@@ -5,7 +5,7 @@ module scepter_constants
         #include <basalt_defines.h>
         #endif 
 
-        integer, parameter :: nt = 50000000
+        integer,parameter :: nt = 50000000
 
         real(kind=8),parameter :: rg = 8.3d-3     kJ mol^-1 K^-1
         real(kind=8),parameter :: rg2 = 8.2d-2  ! L mol^-1 atm K^-1
@@ -55,20 +55,20 @@ module scepter_constants
         real(kind=8),parameter :: fr_ca_cbas = 0.264d0 ! Ca fraction of clystaline basalt
         real(kind=8),parameter :: fr_fe2_cbas = 0.190d0 ! Fe2 fraction of clystaline basalt
         #else
-        real(kind=8), parameter :: fr_si_gbas  = def_bas_si_fr
-        real(kind=8), parameter :: fr_al_gbas  = def_bas_al_fr
-        real(kind=8), parameter :: fr_na_gbas  = def_bas_na_fr
-        real(kind=8), parameter :: fr_k_gbas   = def_bas_k_fr
-        real(kind=8), parameter :: fr_mg_gbas  = def_bas_mg_fr
-        real(kind=8), parameter :: fr_ca_gbas  = def_bas_ca_fr
-        real(kind=8), parameter :: fr_fe2_gbas = def_bas_fe2_fr
-        real(kind=8), parameter :: fr_si_cbas  = def_bas_si_fr
-        real(kind=8), parameter :: fr_al_cbas  = def_bas_al_fr
-        real(kind=8), parameter :: fr_na_cbas  = def_bas_na_fr
-        real(kind=8), parameter :: fr_k_cbas   = def_bas_k_fr
-        real(kind=8), parameter :: fr_mg_cbas  = def_bas_mg_fr
-        real(kind=8), parameter :: fr_ca_cbas  = def_bas_ca_fr
-        real(kind=8), parameter :: fr_fe2_cbas = def_bas_fe2_fr
+        real(kind=8),parameter :: fr_si_gbas  = def_bas_si_fr
+        real(kind=8),parameter :: fr_al_gbas  = def_bas_al_fr
+        real(kind=8),parameter :: fr_na_gbas  = def_bas_na_fr
+        real(kind=8),parameter :: fr_k_gbas   = def_bas_k_fr
+        real(kind=8),parameter :: fr_mg_gbas  = def_bas_mg_fr
+        real(kind=8),parameter :: fr_ca_gbas  = def_bas_ca_fr
+        real(kind=8),parameter :: fr_fe2_gbas = def_bas_fe2_fr
+        real(kind=8),parameter :: fr_si_cbas  = def_bas_si_fr
+        real(kind=8),parameter :: fr_al_cbas  = def_bas_al_fr
+        real(kind=8),parameter :: fr_na_cbas  = def_bas_na_fr
+        real(kind=8),parameter :: fr_k_cbas   = def_bas_k_fr
+        real(kind=8),parameter :: fr_mg_cbas  = def_bas_mg_fr
+        real(kind=8),parameter :: fr_ca_cbas  = def_bas_ca_fr
+        real(kind=8),parameter :: fr_fe2_cbas = def_bas_fe2_fr
         #endif
 
         real(kind=8),parameter :: mvka = 99.52d0 ! cm3/mol; molar volume of kaolinite; Robie et al. 1978
@@ -322,19 +322,19 @@ module scepter_constants
         real(kind=8),parameter :: mvblk = mvka ! for bulk soil assumed to be equal to kaolinite
         real(kind=8),parameter :: mwtblk = mwtka
        
-        ! real(kind=8), parameter :: w = 1.0d-4 ! m yr^-1, uplift rate
+        ! real(kind=8),parameter :: w = 1.0d-4 ! m yr^-1, uplift rate
       
         real(kind=8),parameter :: disp_FULL = 1d0
 
-        ! integer, parameter :: nrec_prof = 22
+        ! integer,parameter :: nrec_prof = 22
         #ifndef nrec_prof_in
-        integer, parameter :: nrec_prof = 20
+        integer,parameter :: nrec_prof = 20
         logical :: linear_rectime = .false. 
         #else
-        integer, parameter :: nrec_prof = nrec_prof_in
+        integer,parameter :: nrec_prof = nrec_prof_in
         logical :: linear_rectime = .true. 
         #endif 
-        integer, parameter :: nrec_flx = 60
+        integer,parameter :: nrec_flx = 60
 
         ! type of uplift vs porosity relationship
         ! #ifndef iwtypein 
@@ -385,9 +385,9 @@ module scepter_constants
         ! integer,parameter :: nps_rain_char = 4
         integer,parameter :: nflx_psd = 6
         #ifndef full_flux_report
-        integer,parameter::nsp_saveall = 1
+        integer,parameter ::nsp_saveall = 1
         #endif 
-        integer,parameter::idust = 15
-        integer, parameter :: nph = 101
+        integer,parameter ::idust = 15
+        integer,parameter :: nph = 101
 
 end module scepter_constants

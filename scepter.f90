@@ -1,16 +1,8 @@
-program weathering
+
 use scepter_constants
+use scepter_variables
 use scepter_weathering_main
 implicit none 
-
-integer nsp_sld,nsp_aq,nsp_gas,nrxn_ext,nz,nsld_kinspc
-character(5),dimension(:),allocatable::chraq,chrsld,chrgas,chrrxn_ext,chrsld_kinspc 
-real(kind=8),dimension(:),allocatable::kin_sld_spc
-character(500) sim_name,runname_save,cwd,path,path2,cmd
-real(kind=8) ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,w,qin,p80,plant_rain,zml_ref,tc,rainpowder_2nd &
-    & ,step_tau
-integer count_dtunchanged_Max
-
 
 CALL getcwd(cwd)
 WRITE(*,*) TRIM(cwd)
