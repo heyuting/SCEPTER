@@ -16,8 +16,6 @@ subroutine weathering_main( &
     #ifdef mod_basalt_cmp
     #include <basalt_defines.h>
     #endif                                    
-
-
     !-------------------------
 
     tc = tcin
