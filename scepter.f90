@@ -7,7 +7,10 @@ program weathering
     use scepter_physics
     use scepter_psd
     use scepter_concentration
-    use scepter_reactions
+    use scepter_equilibrium
+    use scepter_transport
+    use scepter_kinetics
+    use scepter_thermodynamics
     implicit none 
 
     CALL getcwd(cwd)

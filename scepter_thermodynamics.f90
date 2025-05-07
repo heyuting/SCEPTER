@@ -1,4 +1,4 @@
-module scepter_reactions
+module scepter_thermodynamics
     use scepter_constants
     use scepter_variables
     use scepter_equilibrium
@@ -6,10 +6,8 @@ module scepter_reactions
     use scepter_kinetics
     implicit none
     private
-    public :: calc_omega_v5, calc_gamma_davies
-    public :: k_arrhenius, K_q10
-
-
+    public :: sld_therm, k_arrhenius, K_q10, calc_omega_v5, calc_gamma_davies
+    real(kind=8), parameter :: cal2j = 4.184d0
 
 contains
 
@@ -21,7 +19,6 @@ contains
         implicit none
 
         real(kind=8),intent(in)::rg,tc,tempk_0,ss_x,ss_y,ss_z
-        real(kind=8) :: cal2j = 4.184d0 
         real(kind=8),intent(out):: therm
         character(5),intent(in):: mineral
         real(kind=8) tc_ref,ha,therm_ref,delG
@@ -942,7 +939,8 @@ contains
         endif 
 
     endsubroutine calc_omega_v5
- 
+
+
     subroutine calc_gamma_davies( &
         & nz,iosx,tc,charge &
         & ,gamma,dgamma_dis &
@@ -987,4 +985,5 @@ contains
     !ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
 
-end module scepter_reactions 
+
+end module scepter_thermodynamics 
