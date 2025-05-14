@@ -1909,9 +1909,8 @@ subroutine weathering_main( &
         & ,msldx_loc  &! output
         & )
 
-    ! call get_maqads_all_v3( &
+   
     call get_maqads_all_v4( &
-    ! call get_maqads_all_v4a( &
         & nz,nsp_aq_all,nsp_sld_all &
         & ,chraq_all,chrsld_all &
         & ,keqcec_all,keqiex_all,cec_pH_depend,beta_all &
@@ -2253,9 +2252,7 @@ subroutine weathering_main( &
             & ,msldx_loc  &! output
             & )
 
-        ! call get_maqads_all_v3( &
         call get_maqads_all_v4( &
-        ! call get_maqads_all_v4a( &
             & nz,nsp_aq_all,nsp_sld_all &
             & ,chraq_all,chrsld_all &
             & ,keqcec_all,keqiex_all,cec_pH_depend,beta_all &

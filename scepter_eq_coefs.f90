@@ -4,6 +4,9 @@
 !          and reaction rates for aqueous, gaseous, and solid species
 !-----------------------------------------------------------------------    
 module scepter_eq_coefs
+    use scepter_thermodynamics ! Thermodynamic calculations
+    use scepter_concentration ! Concentration calculations
+    use scepter_kinetics ! Kinetics calculations
     implicit none
     private
     public :: coefs_v2
@@ -646,13 +649,6 @@ module scepter_eq_coefs
         !!! ----------- Solid phases ------------------------!!
         ksld_all = 0d0 
         keqsld_all = 0d0
-
-        ! call get_mgasx_all( &
-            ! & nz,nsp_gas_all,nsp_gas,nsp_gas_cnst &
-            ! & ,chrgas,chrgas_all,chrgas_cnst &
-            ! & ,mgas,mgasc &
-            ! & ,mgas_loc  &! output
-            ! & )
 
         call get_maqgasx_all( &
             & nz,nsp_aq_all,nsp_gas_all,nsp_aq,nsp_gas,nsp_aq_cnst,nsp_gas_cnst &

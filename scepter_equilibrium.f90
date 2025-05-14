@@ -4,6 +4,8 @@
 !**************************************************************************************        
 
 module scepter_equilibrium
+    use scepter_constants
+    use scepter_variables
     use scepter_eq_coefs
     use scepter_eq_pH
     use scepter_eq_charge

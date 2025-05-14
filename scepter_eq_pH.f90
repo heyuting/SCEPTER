@@ -3,7 +3,11 @@
 ! Purpose: Calculate pH and related quantities
 !***********************************************************************
 
-module scepter_eq_pH
+module scepter_eq_ph
+    use scepter_concentration ! Concentration calculations
+    use scepter_thermodynamics ! Thermodynamic calculations
+    use scepter_equilibrium ! Equilibrium calculations
+
     implicit none
     private
     public :: calc_pH_v7_4
@@ -29,6 +33,7 @@ module scepter_eq_pH
         ! here maqx is assumed to be concs. of free cations or H4SiO4 or SO42- or NO3-  
         ! gases are already treated with specific gas form.  
         implicit none
+        external DGESV 
         integer,intent(in)::nz
         real(kind=8),intent(in)::kw,tc
         real(kind=8) so4th
@@ -124,6 +129,7 @@ module scepter_eq_pH
         real(kind=8),parameter :: ph_init_min = 1d-20
         real(kind=8),parameter :: ph_init_max = 1d4 
 
+
         ! bisec_chk_ON = .false.
         bisec_chk_ON = .true.
 
@@ -175,7 +181,6 @@ module scepter_eq_pH
             & )
             
         call get_maqt_all( &
-        ! call get_maqt_all_v2( &
             & nz,nsp_aq_all,nsp_gas_all &
             & ,chraq_all,chrgas_all &
             & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl &
@@ -929,4 +934,4 @@ module scepter_eq_pH
 
     endsubroutine calc_pH_v7_4
     
-endmodule scepter_eq_pH
+endmodule scepter_eq_ph
