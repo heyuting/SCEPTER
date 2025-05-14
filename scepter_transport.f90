@@ -17,8 +17,7 @@ module scepter_transport
     private
     public :: alsilicate_aq_gas_1D_v3_2
 
-contains
-
+    contains
     !--------------------------------------------------------------------------------------
     ! Subroutine: alsilicate_aq_gas_1D_v3_2
     ! Purpose: Calculate coupled transport and reactions of aqueous, gaseous, and solid species

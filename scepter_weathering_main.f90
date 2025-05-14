@@ -3490,8 +3490,6 @@ module scepter_weathering_main
                         
                         if (.not. psd_impfull) then 
                             ! call psd_diss( &
-                            ! call psd_diss_pbe_expall( &
-                            ! call psd_diss_pbe_exp( &
                             call psd_diss_pbe( &
                                 & nz,nps &! in
                                 & ,z,DV,dt,pi,tol_dvd,poro &! in 
@@ -3516,8 +3514,6 @@ module scepter_weathering_main
                                 ! psd_save = psd
                                 ! dpsd_save = dpsd
                                 
-                                ! call psd_diss_pbe_expall( &
-                                ! call psd_diss_pbe_exp( &
                                 ! call psd_diss_pbe( &
                                     ! & nz,nps &! in
                                     ! & ,z,DV,dt_pbe,pi,tol_dvd,poro &! in 
@@ -3607,8 +3603,7 @@ module scepter_weathering_main
                             ! & ,' blk ' &! in 
                             ! & ,dpsd,psd_error_flg &! inout
                             ! & )
-                        ! call psd_diss_pbe_expall( &
-                        ! call psd_diss_pbe_exp( &
+
                         call psd_diss_pbe( &
                             & nz,nps &! in
                             & ,z,DV,dt,pi,tol,poro &! in 

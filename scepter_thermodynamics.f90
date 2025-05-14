@@ -985,6 +985,4 @@ contains
     endfunction k_q10
     !ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
-
-
 end module scepter_thermodynamics 
