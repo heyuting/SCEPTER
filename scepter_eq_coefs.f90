@@ -8,6 +8,7 @@ module scepter_eq_coefs
     use scepter_concentration ! Concentration calculations
     use scepter_kinetics ! Kinetics calculations
     use scepter_findloc
+    use scepter_sld_kin
     implicit none
     private
     public :: coefs_v2

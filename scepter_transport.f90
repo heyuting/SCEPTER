@@ -13,6 +13,9 @@ module scepter_transport
     use scepter_concentration ! Concentration calculations  
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_findloc ! Find location of a value in an array
+    use scepter_sld_kin ! Solid dissolution/precipitation kinetics
+    use scepter_calc_rxn_ext ! Calculate reaction rates for external reactions
+    
     implicit none
     private
     public :: alsilicate_aq_gas_1D_v3_2

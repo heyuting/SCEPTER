@@ -44,7 +44,7 @@ program weathering
     ! Allocate arrays for chemical species and reactions
     allocate(chraq(nsp_aq),chrsld(nsp_sld),chrgas(nsp_gas),chrrxn_ext(nrxn_ext))
     allocate(chrsld_kinspc(nsld_kinspc),kin_sld_spc(nsld_kinspc))
-        
+    
     ! Get chemical species names and reaction information
     call get_variables( &
         & nsp_aq,nsp_sld,nsp_gas,nrxn_ext,nsld_kinspc &! input
