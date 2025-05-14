@@ -7,6 +7,8 @@ module scepter_calc_khgas
     use scepter_constants
     use scepter_thermodynamics
     use scepter_concentration
+    use scepter_findloc
+    
     implicit none
     private
     public :: calc_khgas_all_v2

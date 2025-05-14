@@ -12,6 +12,7 @@ module scepter_transport
     use scepter_calc_khgas   ! Gas-aqueous phase equilibrium calculations
     use scepter_concentration ! Concentration calculations  
     use scepter_thermodynamics ! Thermodynamic calculations
+    use scepter_findloc ! Find location of a value in an array
     implicit none
     private
     public :: alsilicate_aq_gas_1D_v3_2

@@ -7,6 +7,7 @@ module scepter_eq_coefs
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_concentration ! Concentration calculations
     use scepter_kinetics ! Kinetics calculations
+    use scepter_findloc
     implicit none
     private
     public :: coefs_v2

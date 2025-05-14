@@ -3,6 +3,7 @@ module scepter_kinetics
     use scepter_variables
     use scepter_equilibrium
     use scepter_transport
+    use scepter_findloc
     implicit none
     private
     public :: sld_kin, sld_rxn, rough_f, calc_rxn_ext_dev_3

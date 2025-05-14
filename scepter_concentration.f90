@@ -1,5 +1,7 @@
 module scepter_concentration
-    use scepter_common
+    use scepter_constants
+    use scepter_variables
+    use scepter_findloc
     implicit none
 
     ! Declare which procedures are public

@@ -7,7 +7,8 @@ module scepter_eq_ph
     use scepter_concentration ! Concentration calculations
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_equilibrium ! Equilibrium calculations
-
+    use scepter_findloc ! Find location of a value in an array
+    
     implicit none
     private
     public :: calc_pH_v7_4

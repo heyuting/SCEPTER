@@ -4,6 +4,7 @@ module scepter_thermodynamics
     use scepter_equilibrium
     use scepter_transport
     use scepter_kinetics
+    use scepter_findloc
     implicit none
     private
     public :: sld_therm, k_arrhenius, K_q10, calc_omega_v5, calc_gamma_davies

@@ -9,6 +9,7 @@ module scepter_equilibrium
     use scepter_eq_coefs
     use scepter_eq_pH
     use scepter_eq_charge
+    use scepter_findloc
     implicit none
     private
     public :: calc_charge_balance_point

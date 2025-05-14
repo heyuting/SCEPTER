@@ -9,16 +9,10 @@ program weathering
     ! Module imports for various components of the weathering simulation
     use scepter_constants    ! Physical and chemical constants
     use scepter_variables    ! Global variables and arrays
-    use scepter_weathering_main  ! Main weathering simulation routines
     use scepter_IO          ! Input/Output operations
     use scepter_input       ! Input parameter handling
-    use scepter_physics     ! Physical processes (e.g., water flow)
-    use scepter_psd         ! Particle size distribution calculations
-    use scepter_concentration ! Concentration calculations and updates
-    use scepter_equilibrium ! Chemical equilibrium calculations
-    use scepter_transport   ! Transport processes (advection, diffusion)
-    use scepter_kinetics    ! Kinetic reaction calculations
-    use scepter_thermodynamics ! Thermodynamic calculations
+    use scepter_weathering_main  ! Main weathering simulation routines
+    
     implicit none 
 
     ! Get and set up working directory
@@ -81,63 +75,5 @@ program weathering
         & ,count_dtunchanged_Max,tc,step_tau &! input 
         & ,nsld_kinspc,chrsld_kinspc,kin_sld_spc &! input
         & )
-
-    contains 
-        !-----------------------------------------------------------------------
-        ! Subroutine to create computational grid, after Hoffmann & Chiang, 2000
-        ! Creates either regular or non-uniform grid based on beta parameter
-        ! For non-uniform grid, uses transformation to concentrate points near surface
-        !-----------------------------------------------------------------------
-        subroutine makegrid(beta,nz,ztot,dz,z,regular_grid)  
-            implicit none
-            integer(kind=4),intent(in) :: nz          ! Number of grid points
-            logical,intent(in)::regular_grid          ! Flag for regular vs. non-uniform grid
-            real(kind=8),intent(in)::beta,ztot       ! Grid transformation parameter and total depth
-            real(kind=8),intent(out)::dz(nz),z(nz)   ! Grid spacing and node positions
-            integer(kind=4) iz
-
-            do iz = 1, nz 
-                z(iz) = iz*ztot/nz  ! regular grid 
-                if (iz==1) then
-                    dz(iz) = ztot*log((beta+(z(iz)/ztot)**2d0)/(beta-(z(iz)/ztot)**2d0))/log((beta+1d0)/(beta-1d0))
-                endif
-                if (iz/=1) then 
-                    dz(iz) = ztot*log((beta+(z(iz)/ztot)**2d0)/(beta-(z(iz)/ztot)**2d0))/log((beta+1d0)/(beta-1d0)) - sum(dz(:iz-1))
-                endif
-            enddo
-
-            ! Override with regular grid if specified
-            if (regular_grid) then 
-                dz = ztot/nz  ! when implementing regular grid
-            endif 
-
-            do iz=1,nz  ! depth is defined at the middle of individual layers 
-                if (iz==1) z(iz)=dz(iz)*0.5d0  
-                if (iz/=1) z(iz) = z(iz-1)+dz(iz-1)*0.5d0 + 0.5d0*dz(iz)
-            enddo
-
-        endsubroutine makegrid
-
-        !-----------------------------------------------------------------------
-        ! Custom implementation of findloc for compatibility
-        ! Searches for a specific string in an array of strings
-        !-----------------------------------------------------------------------
-        #ifdef no_intr_findloc
-            function findloc(chrlist_in,chrspecific,dim)
-                implicit none
-                character(*),intent(in)::chrlist_in(:),chrspecific
-                integer,intent(in)::dim
-                integer findloc,i
-
-                findloc = 0
-                do i=1, size(chrlist_in,dim=dim)
-                    if (trim(adjustl(chrspecific)) == trim(adjustl(chrlist_in(i)))) then
-                        findloc = i
-                        return
-                    endif 
-                enddo 
-
-            endfunction findloc
-        #endif 
 
 endprogram weathering
