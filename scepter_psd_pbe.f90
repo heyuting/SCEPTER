@@ -13,8 +13,6 @@ module scepter_psd_pbe
     private
     public :: psd_diss_pbe
 
-    external DGESV
-
     contains
     !--------------------------------------------------------------------------------------------------
     ! Solve the population balance equation reflecting imposed dissolution rate

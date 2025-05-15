@@ -7,7 +7,7 @@ module scepter_eq_charge
     use scepter_constants
     use scepter_variables
     use scepter_findloc
-    
+    use scepter_thermodynamics
     implicit none
     private
     public :: calc_charge_balance

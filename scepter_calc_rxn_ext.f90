@@ -159,7 +159,6 @@ module scepter_calc_rxn_ext
 
         ! getting maqft_loc and its derivatives
         call get_maqt_all( &
-        ! call get_maqt_all_v2( &
             & nz,nsp_aq_all,nsp_gas_all &
             & ,chraq_all,chrgas_all &
             & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl &

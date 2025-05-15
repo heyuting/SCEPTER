@@ -12,7 +12,6 @@ module scepter_psd_implicit
     public :: psd_implicit_all_v2
     public :: psd_implicit_all_v4
 
-    external DGESV
 
     contains
 
@@ -568,6 +567,8 @@ module scepter_psd_implicit
         real(kind=8) amx3(nz,nz),ymx3(nz),emx3(nps),emx3_loc(nz)
         integer ipiv3(nz) 
         integer info 
+
+        external DGESV
 
         chrflx_psd = (/'tflx ','adv  ','dif  ','rain ','rxn  ','res  '/)
 

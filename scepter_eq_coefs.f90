@@ -4,11 +4,13 @@
 !          and reaction rates for aqueous, gaseous, and solid species
 !-----------------------------------------------------------------------    
 module scepter_eq_coefs
+    use scepter_constants
+    use scepter_variables
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_concentration ! Concentration calculations
-    use scepter_kinetics ! Kinetics calculations
     use scepter_findloc
     use scepter_sld_kin
+
     implicit none
     private
     public :: coefs_v2
@@ -17,7 +19,6 @@ module scepter_eq_coefs
     real(kind=8), parameter :: cal2j = 4.184d0
     
     contains
-
     !-----------------------------------------------------------------------
     !Subroutine: coefs_v2
     !Purpose: Main coefficient calculation subroutine, called by scepter_equilibrium.f90
@@ -788,6 +789,5 @@ module scepter_eq_coefs
 
 
     endsubroutine coefs_v2
-
     
 endmodule scepter_eq_coefs

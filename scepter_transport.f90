@@ -5,16 +5,15 @@
 
 module scepter_transport
     use scepter_constants    ! Physical and chemical constants
-    use scepter_variables    ! Global variables and arrays
-    use scepter_kinetics     ! Kinetic reaction calculations
-    use scepter_equilibrium  ! Chemical equilibrium calculations
+    use scepter_variables    ! Global variables and arrays 
     use scepter_eq_ph        ! pH equilibrium calculations
+    use scepter_sld_kin ! Solid dissolution/precipitation kinetics
+    use scepter_calc_rxn_ext ! Calculate reaction rates for external reactions
     use scepter_calc_khgas   ! Gas-aqueous phase equilibrium calculations
     use scepter_concentration ! Concentration calculations  
     use scepter_thermodynamics ! Thermodynamic calculations
+    use scepter_kinetics ! Kinetic reaction calculations
     use scepter_findloc ! Find location of a value in an array
-    use scepter_sld_kin ! Solid dissolution/precipitation kinetics
-    use scepter_calc_rxn_ext ! Calculate reaction rates for external reactions
     
     implicit none
     private

@@ -1,6 +1,8 @@
 module scepter_variables
     implicit none
 
+    public
+
     integer nsp_sld,nsp_aq,nsp_gas,nrxn_ext,nz,nsld_kinspc
     character(5),dimension(:),allocatable::chraq,chrsld,chrgas,chrrxn_ext,chrsld_kinspc 
     real(kind=8),dimension(:),allocatable::kin_sld_spc
@@ -526,4 +528,4 @@ module scepter_variables
 
     integer iph
 
-end module scepter_variables 
+endmodule scepter_variables 

@@ -6,15 +6,13 @@
 module scepter_equilibrium
     use scepter_constants
     use scepter_variables
-    use scepter_eq_coefs
-    use scepter_eq_pH
-    use scepter_eq_charge
+    use scepter_thermodynamics
     use scepter_findloc
     implicit none
     private
     public :: calc_charge_balance_point
     
-contains
+    contains
     !-----------------------------------------------------------------------
     ! Subroutine: calc_charge_balance_point
     ! Purpose: Calculate charge balance at a point

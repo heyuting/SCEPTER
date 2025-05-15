@@ -1,7 +1,9 @@
 module scepter_concentration
     use scepter_constants
     use scepter_variables
+    use scepter_thermodynamics
     use scepter_findloc
+
     implicit none
 
     ! Declare which procedures are public

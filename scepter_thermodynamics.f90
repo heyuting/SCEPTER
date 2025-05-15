@@ -1,9 +1,7 @@
 module scepter_thermodynamics
     use scepter_constants
     use scepter_variables
-    use scepter_equilibrium
-    use scepter_transport
-    use scepter_kinetics
+    use scepter_concentration
     use scepter_findloc
     implicit none
     private

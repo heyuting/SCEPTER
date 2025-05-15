@@ -2,6 +2,10 @@ module scepter_IO
     use scepter_constants
     use scepter_variables
     implicit none
+    private
+    public :: get_variables_num, get_variables, get_saved_variables_num, get_saved_variables, Console4
+
+    contains
 
     subroutine get_variables_num( &
         & nsp_aq,nsp_sld,nsp_gas,nrxn_ext,nsld_kinspc &! output

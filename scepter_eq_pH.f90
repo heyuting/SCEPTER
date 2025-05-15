@@ -4,9 +4,11 @@
 !***********************************************************************
 
 module scepter_eq_ph
+    use scepter_constants ! Constants
+    use scepter_variables ! Variables
     use scepter_concentration ! Concentration calculations
-    use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_equilibrium ! Equilibrium calculations
+    use scepter_eq_charge ! Charge balance calculations
     use scepter_findloc ! Find location of a value in an array
     
     implicit none
@@ -14,7 +16,6 @@ module scepter_eq_ph
     public :: calc_pH_v7_4
 
     contains
-
     !-----------------------------------------------------------------------
     !Subroutine: calc_pH_v7_4
     !Purpose: Calculate pH of the system
@@ -34,7 +35,9 @@ module scepter_eq_ph
         ! here maqx is assumed to be concs. of free cations or H4SiO4 or SO42- or NO3-  
         ! gases are already treated with specific gas form.  
         implicit none
+
         external DGESV 
+
         integer,intent(in)::nz
         real(kind=8),intent(in)::kw,tc
         real(kind=8) so4th

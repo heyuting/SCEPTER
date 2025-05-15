@@ -6,16 +6,18 @@
 module scepter_weathering_main
     use scepter_constants
     use scepter_variables
+    use scepter_IO
     use scepter_input
+    use scepter_physics
+    use scepter_eq_coefs
+    use scepter_eq_ph
+    use scepter_transport
+    use scepter_thermodynamics
+    use scepter_psd
+    use scepter_psd_pbe
     use scepter_psd_implicit
     use scepter_concentration
     use scepter_findloc
-    
-    use scepter_equilibrium
-    use scepter_transport
-    use scepter_kinetics
-    use scepter_thermodynamics
-    use scepter_physics
     
     implicit none
 
@@ -1910,7 +1912,6 @@ module scepter_weathering_main
 
         ! getting maqft_loc and its derivatives
         call get_maqt_all( &
-        ! call get_maqt_all_v2( &
             & nz,nsp_aq_all,nsp_gas_all &
             & ,chraq_all,chrgas_all &
             & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl &
@@ -2251,7 +2252,6 @@ module scepter_weathering_main
 
             ! getting maqft_loc and its derivatives
             call get_maqt_all( &
-            ! call get_maqt_all_v2( &
                 & nz,nsp_aq_all,nsp_gas_all &
                 & ,chraq_all,chrgas_all &
                 & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl &
@@ -2374,7 +2374,6 @@ module scepter_weathering_main
         !! @@@@@@@@@@@@@@@   start of time integration  @@@@@@@@@@@@@@@@@@@@@@
 
         do while (it<nt)
-            ! call cpu_time(time_start)
             call system_clock(t1)
             
             if (display) then 
@@ -3489,7 +3488,6 @@ module scepter_weathering_main
                         psd = mpsd(isps,:,:)
                         
                         if (.not. psd_impfull) then 
-                            ! call psd_diss( &
                             call psd_diss_pbe( &
                                 & nz,nps &! in
                                 & ,z,DV,dt,pi,tol_dvd,poro &! in 
@@ -3504,61 +3502,6 @@ module scepter_weathering_main
                                 print *, '*** escape from do-loop'
                                 exit
                             endif 
-                            
-                            ! dt_pbe = dt
-                            ! time_pbe = 0
-                            ! ddpsd = 0d0
-                            ! do while(time_pbe < dt)
-                                ! if (time_pbe + dt_pbe > dt) dt_pbe = dt - time_pbe
-                                ! DV(:) = flx_sld(isps, 4 + isps,:)*mv(isps)*1d-6*dt_pbe 
-                                ! psd_save = psd
-                                ! dpsd_save = dpsd
-                                
-                                ! call psd_diss_pbe( &
-                                    ! & nz,nps &! in
-                                    ! & ,z,DV,dt_pbe,pi,tol_dvd,poro &! in 
-                                    ! & ,incld_rough,rough_c0,rough_c1 &! in
-                                    ! & ,psd,ps,dps,ps_min,ps_max &! in 
-                                    ! & ,chrsld(isps) &! in 
-                                    ! & ,ddpsd,psd_error_flg &! inout
-                                    ! & )
-                                    
-                                ! if (psd_error_flg) then 
-                                    ! psd_error_flg = .false.
-                                    ! dt_pbe = dt_pbe/10d0
-                                    ! psd = psd_save
-                                    ! dpsd = dpsd_save
-                                    ! cycle
-                                ! endif 
-                                
-                                ! psd = psd + ddpsd
-                                ! dpsd = dpsd + ddpsd
-                                
-                                ! time_pbe = time_pbe + dt_pbe
-                                
-                            ! enddo 
-                            
-                            
-                            ! if (psd_error_flg) then 
-                                ! psd_error_flg = .false. 
-                                ! flgback = .false. 
-                                ! flgreducedt = .true.
-                                ! psd = psd_old
-                                ! mpsd = mpsd_old
-                                ! poro = poroprev
-                                ! torg = torgprev
-                                ! tora = toraprev
-                                ! disp = dispprev
-                                ! v = vprev
-                                ! hr = hrprev
-                                ! w = wprev
-                                ! call calcupwindscheme(  &
-                                    ! up,dwn,cnr,adf & ! output 
-                                    ! ,w,nz   & ! input &
-                                    ! )
-                                ! dt = dt/1d1
-                                ! go to 100
-                            ! endif 
                         else
                             do iz=1,nz
                                 dpsd(:,iz) = DV(iz)/nps/dps(:)
@@ -3566,9 +3509,7 @@ module scepter_weathering_main
                         endif 
                         
                         dmpsd(isps,:,:) = dpsd
-                        
-                        ! print *, chrsld(isps),DV
-                    
+                                            
                     enddo 
 
                     if ( flgback .or. psd_error_flg) then 
@@ -3595,15 +3536,6 @@ module scepter_weathering_main
                     dpsd = 0d0
                     
                     if (.not. psd_impfull) then 
-                        ! call psd_diss( &
-                            ! & nz,nps &! in
-                            ! & ,z,DV,dt,pi,tol,poro &! in 
-                            ! & ,incld_rough,rough_c0,rough_c1 &! in
-                            ! & ,psd,ps,dps,ps_min,ps_max &! in 
-                            ! & ,' blk ' &! in 
-                            ! & ,dpsd,psd_error_flg &! inout
-                            ! & )
-
                         call psd_diss_pbe( &
                             & nz,nps &! in
                             & ,z,DV,dt,pi,tol,poro &! in 
@@ -3623,27 +3555,6 @@ module scepter_weathering_main
                             mpsd = mpsd_save_2
                             cycle
                         endif 
-                            
-                        ! if (psd_error_flg) then 
-                            ! psd_error_flg = .false. 
-                            ! flgback = .false. 
-                            ! flgreducedt = .true.
-                            ! psd = psd_old
-                            ! mpsd = mpsd_old
-                            ! poro = poroprev
-                            ! torg = torgprev
-                            ! tora = toraprev
-                            ! disp = dispprev
-                            ! v = vprev
-                            ! hr = hrprev
-                            ! w = wprev
-                            ! call calcupwindscheme(  &
-                                ! up,dwn,cnr,adf & ! output 
-                                ! ,w,nz   & ! input &
-                                ! )
-                            ! dt = dt/1d1
-                            ! go to 100
-                        ! endif 
                     else 
                         do iz=1,nz
                             dpsd(:,iz) = DV(iz)/nps/dps(:)
@@ -3712,27 +3623,7 @@ module scepter_weathering_main
                                 print *, '*** escape from do-loop'
                                 exit
                             endif 
-                            
-                            ! if (flgback) then 
-                                ! flgback = .false. 
-                                ! flgreducedt = .true.
-                                ! psd = psd_old
-                                ! mpsd = mpsd_old
-                                ! poro = poroprev
-                                ! torg = torgprev
-                                ! tora = toraprev
-                                ! disp = dispprev
-                                ! v = vprev
-                                ! hr = hrprev
-                                ! w = wprev
-                                ! call calcupwindscheme(  &
-                                    ! up,dwn,cnr,adf & ! output 
-                                    ! ,w,nz   & ! input &
-                                    ! )
-                                ! dt = dt/1d1
-                                ! go to 100
-                            ! endif 
-                                
+   
                             do ips=1,nps
                                 mpsdx(isps,ips,:) = psdx_norm(ips,:)*psd_norm_fact(ips)
                                 flx_mpsd(isps,ips,:,:) = flx_psd_norm(ips,:,:)*psd_norm_fact(ips)
@@ -5030,7 +4921,6 @@ module scepter_weathering_main
             
             progress_rate_prev = progress_rate
             
-            ! call cpu_time(time_fin)
             call system_clock(t2,t_rate,t_max)
             if ( t2 < t1 ) then
                 diff = (t_max - t1) + t2 + 1

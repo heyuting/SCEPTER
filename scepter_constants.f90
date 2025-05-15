@@ -4,7 +4,8 @@ module scepter_constants
         #ifdef mod_basalt_cmp
         #include <basalt_defines.h>
         #endif 
-
+        public
+        
         integer,parameter :: nt = 50000000
 
         real(kind=8),parameter :: rg = 8.3d-3     kJ mol^-1 K^-1
