@@ -45,6 +45,11 @@ module scepter_weathering_main
         real(kind=8),intent(in) :: ttot  ! yr
         integer,intent(in) :: nz != 30 
         real(kind=8) z(nz),dz(nz)
+        real(kind=8) :: rho_grain_z(nz),sldvolfrac(nz) != 2.7d0 ! g/cm3 as soil grain density 
+        real(kind=8) :: mblk(nz),mblki,mblkix,mblkx(nz)
+        real(kind=8) sat(nz), poro(nz), torg(nz), tora(nz), tc, satup
+        real(kind=8) w(nz),w_btm,wx(nz),wexp(nz)
+        real(kind=8) v(nz),qin
         real(kind=8),intent(in) :: tcin != 15.0d0 ! deg celsius
         real(kind=8),intent(in)::plant_rain != 1d2 ! 1 t/ha/yr; approximate values from Vanveen et al. 1991 ! 
         real(kind=8),intent(in)::rainpowder != 30d2 !  g/m2/yr 
@@ -59,7 +64,8 @@ module scepter_weathering_main
         
         character(500),intent(in):: runname_save
         real(kind=8),intent(in) :: step_tau ! = 0.1d0 ! yr time duration during which dust is added
-        integer,intent(in):: count_dtunchanged_Max  
+        integer,intent(in):: count_dtunchanged_Max 
+        integer,intent(in)::nsp_sld != 5 
         integer,intent(in)::nsp_sld_2 != 25
         integer,intent(in)::nsp_aq != 5
         integer,intent(in)::nsp_gas != 2
@@ -76,6 +82,153 @@ module scepter_weathering_main
         real(kind=8),intent(in)::zml_ref
         character(500),intent(in):: sim_name
 
+        real(kind=8),dimension(nz):: pro,prox,poroprev,hrb,vprev,torgprev,toraprev,wprev,ssab,int_ph
+        real(kind=8),dimension(nz):: ios,iosx,gamma,gamma_tmp,dgamma_dios_tmp
+        real(kind=8),dimension(nz):: dummy,up,dwn,cnr,adf
+        real(kind=8),dimension(nz) :: disp,dispprev  ! dispersion coefficients 
+        real(kind=8),dimension(nz) :: cec  ! cation exchange capacity  
+        real(kind=8),dimension(nz) :: bs  ! base saturation  
+        real(kind=8),dimension(nz) :: proxads  ! H+ at exchange site  
+        real(kind=8) poro_error, poro_tol, porox(nz), dwsporo(nz), wsporo(nz) 
+
+        !-----------------------------
+        ! Mass and concentration arrays
+        !-----------------------------
+        real(kind=8),dimension(nsp_sld)::msldi,msldth,mv,rfrc_sld,mwt,rfrc_sld_plant,rfrc_sld_2nd
+        real(kind=8),dimension(nsp_sld,nsp_aq)::staq
+        real(kind=8),dimension(nsp_sld,nsp_gas)::stgas
+        real(kind=8),dimension(nsp_sld,nz)::msldx,msld,ksld,omega,msldsupp,nonprec,rxnsld
+        real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld,nz)::flx_sld
+        real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld)::int_flx_sld
+        real(kind=8),dimension(nsp_aq)::maqi,maqth,daq,mwtaq
+        real(kind=8),dimension(nsp_aq,nz)::maqx,maq,rxnaq,maqsupp,cecaq,cecaqr,cecaqwt
+        real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld,nz)::flx_aq
+        real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld)::int_flx_aq
+        real(kind=8),dimension(nsp_gas)::mgasi,mgasth,dgasa,dgasg,dmgas,khgasi,dgasi
+        real(kind=8),dimension(nsp_gas,nz)::mgasx,mgas,khgasx,khgas,dgas,agasx,agas,rxngas,mgassupp 
+        real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld,nz)::flx_gas  
+        real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld)::int_flx_gas  
+        real(kind=8),dimension(nrxn_ext,nz)::rxnext
+        real(kind=8),dimension(nrxn_ext,nsp_gas)::stgas_ext,stgas_dext
+        real(kind=8),dimension(nrxn_ext,nsp_aq)::staq_ext,staq_dext
+        real(kind=8),dimension(nrxn_ext,nsp_sld)::stsld_ext,stsld_dext
+        real(kind=8),dimension(:),allocatable::kin_sld_spc
+
+        !-----------------------------
+        ! All species arrays
+        !-----------------------------
+        real(kind=8),dimension(nsp_aq_all)::daq_all,maqi_all,maqth_all,mwtaq_all
+        real(kind=8),dimension(nsp_gas_all)::dgasa_all,dgasg_all,mgasi_all,mgasth_all
+        real(kind=8),dimension(nsp_gas_all,3)::keqgas_h
+        real(kind=8),dimension(nsp_aq_all,4)::keqaq_h
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_c
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_s
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_no3
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_nh3
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_oxa
+        real(kind=8),dimension(nsp_aq_all,2)::keqaq_cl
+        real(kind=8),dimension(nsp_sld_all,nz)::ksld_all
+        real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::staq_all
+        real(kind=8),dimension(nsp_sld_all,nsp_gas_all)::stgas_all
+        real(kind=8),dimension(nsp_sld_all)::keqsld_all,mv_all,msldi_all,msldth_all,rfrc_sld_all,mwt_all,rfrc_sld_plant_all,msldi_allx
+        real(kind=8),dimension(nsp_sld_all)::keqcec_all
+        real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::keqiex_all
+        real(kind=8),dimension(nsp_sld_all)::rfrc_sld_all_2nd
+        real(kind=8),dimension(nrxn_ext_all,nz)::krxn1_ext_all
+        real(kind=8),dimension(nrxn_ext_all,nz)::krxn2_ext_all
+        real(kind=8),dimension(nrxn_ext_all,nsp_aq_all)::staq_ext_all,staq_dext_all
+        real(kind=8),dimension(nrxn_ext_all,nsp_gas_all)::stgas_ext_all,stgas_dext_all
+        real(kind=8),dimension(nrxn_ext_all,nsp_sld_all)::stsld_ext_all,stsld_dext_all
+
+        !-----------------------------
+        ! Aqueous species arrays
+        !-----------------------------
+        real(kind=8),dimension(nsp_aq,nz)::maqft,maqft_prev,maqfads,maqfads_prev
+        real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,dso4fdmaq_all,diosdmaq_all
+        real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,dmaqft_dpro_loc,maqft_loc,maqads_loc,dmaqft_dios_loc
+        real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqft_dmaqf_loc
+        real(kind=8),dimension(nsp_aq_all,nsp_gas_all,nz)::dmaqft_dmgas_loc
+        real(kind=8),dimension(nsp_aq_all,nz)::maqfads_loc,dmaqfads_dpro
+        real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqfads_dmaqf
+        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_dmsld
+        real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,dso4fdmgas_all,diosdmgas_all
+        real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
+        real(kind=8),dimension(nsp_sld_all,nz)::msldx_loc,msldf_loc,beta_loc
+
+        !-----------------------------
+        ! Adsorption parameters
+        !-----------------------------
+        real(kind=8),dimension(nsp_aq,nsp_sld,nz)::maqfads_sld
+        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::maqfads_sld_loc
+        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nsp_aq_all,nz)::dmaqfads_sld_dmaqf
+        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_sld_dmsld
+        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_sld_dpro
+        real(kind=8),dimension(nsp_aq_all)::base_charge_all
+        real(kind=8),dimension(nsp_aq)::base_charge,minmaqads
+
+        !-----------------------------
+        ! Constant species arrays
+        !-----------------------------
+        real(kind=8),dimension(nsp_aq_all - nsp_aq,nz)::maqc
+        real(kind=8),dimension(nsp_gas_all - nsp_gas,nz)::mgasc
+        real(kind=8),dimension(nsp_sld_all - nsp_sld,nz)::msldc
+
+        !-----------------------------
+        ! CO2 species parameters
+        !-----------------------------
+        real(kind=8),dimension(4,5 + nrxn_ext + nsp_sld,nz)::flx_co2sp
+        real(kind=8),dimension(6,5 + nrxn_ext + nsp_sld)::int_flx_co2sp
+        character(5),dimension(6)::chrco2sp
+
+        !-----------------------------
+        ! Particle size distribution parameters
+        !-----------------------------
+        real(kind=8),dimension(nps)::ps,psd_th
+        real(kind=8),dimension(nps,nz)::psd,dVd,psd_old,dpsd,psdx,psd_save,ddpsd,dpsd_save
+        real(kind=8),dimension(nps,nz)::psd_rain
+        real(kind=8),dimension(nps,nz)::psd_norm,psdx_norm,dpsd_norm,psd_rain_norm
+        real(kind=8),dimension(nps)::psd_tmp,dvd_tmp
+        real(kind=8),dimension(nps)::psd_pr,dps,rough_ps_b
+        real(kind=8),dimension(nps)::psd_pr_norm,psd_norm_fact,psd_rain_tmp,intpsd,intpsd_tmp,intpsd_sum_tmp
+        real(kind=8),dimension(nz)::DV
+
+        !-----------------------------
+        ! Rain parameters
+        !-----------------------------
+        integer nps_rain_char_in,nps_rain_char != 4
+        real(kind=8),dimension(nps,nflx_psd,nz) :: flx_psd ! itflx,iadv,idif,irain,irxn,ires
+        real(kind=8),dimension(nps,nflx_psd,nz) :: flx_psd_norm ! itflx,iadv,idif,irain,irxn,ires
+        real(kind=8),dimension(nsp_sld,nps,nz)::mpsd,mpsd_rain,dmpsd,mpsdx,mpsd_old,mpsd_save_2
+        real(kind=8),dimension(nsp_sld,nps)::mpsd_pr,mpsd_th,rough_ps
+        real(kind=8),dimension(nsp_sld,nps,nflx_psd,nz) :: flx_mpsd ! itflx,iadv,idif,irain,irxn,ires
+        real(kind=8),dimension(nsp_sld)::minsld
+        real(kind=8),dimension(nsp_sld,nz):: hr,ssa,hrprev,rough,hri,ssv,ssav,ssas
+        real(kind=8),dimension(nsp_sld):: hrii
+        character(10),dimension(nsp_sld)::roughref 
+        character(10),dimension(nsp_sld)::precstyle
+        real(kind=8),dimension(nsp_sld,nz)::solmod,fkin
+
+#ifdef full_flux_report
+        integer,dimension(nsp_aq,nz)::iaqflx
+        integer,dimension(nsp_gas,nz)::igasflx
+        integer,dimension(nsp_sld,nz)::isldflx
+        integer,dimension(6,nz)::ico2flx
+#else
+        integer,dimension(nsp_aq)::iaqflx
+        integer,dimension(nsp_gas)::igasflx
+        integer,dimension(nsp_sld)::isldflx
+        integer,dimension(6)::ico2flx
+        integer iphint,iphint2
+        character(5),dimension(nsp_saveall)::chrsp_saveall
+#endif 
+        integer,dimension(nsp_sld)::imix
+        real(kind=8),dimension(nz,nz,nsp_sld)::trans
+        real(kind=8),dimension(nsp_sld)::zml
+        real(kind=8),dimension(nz)::so4f,no3f,so4fprev
+
+        character(5),dimension(5 + nrxn_ext + nsp_sld)::chrflx
+        integer,dimension(nsp_sld)::irxn_sld 
+        integer,dimension(nrxn_ext)::irxn_ext
 
         tc = tcin
         qin = q0

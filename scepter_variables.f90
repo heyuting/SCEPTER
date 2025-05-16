@@ -1,9 +1,10 @@
 module scepter_variables
+    use scepter_constants
     implicit none
 
     public
 
-    integer nsp_sld,nsp_aq,nsp_gas,nrxn_ext,nz,nsld_kinspc
+    integer nsp_sld,nsp_aq,nsp_gas,nrxn_ext,nsld_kinspc
     character(5),dimension(:),allocatable::chraq,chrsld,chrgas,chrrxn_ext,chrsld_kinspc 
     real(kind=8),dimension(:),allocatable::kin_sld_spc
     character(500) sim_name,runname_save,cwd,path,path2,cmd
@@ -16,34 +17,13 @@ module scepter_variables
     real(kind=8) pco2i,pnh3i,proi
     real(kind=8) :: rho_grain = 2.7d0 ! g/cm3 as soil grain density 
     real(kind=8) :: rho_grain_calc,rho_grain_calcx != 2.7d0 ! g/cm3 as soil grain density 
-    real(kind=8) :: rho_grain_z(nz),sldvolfrac(nz) != 2.7d0 ! g/cm3 as soil grain density 
     real(kind=8) :: rho_error,rho_tol, poroi_calc 
-    real(kind=8) :: mblk(nz),mblki,mblkix,mblkx(nz)
     logical(kind=8) :: incld_blk
     real(kind=8)::zsupp_plant = 0.3d0 !  e-folding decrease
-    real(kind=8) sat(nz), poro(nz), torg(nz), tora(nz), tc, satup
-    real(kind=8) w(nz),w_btm,wx(nz),wexp(nz)
-    real(kind=8) v(nz),qin
-
-
-    !-----------------------------
-    ! Transport and dispersion parameters
-    !-----------------------------
-    real(kind=8),dimension(nz):: pro,prox,poroprev,hrb,vprev,torgprev,toraprev,wprev,ssab,int_ph
-    real(kind=8),dimension(nz):: ios,iosx,gamma,gamma_tmp,dgamma_dios_tmp
     real(kind=8) :: rcharge
-    real(kind=8),dimension(nz):: dummy,up,dwn,cnr,adf
     real(kind=8) :: rough_c0_b = 10d0**(3.3d0)
     real(kind=8) :: rough_c1_b = 0.33d0
     real(kind=8) :: c_disp,c0_disp,c1_disp,zdisp  ! dispersion coefficients 
-    real(kind=8),dimension(nz) :: disp,dispprev  ! dispersion coefficients 
-    real(kind=8),dimension(nz) :: cec  ! cation exchange capacity  
-    real(kind=8),dimension(nz) :: bs  ! base saturation  
-    real(kind=8),dimension(nz) :: proxads  ! H+ at exchange site  
-
-    !-----------------------------
-    ! Reaction rate constants
-    !-----------------------------
     real(kind=8) kho,ucv,kco2,k1,kw,k2,khco2i,knh3,k1nh3,khnh3i,kn2o
 
     !-----------------------------
@@ -163,11 +143,7 @@ module scepter_variables
     real(kind=8) :: dsavetime = 1d3
     logical :: rectime_scheme_old = .false.
 
-    !-----------------------------
-    ! Porosity iteration parameters
-    !-----------------------------
     integer poro_iter , poro_iter_max
-    real(kind=8) poro_error, poro_tol, porox(nz), dwsporo(nz), wsporo(nz) 
     real(kind=8) beta 
 
     !-----------------------------
@@ -199,113 +175,6 @@ module scepter_variables
     character(5),dimension(nrxn_ext_all)::chrrxn_ext_all
     character(5),dimension(:),allocatable ::chrsld_kinspc
 
-    !-----------------------------
-    ! Mass and concentration arrays
-    !-----------------------------
-    real(kind=8),dimension(nsp_sld)::msldi,msldth,mv,rfrc_sld,mwt,rfrc_sld_plant,rfrc_sld_2nd
-    real(kind=8),dimension(nsp_sld,nsp_aq)::staq
-    real(kind=8),dimension(nsp_sld,nsp_gas)::stgas
-    real(kind=8),dimension(nsp_sld,nz)::msldx,msld,ksld,omega,msldsupp,nonprec,rxnsld
-    real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld,nz)::flx_sld
-    real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld)::int_flx_sld
-    real(kind=8),dimension(nsp_aq)::maqi,maqth,daq,mwtaq
-    real(kind=8),dimension(nsp_aq,nz)::maqx,maq,rxnaq,maqsupp,cecaq,cecaqr,cecaqwt
-    real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld,nz)::flx_aq
-    real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld)::int_flx_aq
-    real(kind=8),dimension(nsp_gas)::mgasi,mgasth,dgasa,dgasg,dmgas,khgasi,dgasi
-    real(kind=8),dimension(nsp_gas,nz)::mgasx,mgas,khgasx,khgas,dgas,agasx,agas,rxngas,mgassupp 
-    real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld,nz)::flx_gas  
-    real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld)::int_flx_gas  
-    real(kind=8),dimension(nrxn_ext,nz)::rxnext
-    real(kind=8),dimension(nrxn_ext,nsp_gas)::stgas_ext,stgas_dext
-    real(kind=8),dimension(nrxn_ext,nsp_aq)::staq_ext,staq_dext
-    real(kind=8),dimension(nrxn_ext,nsp_sld)::stsld_ext,stsld_dext
-    real(kind=8),dimension(:),allocatable::kin_sld_spc
-
-    !-----------------------------
-    ! All species arrays
-    !-----------------------------
-    real(kind=8),dimension(nsp_aq_all)::daq_all,maqi_all,maqth_all,mwtaq_all
-    real(kind=8),dimension(nsp_gas_all)::dgasa_all,dgasg_all,mgasi_all,mgasth_all
-    real(kind=8),dimension(nsp_gas_all,3)::keqgas_h
-    real(kind=8),dimension(nsp_aq_all,4)::keqaq_h
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_c
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_s
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_no3
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_nh3
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_oxa
-    real(kind=8),dimension(nsp_aq_all,2)::keqaq_cl
-    real(kind=8),dimension(nsp_sld_all,nz)::ksld_all
-    real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::staq_all
-    real(kind=8),dimension(nsp_sld_all,nsp_gas_all)::stgas_all
-    real(kind=8),dimension(nsp_sld_all)::keqsld_all,mv_all,msldi_all,msldth_all,rfrc_sld_all,mwt_all,rfrc_sld_plant_all,msldi_allx
-    real(kind=8),dimension(nsp_sld_all)::keqcec_all
-    real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::keqiex_all
-    real(kind=8),dimension(nsp_sld_all)::rfrc_sld_all_2nd
-    real(kind=8),dimension(nrxn_ext_all,nz)::krxn1_ext_all
-    real(kind=8),dimension(nrxn_ext_all,nz)::krxn2_ext_all
-    real(kind=8),dimension(nrxn_ext_all,nsp_aq_all)::staq_ext_all,staq_dext_all
-    real(kind=8),dimension(nrxn_ext_all,nsp_gas_all)::stgas_ext_all,stgas_dext_all
-    real(kind=8),dimension(nrxn_ext_all,nsp_sld_all)::stsld_ext_all,stsld_dext_all
-
-    !-----------------------------
-    ! Aqueous species arrays
-    !-----------------------------
-    real(kind=8),dimension(nsp_aq,nz)::maqft,maqft_prev,maqfads,maqfads_prev
-    real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,dso4fdmaq_all,diosdmaq_all
-    real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,dmaqft_dpro_loc,maqft_loc,maqads_loc,dmaqft_dios_loc
-    real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqft_dmaqf_loc
-    real(kind=8),dimension(nsp_aq_all,nsp_gas_all,nz)::dmaqft_dmgas_loc
-    real(kind=8),dimension(nsp_aq_all,nz)::maqfads_loc,dmaqfads_dpro
-    real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqfads_dmaqf
-    real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_dmsld
-    real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,dso4fdmgas_all,diosdmgas_all
-    real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
-    real(kind=8),dimension(nsp_sld_all,nz)::msldx_loc,msldf_loc,beta_loc
-
-    !-----------------------------
-    ! Adsorption parameters
-    !-----------------------------
-    real(kind=8),dimension(nsp_aq,nsp_sld,nz)::maqfads_sld
-    real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::maqfads_sld_loc
-    real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nsp_aq_all,nz)::dmaqfads_sld_dmaqf
-    real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_sld_dmsld
-    real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_sld_dpro
-    real(kind=8),dimension(nsp_aq_all)::base_charge_all
-    real(kind=8),dimension(nsp_aq)::base_charge,minmaqads
-
-    !-----------------------------
-    ! Constant species arrays
-    !-----------------------------
-    real(kind=8),dimension(nsp_aq_all - nsp_aq,nz)::maqc
-    real(kind=8),dimension(nsp_gas_all - nsp_gas,nz)::mgasc
-    real(kind=8),dimension(nsp_sld_all - nsp_sld,nz)::msldc
-
-    !-----------------------------
-    ! CO2 species parameters
-    !-----------------------------
-    real(kind=8),dimension(4,5 + nrxn_ext + nsp_sld,nz)::flx_co2sp
-    real(kind=8),dimension(6,5 + nrxn_ext + nsp_sld)::int_flx_co2sp
-    character(5),dimension(6)::chrco2sp
-
-    !-----------------------------
-    ! Particle size distribution parameters
-    !-----------------------------
-    real(kind=8),dimension(nps)::ps,psd_th
-    real(kind=8),dimension(nps,nz)::psd,dVd,psd_old,dpsd,psdx,psd_save,ddpsd,dpsd_save
-    real(kind=8),dimension(nps,nz)::psd_rain
-    real(kind=8),dimension(nps,nz)::psd_norm,psdx_norm,dpsd_norm,psd_rain_norm
-    real(kind=8),dimension(nps)::psd_tmp,dvd_tmp
-    real(kind=8),dimension(nps)::psd_pr,dps,rough_ps_b
-    real(kind=8),dimension(nps)::psd_pr_norm,psd_norm_fact,psd_rain_tmp,intpsd,intpsd_tmp,intpsd_sum_tmp
-    real(kind=8),dimension(nz)::DV
-
-    !-----------------------------
-    ! Rain parameters
-    !-----------------------------
-    integer nps_rain_char_in,nps_rain_char != 4
-    real(kind=8),dimension(:),allocatable::pssigma_rain_list,psu_rain_list,psw_rain_list
-    real(kind=8),dimension(:),allocatable::pssigma_rain_list_in,psu_rain_list_in,psw_rain_list_in
     real(kind=8) psu_pr,pssigma_pr,psu_rain,psw_rain,pssigma_rain,ps_new,ps_newp,dvd_res,error_psd,volsld,flx_max_max,psd_th_flex
     real(kind=8) p80_tmp
     real(kind=8) :: ps_sigma_std = 1d0
@@ -315,8 +184,6 @@ module scepter_variables
     !-----------------------------
     ! Particle size distribution flux parameters
     !-----------------------------
-    real(kind=8),dimension(nps,nflx_psd,nz) :: flx_psd ! itflx,iadv,idif,irain,irxn,ires
-    real(kind=8),dimension(nps,nflx_psd,nz) :: flx_psd_norm ! itflx,iadv,idif,irain,irxn,ires
     logical :: do_psd = .true.
     logical :: do_psd_norm = .true.
     logical :: do_psd_full = .true.
@@ -326,28 +193,17 @@ module scepter_variables
     logical :: psd_loop = .true.
     logical :: psd_enable_skip = .true.
 
-    !-----------------------------
-    ! Mineral PSD parameters
-    !-----------------------------
-    real(kind=8),dimension(nsp_sld,nps,nz)::mpsd,mpsd_rain,dmpsd,mpsdx,mpsd_old,mpsd_save_2
-    real(kind=8),dimension(nsp_sld,nps)::mpsd_pr,mpsd_th,rough_ps
-    real(kind=8),dimension(nsp_sld,nps,nflx_psd,nz) :: flx_mpsd ! itflx,iadv,idif,irain,irxn,ires
-    real(kind=8),dimension(nsp_sld)::minsld
-
-    !-----------------------------
-    ! Surface area parameters
-    !-----------------------------
-    real(kind=8),dimension(nsp_sld,nz):: hr,ssa,hrprev,rough,hri,ssv,ssav,ssas
-    real(kind=8),dimension(nsp_sld):: hrii
+    real(kind=8),dimension(:),allocatable::pssigma_rain_list,psu_rain_list,psw_rain_list
+    real(kind=8),dimension(:),allocatable::pssigma_rain_list_in,psu_rain_list_in,psw_rain_list_in
+ 
     real(kind=8):: rough_c0 != 10d0**(3.3d0)
     real(kind=8):: rough_c1 != 0.33d0
-    character(10),dimension(nsp_sld)::roughref 
     character(10)::roughref_b
     integer nsld_sa
     character(5),dimension(:),allocatable::chrsld_sa
     real(kind=8) time_pbe,dt_pbe,dt_save
     integer nsld_nopsd
-        character(5),dimension(:),allocatable::chrsld_nopsd ! minerals whose PSDs tracking is not conducted for some reasons (e.g., too fast; mostly precipitating etc.)
+    character(5),dimension(:),allocatable::chrsld_nopsd ! minerals whose PSDs tracking is not conducted for some reasons (e.g., too fast; mostly precipitating etc.)
 
     !-----------------------------
     ! CEC parameters
@@ -358,10 +214,10 @@ module scepter_variables
     real(kind=8),dimension(nsp_sld_all,nsp_aq_all):: logkhaq_all,logkhaq_all_def
     real(kind=8),dimension(nsp_sld_all):: beta_all,beta_all_def
 
-    character(10),dimension(nsp_sld)::precstyle
-    real(kind=8),dimension(nsp_sld,nz)::solmod,fkin
-    logical:: anealing_dust = .false.
+
     logical,dimension(nsp_sld_all)::cec_pH_depend
+
+    logical:: anealing_dust = .false.
 
     integer ieqgas_h0,ieqgas_h1,ieqgas_h2
     data ieqgas_h0,ieqgas_h1,ieqgas_h2/1,2,3/
@@ -375,53 +231,25 @@ module scepter_variables
     integer ieqaq_so4,ieqaq_so42
     data ieqaq_so4,ieqaq_so42/1,2/
 
-    !-----------------------------
-    ! Flux indices
-    !-----------------------------
-#ifdef full_flux_report
-    integer,dimension(nsp_aq,nz)::iaqflx
-    integer,dimension(nsp_gas,nz)::igasflx
-    integer,dimension(nsp_sld,nz)::isldflx
-    integer,dimension(6,nz)::ico2flx
-#else
-    integer,dimension(nsp_aq)::iaqflx
-    integer,dimension(nsp_gas)::igasflx
-    integer,dimension(nsp_sld)::isldflx
-    integer,dimension(6)::ico2flx
-    integer iphint,iphint2
-    character(5),dimension(nsp_saveall)::chrsp_saveall
-#endif 
+
 
     integer isldprof,isldprof2,isldprof3,iaqprof,igasprof,isldsat,ibsd,irate,ipsd,ipsdv,ipsds,ipsdflx  &
         & ,isa,isa2,iaqprof2,iaqprof3,iaqprof4,iaqprof5,iaqprof6
 
-    integer,dimension(nsp_sld)::imix
-    real(kind=8),dimension(nz,nz,nsp_sld)::trans
-    real(kind=8),dimension(nsp_sld)::zml
     real(kind=8) zml_background,zml_OM,zml_dust
     real(kind=8) dbl_ref
     integer :: nz_disp = 10
-
-    real(kind=8),dimension(nz)::so4f,no3f,so4fprev
-
     real(kind=8) dt_prev
 
     logical print_cb,ph_error,save_trans,ads_error
     character(500) print_loc
 
     real(kind=8) def_dust,def_rain,def_pr,def_OM_frc
-    character(5),dimension(5 + nrxn_ext + nsp_sld)::chrflx
     character(3) chriz
     character(50) chrfmt
-
-    !-----------------------------
-    ! Flux indices
-    !-----------------------------
     integer::itflx,iadv,idif,irain,ires
     data itflx,iadv,idif,irain/1,2,3,4/
 
-    integer,dimension(nsp_sld)::irxn_sld 
-    integer,dimension(nrxn_ext)::irxn_ext
 
     !-----------------------------
     ! Save parameters
