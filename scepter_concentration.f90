@@ -6,14 +6,8 @@ module scepter_concentration
 
     implicit none
 
-    ! Declare which procedures are public
-    public :: get_base_charge
-    public :: get_mgasx_all
-    public :: get_msldx_all
-    public :: get_maqgasx_all
-    public :: get_maqt_all
-    public :: get_maqads_all_v4
-            
+    public :: get_base_charge, get_mgasx_all, get_msldx_all, get_maqgasx_all, get_maqt_all
+
     contains
     subroutine get_base_charge( &
         & nsp_aq_all & 

@@ -8,7 +8,7 @@ module scepter_constants
         
         integer,parameter :: nt = 50000000
 
-        real(kind=8),parameter :: rg = 8.3d-3     kJ mol^-1 K^-1
+        real(kind=8),parameter :: rg = 8.3d-3   !  kJ mol^-1 K^-1
         real(kind=8),parameter :: rg2 = 8.2d-2  ! L mol^-1 atm K^-1
 
         real(kind=8),parameter :: tempk_0 = 273d0
@@ -89,12 +89,10 @@ module scepter_constants
         real(kind=8),parameter :: mvcc = 36.934d0 ! cm3/mol; molar volume of Cc (CaCO3); Robie et al. 1978
         real(kind=8),parameter :: mvpy = 23.94d0 ! cm3/mol; molar volume of Pyrite (FeS2); Robie et al. 1978
         real(kind=8),parameter :: mvamal = 31.956d0 ! cm3/mol; assuming amorphous Al has molar volume of Gibsite (Al(OH)3); Robie et al. 1978
-        real(kind=8),parameter :: mvgb = 31.956d0 ! cm3/m
+        real(kind=8),parameter :: mvgb = 31.956d0 ! cm3/mol; molar volume of Gibsite (Al(OH)3); Robie et al. 1978
         ! Carbonates and Sulfides   
-        r volume of Gibsite (Al(OH)3); Robie et al. 1978
         real(kind=8),parameter :: mvct = 108.5d0 ! cm3/mol; molar volume of Chrysotile (Mg3Si2O5(OH)4); Robie et al. 1978
-        real(kind=8),parameter :: mv
-        real(kind=8),parameter :: mvarg = 34.15d0 ! cm3/mol; molar volume of Aragonite (CaCO3); Robie et al. 1978
+        real(kind=8),parameter :: mvfa = 46.39d0 ! cm3/mol; molar volume of Fayalite (Fe2SiO4); Robie et al. 1978
         real(kind=8),parameter :: mvdlm = 64.34d0 ! cm3/mol; molar volume of Dolomite (CaMg(CO3)2); Robie et al. 1978
 
         ! Amorphous and Secondary Mineralsfa = 46.39d0 ! cm3/mol; molar volume of Fayalite (Fe2SiO4); Robie et al. 1978
@@ -119,14 +117,11 @@ module scepter_constants
         real(kind=8),parameter :: mvom = 30d0/1.5d0 ! cm3/mol; molar volume of OM (CH2O); calculated assuming 30 g/mol of molar weight and 1.2 g/cm3 of density (Mayer et al., 2004; Ruhlmann et al.,2006)
         real(kind=8),parameter :: mvomb = 30d0/1.5d0 ! cm3/mol; assumed to be same as mvom
         real(kind=8),parameter :: mvg1 = 30d0/1.5d0 ! cm3/mol; assumed to be same as mvom
-        real(kind=8),parameter :: mvg2 
-        ! Organic Matter and Silica
-        = 30d0/1.5d0 ! cm3/mol; assumed to be same as mvom
+        real(kind=8),parameter :: mvg2 = 30d0/1.5d0 ! cm3/mol; assumed to be same as mvom
         real(kind=8),parameter :: mvg3 = 30d0/1.5d0 ! cm3/mol; assumed to be same as mvom
         real(kind=8),parameter :: mvamsi = 25.739d0 ! cm3/mol; molar volume of amorphous silica taken as cristobalite (SiO2); Robie et al. 1978
         real(kind=8),parameter :: mvphsi = 25.739d0 ! cm3/mol; molar volume of phytolith silica taken as cristobalite (SiO2); Robie et al. 1978
         real(kind=8),parameter :: mvarg = 34.15d0 ! cm3/mol; molar volume of aragonite; Robie et al. 1978
-        real(kind=8),parameter :: mvdlm = 64.34d0 ! cm3/mol; molar volume of dolomite; Robie et al. 1978
         real(kind=8),parameter :: mvhm = 30.274d0 ! cm3/mol; molar volume of hematite; Robie et al. 1978
         real(kind=8),parameter :: mvill = 139.35d0 ! cm3/mol; molar volume of illite (K0.6Mg0.25Al2        real(kind=8),parameter :: mvqtz = 22.688d0 ! cm3/mol; molar volume of quartz (SiO2); Robie et al. 1978
 
@@ -135,6 +130,7 @@ module scepter_constants
         real(kind=8),parameter :: mvgps = 74.69d0 ! cm3/mol; molar volume of gypsum (CaSO4*2H2O); Robie et al. 1978
         real(kind=8),parameter :: mvtm = 272.92d0 ! cm3/mol; molar volume of tremolite (Ca2Mg5(Si8O22)(OH)2); Robie et al. 1978
         real(kind=8),parameter :: mven = 31.31d0 ! cm3/mol; molar volume of enstatite (MgSiO3); te (FeSiO3); Robie and Hemingway 1995
+        real(kind=8),parameter :: mvfer = 33.00d0 ! cm3/mol; molar volume of ferrosilite (FeSiO3); Robie and Hemingway 1995
         real(kind=8),parameter :: mvopx = fr_fer_opx*mvfer +(1d0-fr_fer_opx)*mven !  cm3/mol; molar volume of clinopyroxene (FexMg(1-x)SiO3); assuming simple ('ideal'?) mixing
         real(kind=8),parameter :: mvmscv = 140.71d0 ! cm3/mol; molar volume of muscovite (KAl2(AlSi3O10)(OH)2); Robie et al. 1978
         real(kind=8),parameter :: mvplgp = 149.91d0 ! cm3/mol; molar volume of phlogopite (KMg3(AlSi3O10)(OH)2); Robie et al. 1978

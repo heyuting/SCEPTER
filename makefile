@@ -3,6 +3,7 @@
 
 FC            = gfortran
 # FC            = ifort
+FFLAGS = -O2 -Wall -cpp
 
 CPFLAGS       = 
 CPFLAGS       += -Dno_intr_findloc # need to use in cluster
@@ -49,7 +50,7 @@ LIBS          = -lopenblas
 
 ifneq (,$(findstring -Dmod_basalt_cmp,$(CPFLAGS)))
   # Found -Dmod_basalt_cmp
-  INC          = -I/storage/coda1/p-creinhard3/0/ykanzaki3/PyWeath/data 
+  INC          = -I/home/yhs5/project/SCEPTER/data 
 else
   # Not found
   INC          = 
@@ -62,20 +63,21 @@ else
   # Not found
 endif
 
-OBJS          = scepter.o 
-SRC           = scepter.f90  
-                            
+OBJS          = $(SRC:.f90=.o)
+SRC           = scepter_constants.f90 scepter_variables.f90 scepter_IO.f90 scepter_input.f90 $(wildcard scepter_*.f90)
 PROGRAM       = scepter
 
 all:            $(PROGRAM)
 
+# Linking step
 $(PROGRAM):     $(OBJS)
 	$(FC) $(OBJS) -o $(PROGRAM) -cpp $(CPFLAGS) $(CFLAGS) $(LIBS) $(LDFLAGS) $(INC)
 
-$(OBJS):        $(SRC) 
-	$(FC) $(SRC) -c -cpp $(CPFLAGS) $(CFLAGS) $(LIBS) $(LDFLAGS) $(INC)
+# Compilation rule
+%.o: %.f90
+	$(FC) $< -c -cpp $(CPFLAGS) $(CFLAGS) $(LIBS) $(LDFLAGS) $(INC)
 
-clean:;         rm -f *.o  *~ $(PROGRAM)
+clean:;         rm -f *.o  *.mod *~ $(PROGRAM)
 blank:;         truncate -s 0 *.out
 cleanall:;         rm -f *.o *.out *~ $(PROGRAM)
 
