@@ -330,9 +330,9 @@ module scepter_psd_implicit
                 stop
                 exit
             endif
-        #ifdef show_PSDiter
+#ifdef show_PSDiter
             print '(a,E11.3,a,i0,a,E11.3)', 'PSD--'//chrsp//': iteration error = ',error, ', iteration = ',iter,', time step [yr] = ',dt
-        #endif 
+#endif 
             iter = iter + 1 
             
             if (iter > iter_Max ) then
@@ -340,17 +340,6 @@ module scepter_psd_implicit
                 ! dt = dt/10d0
                 if (dt==0d0) then 
                     print *, chrsp,'dt==0d0; stop'
-                
-        ! #ifdef errmtx_printout
-                    ! open(unit=11,file='amx.txt',status = 'replace')
-                    ! open(unit=12,file='ymx.txt',status = 'replace')
-                    ! do ie = 1,nsp3*(nz)
-                        ! write(11,*) (amx3(ie,ie2),ie2 = 1,nsp3*nz)
-                        ! write(12,*) ymx3(ie)
-                    ! enddo 
-                    ! close(11)
-                    ! close(12)      
-        ! #endif 
                     stop
                 endif 
                 flgback = .true.
@@ -386,13 +375,7 @@ module scepter_psd_implicit
                 mp_tmp = vol * psdx(ips,min(iz+1,nz)) * dps(ips)
                 
                 dzinv = 1d0/dz(iz)
-                
-                ! drxn_tmp = & 
-                    ! & vol * 1d0 * dps(ips) &
-                    ! & * surf * psdx(ips,iz) * dps(ips) * kpsd(iz) &
-                    ! & + vol * psdx(ips,iz) * dps(ips) &
-                    ! & * su
-                ! drxn_tmp = surf * 1d0 * dps(ips) * kpsd(iz) 
+            
                 drxn_tmp = 0d0 
                 
                 w_tmp = w(iz)
@@ -440,7 +423,7 @@ module scepter_psd_implicit
             enddo
         enddo
             
-        #ifdef dispPSDiter
+#ifdef dispPSDiter
 
         write(chrfmt,'(i0)') nflx_psd
         chrfmt = '(a5,'//trim(adjustl(chrfmt))//'(1x,a11))'
@@ -457,7 +440,7 @@ module scepter_psd_implicit
         enddo 
         print *
 
-        #endif     
+#endif     
         
 
                 
@@ -848,17 +831,6 @@ module scepter_psd_implicit
                 ! dt = dt/10d0
                 if (dt==0d0) then 
                     print *, chrsp,'dt==0d0; stop'
-                
-        ! #ifdef errmtx_printout
-                    ! open(unit=11,file='amx.txt',status = 'replace')
-                    ! open(unit=12,file='ymx.txt',status = 'replace')
-                    ! do ie = 1,nsp3*(nz)
-                        ! write(11,*) (amx3(ie,ie2),ie2 = 1,nsp3*nz)
-                        ! write(12,*) ymx3(ie)
-                    ! enddo 
-                    ! close(11)
-                    ! close(12)      
-        ! #endif 
                     stop
                 endif 
                 flgback = .true.
@@ -1018,7 +990,7 @@ module scepter_psd_implicit
             enddo
         enddo
             
-        #ifdef dispPSDiter
+#ifdef dispPSDiter
 
         write(chrfmt,'(i0)') nflx_psd
         chrfmt = '(a5,'//trim(adjustl(chrfmt))//'(1x,a11))'
@@ -1035,7 +1007,7 @@ module scepter_psd_implicit
         enddo 
         print *
 
-        #endif     
+#endif     
         
 
                 

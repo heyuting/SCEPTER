@@ -36,11 +36,11 @@ module scepter_weathering_main
 
         implicit none
 
-        !-----------------------------
-        #ifdef mod_basalt_cmp
-        #include <basalt_defines.h>
-        #endif                                    
-        !-------------------------
+!-----------------------------
+#ifdef mod_basalt_cmp
+#include <basalt_defines.h>
+#endif                                    
+!-------------------------
 
         tc = tcin
         qin = q0
@@ -51,9 +51,9 @@ module scepter_weathering_main
         nsp_gas_cnst = nsp_gas_all - nsp_gas
         nsp3 = nsp_sld + nsp_aq + nsp_gas
 
-        #ifdef calcw_full
+#ifdef calcw_full
         nsp3 = nsp3 + 1
-        #endif 
+#endif 
 
         isldprof    = idust + nsp_sld + nsp_gas + nsp_aq + 1
         isldprof2   = idust + nsp_sld + nsp_gas + nsp_aq + 2
@@ -1149,9 +1149,9 @@ module scepter_weathering_main
             base = trim(adjustl(base))//'_sevol1'
         elseif (surfevol2) then 
             base = trim(adjustl(base))//'_sevol2'
-        #if defined(surfssa)
+#if defined(surfssa)
             base = trim(adjustl(base))//'_ssa'
-        #endif 
+#endif 
         endif 
 
         if (.not. regular_grid) then 
@@ -1178,7 +1178,7 @@ module scepter_weathering_main
         ! write(runname,*) trim(adjustl(sim_name))
         write(runname,*) 'output'
 
-        #ifdef full_flux_report
+#ifdef full_flux_report
         do isps = 1, nsp_sld 
             do iz = 1, nz
                 isldflx(isps,iz) = idust + (isps-1)*nz + iz
@@ -1206,7 +1206,7 @@ module scepter_weathering_main
             enddo 
         enddo 
         ! pause
-        #else 
+#else 
         do isps = 1, nsp_sld 
             isldflx(isps) = idust + isps
         enddo 
@@ -1226,7 +1226,7 @@ module scepter_weathering_main
         iphint  = idust + nsp_sld + nsp_aq + nsp_gas + 7
         iphint2 = idust + nsp_sld + nsp_aq + nsp_gas + 8
 
-        #endif 
+#endif 
 
         ! print*,workdir
         ! print*,runname
@@ -1238,7 +1238,7 @@ module scepter_weathering_main
 
         ! call system ('cp gases.in solutes.in slds.in extrxns.in '//trim(adjustl(workdir))//trim(adjustl(runname)))
 
-        #ifdef full_flux_report
+#ifdef full_flux_report
 
         write(chrfmt,'(i0)') nflx+2
 
@@ -1288,7 +1288,7 @@ module scepter_weathering_main
             enddo 
         enddo 
 
-        #else 
+#else 
 
         write(chrfmt,'(i0)') nflx+1
 
@@ -1363,7 +1363,7 @@ module scepter_weathering_main
             close(ico2flx(ico2))
         enddo 
 
-        #endif 
+#endif 
 
         open(idust, file=trim(adjustl(flxdir))//'/'//'dust.txt', &
             & status='replace')
@@ -1468,15 +1468,15 @@ module scepter_weathering_main
 
 
         sat = min(1.0d0,(1d0-satup)*z/zsat + satup)
-        #ifdef satconvex 
+#ifdef satconvex 
         sat = min(1.0d0, satup+(1d0-satup)*(z/zsat)**2d0)
-        #endif 
-        #ifdef satconcave 
+#endif 
+#ifdef satconcave 
         sat = min(1.0d0, 1d0-(1d0-satup)*(1d0-z/zsat)**2d0)
         do iz=1,nz
             if (z(iz)>=zsat) sat(iz)=1d0
         enddo 
-        #endif 
+#endif 
 
         ! getting user-defined SA
 
@@ -1786,20 +1786,6 @@ module scepter_weathering_main
             endif 
         endif 
 
-        ! #ifdef surfssa
-        ! hri = ssa_cmn*1d6/poro
-        ! mvab_save = mvab
-        ! mvan_save = mvan
-        ! mvcc_save = mvcc
-        ! mvfo_save = mvfo
-        ! mvka_save = mvka
-        ! mvab = mwtab 
-        ! mvan = mwtan 
-        ! mvcc = mwtcc 
-        ! mvfo = mwtfo 
-        ! mvka = mwtka 
-        ! #endif 
-
         dt = maxdt
 
         dt = 1d-20 ! for basalt exp?
@@ -1822,7 +1808,7 @@ module scepter_weathering_main
             ! poro(iz) = 1d0 - sum(msld(:,iz)*mv(:)*1d-6)
         ! enddo 
             
-        #ifdef ksld_chk
+#ifdef ksld_chk
         open (idust, file='./ksld_chk.txt', status ='unknown',action='write')
         write(chrfmt,'(i0)') nsp_sld_all
         chrfmt = '(a12,'//trim(adjustl(chrfmt))//'(1x,a5))'
@@ -1858,7 +1844,7 @@ module scepter_weathering_main
         enddo 
         close(idust)
         ! stop
-        #endif 
+#endif 
 
         omega = 0d0
 
@@ -3206,19 +3192,6 @@ module scepter_weathering_main
             endif    
             
             if (poroevol) then 
-                ! poroprev = poro
-        ! #ifdef surfssa
-                ! mvab = mvab_save 
-                ! mvan = mvan_save 
-                ! mvcc = mvcc_save 
-                ! mvfo = mvfo_save 
-                ! mvka = mvka_save 
-        ! #endif 
-                ! poro = poroi + (mabi-mabx)*(mvab)*1d-6  &
-                    ! & +(mfoi-mfox)*(mvfo)*1d-6 &
-                    ! & +(mani-manx)*(mvan)*1d-6 &
-                    ! & +(mcci-mccx)*(mvcc)*1d-6 &
-                    ! & +(mkai-mkax)*(mvka)*1d-6 
                 if (iwtype == iwtype_flex) then 
                     poro = poroi
                     ! not constant but calculated as defined (only applicable when unit of msld(x) is mol per bulk soil)
@@ -3232,18 +3205,6 @@ module scepter_weathering_main
                         & ,poro &! inout
                         & )
                 endif 
-                ! poro = poroi
-                ! do isps=1,nsp_sld
-                    ! poro = poro + (msldi(isps)-msldx(isps,:))*mv(isps)*1d-6
-                ! enddo
-                ! do iz=1,nz
-                    ! DV(iz) = 0d0
-                    ! do isps = 1,nsp_sld 
-                        ! DV(iz) = DV(iz) + ( flx_sld(isps, 4 + isps,iz) + flx_sld(isps, idif ,iz) + flx_sld(isps, irain ,iz) ) &
-                            ! & *mv(isps)*1d-6*dt 
-                    ! enddo 
-                    ! poro(iz) = poroprev(iz) - DV(iz)
-                ! enddo 
                 
                 if (any(poro<0d0)) then 
                     print*,'negative porosity: stop'
@@ -3316,7 +3277,7 @@ module scepter_weathering_main
 
                 if (disp_FULL_ON) disp = disp_FULL
                 
-        #ifndef calcw_full
+#ifndef calcw_full
                 w(:) = w0 
                 dwsporo = 0d0        
                 wsporo = w_btm*(1d0 - poroi)
@@ -3360,7 +3321,7 @@ module scepter_weathering_main
                     up,dwn,cnr,adf & ! output 
                     ,w,nz   & ! input &
                     )
-        #endif 
+#endif 
                 do isps=1,nsp_sld
                     hr(isps,:) = hri(isps,:)*rough(isps,:)
                     if (surfevol1 ) then 
@@ -4592,7 +4553,7 @@ module scepter_weathering_main
                 
                 irec_prof=irec_prof+1
                 
-        #ifdef full_flux_report
+#ifdef full_flux_report
                 do isps=1,nsp_sld 
                     do iz=1,nz
                         write(chriz,'(i3.3)') iz
@@ -4647,7 +4608,7 @@ module scepter_weathering_main
                         close(ico2flx(ico2,iz))
                     enddo 
                 enddo 
-        #else
+#else
                 do isps=1,nsp_sld 
                     open(isldflx(isps), file=trim(adjustl(flxdir))//'/' &
                         & //'flx_sld-'//trim(adjustl(chrsld(isps)))//'.txt', action='write',status='old',position='append')
@@ -4715,7 +4676,7 @@ module scepter_weathering_main
                 write(iphint2,*) time,(-log10(gamma(iz)*prox(iz)),iz=1,nz)
                 close(iphint2)
                 
-        #endif 
+#endif 
                 flx_recorded = .true.
                 
                 open(isldprof,file=trim(adjustl(profdir))//'/' &

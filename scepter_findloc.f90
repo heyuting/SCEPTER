@@ -16,7 +16,7 @@ module scepter_findloc
     ! Custom implementation of findloc for compatibility
     ! Searches for a specific string in an array of strings
     !-----------------------------------------------------------------------
-    #ifdef no_intr_findloc
+#ifdef no_intr_findloc
         function findloc(chrlist_in,chrspecific,dim)
             implicit none
             character(*),intent(in)::chrlist_in(:),chrspecific
@@ -31,6 +31,6 @@ module scepter_findloc
                 endif 
             enddo 
         endfunction findloc
-    #endif 
+#endif 
     
 endmodule scepter_findloc

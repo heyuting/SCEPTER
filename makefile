@@ -3,7 +3,7 @@
 
 FC            = gfortran
 # FC            = ifort
-FFLAGS = -O2 -Wall -cpp
+FFLAGS = -O2 -Wall -cpp $(CPFLAGS)
 
 CPFLAGS       = 
 CPFLAGS       += -Dno_intr_findloc # need to use in cluster
@@ -64,7 +64,7 @@ else
 endif
 
 OBJS          = $(SRC:.f90=.o)
-SRC           = scepter_constants.f90 scepter_variables.f90 scepter_IO.f90 scepter_input.f90 $(wildcard scepter_*.f90)
+SRC           = scepter_constants.f90 scepter_variables.f90 scepter_IO.f90 scepter_input.f90 $(wildcard scepter*.f90)
 PROGRAM       = scepter
 
 all:            $(PROGRAM)

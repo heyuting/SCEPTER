@@ -79,11 +79,11 @@ module scepter_eq_charge
         real(kind=8),dimension(nsp_gas_all,3,nz)::fkeqgas_h
         real(kind=8),dimension(nsp_aq_all,4,nz)::fkeqaq_h
         real(kind=8),dimension(nsp_aq_all,2,nz)::fkeqaq_c,fkeqaq_s,fkeqaq_no3,fkeqaq_nh3,fkeqaq_oxa,fkeqaq_cl
-        #ifdef debug_phcalc
+#ifdef debug_phcalc
         logical::debug = .true. 
-        #else
+#else
         logical::debug = .false. 
-        #endif
+#endif
 
         path_tmp = print_loc(:index(print_loc,'.txt')-5)
         index_tmp = print_loc(index(print_loc,'.txt')-4:)

@@ -666,7 +666,7 @@ module scepter_psd_pbe
                     stop
                     exit
                 endif
-        #ifdef show_PSDiter
+#ifdef show_PSDiter
                 print '(a,E11.3,a,i0,a,E11.3,a,E11.3,a,E11.3,a,E11.3)' &
                     & , 'PBE--'//chrsp//': iteration error = ',error, ', iteration = ',iter &
                     & ,', time step [yr] = ',dt &
@@ -674,7 +674,7 @@ module scepter_psd_pbe
                     & , ', min psd = ',minval(psdxx(:,iz))   &
                     & , ', diss-rate [m/yr] = ',kpsdx(iz) 
                 ! print *, error > tol
-        #endif 
+#endif 
                 iter = iter + 1 
                 
                 if (iter > iter_Max ) then

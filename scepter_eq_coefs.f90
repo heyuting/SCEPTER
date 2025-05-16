@@ -126,9 +126,9 @@ module scepter_eq_coefs
         ! Glycerophosphate (value for glycerol from Schramke et al. 1999 for now)
         daq_all(findloc(chraq_all,'glp',dim=1)) = 0.93d-5 * sec2yr *1d-4 ! sec2yr*1d-4 converting cm2/s to m2/yr
 
-        #ifdef disp_cnst
+#ifdef disp_cnst
         daq_all=disp_cnst
-        #endif 
+#endif 
 
         ! --------------------------------- gas diff
 
@@ -151,9 +151,9 @@ module scepter_eq_coefs
         dgasa_all(findloc(chrgas_all,'pn2o',dim=1)) = k_arrhenius(4.89d-02    , 15d0+tempk_0, tc+tempk_0, 20.33417d0, rg)
         dgasg_all(findloc(chrgas_all,'pn2o',dim=1)) = k_arrhenius(441.504d0   , 15d0+tempk_0, tc+tempk_0, 4.18d0    , rg)
 
-        #ifdef disp_cnst
+#ifdef disp_cnst
         dgasa_all=disp_cnst
-        #endif 
+#endif 
 
         kw = -14.93d0+0.04188d0*tc-0.0001974d0*tc**2d0+0.000000555d0*tc**3d0-0.0000000007581d0*tc**4d0  ! Murakami et al. 2011
         kw = k_arrhenius(10d0**(-14.35d0), tempk_0+15.0d0, tempk_0+tc, 58.736742d0, rg) ! from Kanzaki and Murakami 2015
@@ -223,7 +223,7 @@ module scepter_eq_coefs
         keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h2) = 1d0/(10d0**-1.25d0) ! from Lawrence et al., GCA, 2014
 
         ! Sikora buffer (consts from Goldberg et al., 2002)
-        #ifdef Goldberg_Sikora
+#ifdef Goldberg_Sikora
         ! AcO- + H+ = AcOH  
         keqaq_h(findloc(chraq_all,'ac',dim=1),ieqaq_h1) =  &
             & k_arrhenius(10d0**(4.756d0),25d0+tempk_0,tc+tempk_0,0.41d0,rg)  
@@ -242,7 +242,7 @@ module scepter_eq_coefs
 
 
         ! Sikora buffer (consts at 25oC from Sikora 2006 with temperature dependence remaining from Goldberg)
-        #else
+#else
         ! AcO- + H+ = AcOH  
         keqaq_h(findloc(chraq_all,'ac',dim=1),ieqaq_h1) =  &
             & k_arrhenius(10d0**(4.48d0),25d0+tempk_0,tc+tempk_0,0.41d0,rg)  
@@ -258,7 +258,7 @@ module scepter_eq_coefs
         ! TEA + H+ = TEA+  
         keqaq_h(findloc(chraq_all,'tea',dim=1),ieqaq_h1) =  &
             & k_arrhenius(10d0**(8.09d0),25d0+tempk_0,tc+tempk_0,-33.6d0,rg)  
-        #endif 
+#endif 
             
         ! Mehlich buffer (consts from Goldberg et al., 2002)
 

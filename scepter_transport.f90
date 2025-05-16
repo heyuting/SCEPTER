@@ -1205,7 +1205,7 @@ module scepter_transport
                         enddo 
 
 
-        #ifdef calcw_full
+#ifdef calcw_full
                 col =  nsp3*(iz-1)+ nsp3
                 amx3(row,col) = ( &
                     & - ( - sporo_tmp* m_tmp)/dz(iz)*merge(dt,1d0,dt_norm)  &
@@ -1220,7 +1220,7 @@ module scepter_transport
                     & ) &
                     ! & *wp_tmp  &
                     & *merge(0.0d0,1d0,m_tmp<mth_tmp*sw_red)
-        #endif                         
+#endif                         
                         ! modifications with porosity and dz are made in make_trans subroutine
                         do iiz = 1, nz
                             col = nsp3*(iiz-1)+isps
@@ -1265,7 +1265,7 @@ module scepter_transport
             
             endif 
             
-        #ifdef calcw_full
+#ifdef calcw_full
             do iz=1,nz
                 row = nsp3*(iz-1) + nsp3
                         
@@ -1390,7 +1390,7 @@ module scepter_transport
             
             
             enddo
-        #endif 
+#endif 
             
 
             do iz = 1, nz   ! ==============================
@@ -2055,7 +2055,7 @@ module scepter_transport
                     enddo
                 endif
                 
-        #ifdef errmtx_printout
+#ifdef errmtx_printout
                 open(unit=11,file='amx.txt',status = 'replace')
                 open(unit=12,file='ymx.txt',status = 'replace')
                 do ie = 1,nsp3*(nz)
@@ -2064,7 +2064,7 @@ module scepter_transport
                 enddo 
                 close(11)
                 close(12) 
-        #endif 
+#endif 
                 
                 flgback = .true.
                 ! pause
@@ -2078,7 +2078,7 @@ module scepter_transport
             if (any(isnan(ymx3))) then
                 print*,'error in soultion'
                 
-        #ifdef errmtx_printout
+#ifdef errmtx_printout
                 open(unit=11,file='amx.txt',status = 'replace')
                 open(unit=12,file='ymx.txt',status = 'replace')
                 do ie = 1,nsp3*(nz)
@@ -2087,7 +2087,7 @@ module scepter_transport
                 enddo 
                 close(11)
                 close(12)   
-        #endif     
+#endif     
                 
                 flgback = .true.
                 ! pause
@@ -2182,7 +2182,7 @@ module scepter_transport
                     endif
                 enddo 
                 
-        #ifdef calcw_full
+#ifdef calcw_full
                 row =  nsp3*(iz-1) + nsp3
                 if (isnan(ymx3(row))) then 
                     print *,'nan at', iz,z(iz),'w'
@@ -2193,7 +2193,7 @@ module scepter_transport
                 emx3(row) = abs(ymx3(row))  
                 
                 w(iz) = w(iz) + ymx3(row)
-        #endif 
+#endif 
 
             end do 
 
@@ -2211,7 +2211,7 @@ module scepter_transport
                 print*, 'isnan(error), info/=0,any(isnan(msldx)),any(isnan(maqx)),any(isnan(mgasx))'
                 print*,isnan(error),info,any(isnan(msldx)),any(isnan(maqx)),any(isnan(mgasx))
                 
-        #ifdef errmtx_printout
+#ifdef errmtx_printout
                 open(unit=11,file='amx.txt',status = 'replace')
                 open(unit=12,file='ymx.txt',status = 'replace')
                 do ie = 1,nsp3*(nz)
@@ -2220,7 +2220,7 @@ module scepter_transport
                 enddo 
                 close(11)
                 close(12)   
-        #endif 
+#endif 
                 
                 ! dt = dt/10d0
                 flgback = .true.
@@ -2242,7 +2242,7 @@ module scepter_transport
                 if (dt==0d0) then 
                     print *, 'dt==0d0; stop'
                 
-        #ifdef errmtx_printout
+#ifdef errmtx_printout
                     open(unit=11,file='amx.txt',status = 'replace')
                     open(unit=12,file='ymx.txt',status = 'replace')
                     do ie = 1,nsp3*(nz)
@@ -2251,7 +2251,7 @@ module scepter_transport
                     enddo 
                     close(11)
                     close(12)      
-        #endif 
+#endif 
                     stop
                 endif 
                 flgback = .true.
@@ -2259,7 +2259,7 @@ module scepter_transport
                 exit 
             end if
             
-        #ifdef dispiter
+#ifdef dispiter
                 write(chrfmt,'(i0)') nz_disp
                 chrfmt = '(a5,'//trim(adjustl(chrfmt))//'(1x,E11.3))'
                 
@@ -2285,7 +2285,7 @@ module scepter_transport
                     enddo 
                 endif 
                 print *
-        #endif     
+#endif     
 
         enddo   
         ! ==============================================
@@ -2953,7 +2953,7 @@ module scepter_transport
         ! Display iteration results for debugging/monitoring
         ! This section prints out saturation, pH, and flux information
         !==============================================
-        #ifdef dispiter
+#ifdef dispiter
             print *
             print *,' [saturation & pH] '
             if (nsp_sld>0) then 
@@ -2994,7 +2994,7 @@ module scepter_transport
                 enddo 
             endif 
             print *
-        #endif     
+#endif     
 
         if (chkflx .and. dt > dt_th) then 
             flx_max_max = 0d0

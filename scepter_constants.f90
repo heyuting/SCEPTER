@@ -1,9 +1,9 @@
 module scepter_constants
     implicit none
-        !-----------------------------
-        #ifdef mod_basalt_cmp
-        #include <basalt_defines.h>
-        #endif 
+!-----------------------------
+#ifdef mod_basalt_cmp
+#include <basalt_defines.h>
+#endif 
         public
         
         integer,parameter :: nt = 50000000
@@ -39,7 +39,7 @@ module scepter_constants
         real(kind=8),parameter :: fr_opx_agt = 0.0d0 ! OPX (or 1 - Ca:(Fe+Mg)) fraction for Augite; 0.0 - 1.0; from Beerling et al 2020
         real(kind=8),parameter :: fr_napx_agt = 0.1d0 ! Na fraction for Augite (or Na/(Ca+Fe+Mg)); 0.0 - 1.0; from Beerling et al 2020
 
-        #ifndef mod_basalt_cmp
+#ifndef mod_basalt_cmp
         real(kind=8),parameter :: fr_si_gbas = 1d0 ! Si fraction of glass basalt; Pollyea and Rimstidt 2017 (referring to basalt used by Oelkers and Gislason (2001) and Gundbrandsson et al. (2011)
         real(kind=8),parameter :: fr_al_gbas = 0.358d0 ! Al fraction of glass basalt
         real(kind=8),parameter :: fr_na_gbas = 0.079d0 ! Na fraction of glass basalt
@@ -55,7 +55,7 @@ module scepter_constants
         real(kind=8),parameter :: fr_mg_cbas = 0.281d0 ! Mg fraction of clystaline basalt
         real(kind=8),parameter :: fr_ca_cbas = 0.264d0 ! Ca fraction of clystaline basalt
         real(kind=8),parameter :: fr_fe2_cbas = 0.190d0 ! Fe2 fraction of clystaline basalt
-        #else
+#else
         real(kind=8),parameter :: fr_si_gbas  = def_bas_si_fr
         real(kind=8),parameter :: fr_al_gbas  = def_bas_al_fr
         real(kind=8),parameter :: fr_na_gbas  = def_bas_na_fr
@@ -70,7 +70,7 @@ module scepter_constants
         real(kind=8),parameter :: fr_mg_cbas  = def_bas_mg_fr
         real(kind=8),parameter :: fr_ca_cbas  = def_bas_ca_fr
         real(kind=8),parameter :: fr_fe2_cbas = def_bas_fe2_fr
-        #endif
+#endif
 
         real(kind=8),parameter :: mvka = 99.52d0 ! cm3/mol; molar volume of kaolinite; Robie et al. 1978
         real(kind=8),parameter :: mvfo = 43.79d0 ! cm3/mol; molar volume of Fo; Robie et al. 1978
@@ -324,13 +324,13 @@ module scepter_constants
         real(kind=8),parameter :: disp_FULL = 1d0
 
         ! integer,parameter :: nrec_prof = 22
-        #ifndef nrec_prof_in
+#ifndef nrec_prof_in
         integer,parameter :: nrec_prof = 20
         logical :: linear_rectime = .false. 
-        #else
+#else
         integer,parameter :: nrec_prof = nrec_prof_in
         logical :: linear_rectime = .true. 
-        #endif 
+#endif 
         integer,parameter :: nrec_flx = 60
 
         ! type of uplift vs porosity relationship
@@ -343,12 +343,12 @@ module scepter_constants
         integer,parameter :: iwtype_spwcnst = 2
         integer,parameter :: iwtype_flex = 3
         
-        #ifndef imixtype_background_in 
-        #define imixtype_background_in  1
-        #endif 
-        #ifndef imixtype_OM_in 
-        #define imixtype_OM_in  1
-        #endif 
+#ifndef imixtype_background_in 
+        integer,parameter :: imixtype_background_in = 1
+#endif 
+#ifndef imixtype_OM_in 
+        integer,parameter :: imixtype_OM_in = 1
+#endif 
 
         integer,parameter :: imixtype_nobio = 0
         integer,parameter :: imixtype_fick = 1
@@ -381,9 +381,9 @@ module scepter_constants
         real(kind=8),parameter :: tol_dvd = 1d-4 ! 
         ! integer,parameter :: nps_rain_char = 4
         integer,parameter :: nflx_psd = 6
-        #ifndef full_flux_report
+#ifndef full_flux_report
         integer,parameter ::nsp_saveall = 1
-        #endif 
+#endif 
         integer,parameter ::idust = 15
         integer,parameter :: nph = 101
 

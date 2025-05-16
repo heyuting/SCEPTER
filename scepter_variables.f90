@@ -155,11 +155,11 @@ module scepter_variables
     !-----------------------------
     ! Dust and wave parameters
     !-----------------------------
-    #ifdef def_flx_save_alltime
+#ifdef def_flx_save_alltime
     logical :: flx_save_alltime = .true.
-    #else
+#else
     logical :: flx_save_alltime = .false.
-    #endif
+#endif
 
     real(kind=8),intent(in) :: step_tau ! = 0.1d0 ! yr time duration during which dust is added
     real(kind=8) :: tol_step_tau = 1d-6 ! yr time duration during which dust is added
@@ -197,10 +197,10 @@ module scepter_variables
     !-----------------------------
     ! Recording time parameters
     !-----------------------------
-    #ifndef nrec_prof_in
+#ifndef nrec_prof_in
     data rectime_prof /1d1,3d1,1d2,3d2,1d3,3d3,1d4,3d4 &
         & ,1d5,2d5,3d5,4d5,5d5,6d5,7d5,8d5,9d5,1d6,1.1d6,1.2d6/
-    #endif 
+#endif 
     real(kind=8) :: savetime = 1d3
     real(kind=8) :: dsavetime = 1d3
     logical :: rectime_scheme_old = .false.
@@ -444,19 +444,19 @@ module scepter_variables
     !-----------------------------
     ! Flux indices
     !-----------------------------
-    #ifdef full_flux_report
+#ifdef full_flux_report
     integer,dimension(nsp_aq,nz)::iaqflx
     integer,dimension(nsp_gas,nz)::igasflx
     integer,dimension(nsp_sld,nz)::isldflx
     integer,dimension(6,nz)::ico2flx
-    #else
+#else
     integer,dimension(nsp_aq)::iaqflx
     integer,dimension(nsp_gas)::igasflx
     integer,dimension(nsp_sld)::isldflx
     integer,dimension(6)::ico2flx
     integer iphint,iphint2
     character(5),dimension(nsp_saveall)::chrsp_saveall
-    #endif 
+#endif 
 
     !-----------------------------
     ! Profile indices
