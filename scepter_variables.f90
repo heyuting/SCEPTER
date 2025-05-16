@@ -10,61 +10,21 @@ module scepter_variables
     real(kind=8) ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,w,qin,p80,plant_rain,zml_ref,tc,rainpowder_2nd &
         & ,step_tau
     integer count_dtunchanged_Max
-    !-----------------------------
-    ! Model dimensions and time parameters
-    !-----------------------------
-    real(kind=8),intent(in) :: ztot != 3.0d0 ! m
-    real(kind=8),intent(in) :: ttot  ! yr
-    integer,intent(in) :: nz != 30 
-    real(kind=8) z(nz),dz(nz)
-    real(kind=8),intent(in) :: tcin != 15.0d0 ! deg celsius
+
     real(kind=8) dt  ! yr 
     real(kind=8) time
-
-    !-----------------------------
-    ! Gas concentrations
-    !-----------------------------
     real(kind=8) pco2i,pnh3i,proi
-
-    !-----------------------------
-    ! Density and porosity parameters
-    !-----------------------------
     real(kind=8) :: rho_grain = 2.7d0 ! g/cm3 as soil grain density 
     real(kind=8) :: rho_grain_calc,rho_grain_calcx != 2.7d0 ! g/cm3 as soil grain density 
     real(kind=8) :: rho_grain_z(nz),sldvolfrac(nz) != 2.7d0 ! g/cm3 as soil grain density 
     real(kind=8) :: rho_error,rho_tol, poroi_calc 
     real(kind=8) :: mblk(nz),mblki,mblkix,mblkx(nz)
     logical(kind=8) :: incld_blk
-
-    !-----------------------------
-    ! Plant and rain parameters
-    !-----------------------------
-    real(kind=8),intent(in)::plant_rain != 1d2 ! 1 t/ha/yr; approximate values from Vanveen et al. 1991 ! 
     real(kind=8)::zsupp_plant = 0.3d0 !  e-folding decrease
-    real(kind=8),intent(in)::rainpowder != 30d2 !  g/m2/yr 
-    real(kind=8),intent(in)::rainpowder_2nd != 30d2 !  g/m2/yr 
-    real(kind=8),intent(in)::zsupp != 0.3d0 !  e-folding decrease
-
-    !-----------------------------
-    ! Soil properties
-    !-----------------------------
     real(kind=8) sat(nz), poro(nz), torg(nz), tora(nz), tc, satup
-    real(kind=8),intent(in) :: poroi != 0.5d0
-    real(kind=8),intent(in) :: satup0 != 0.10d0
-    real(kind=8),intent(in) :: zsat != 5d0  ! water table depth [m] 
-
-    !-----------------------------
-    ! Uplift and flow parameters
-    !-----------------------------
-    real(kind=8),intent(in) :: w0 != 5.0d-5 ! m yr^-1, uplift rate ** default 
     real(kind=8) w(nz),w_btm,wx(nz),wexp(nz)
-    real(kind=8),intent(in) :: q0 != 10d-1 ! m yr^-1
     real(kind=8) v(nz),qin
 
-    !-----------------------------
-    ! Particle size parameters
-    !-----------------------------
-    real(kind=8),intent(in) :: p80 != 1d-6 ! m 
 
     !-----------------------------
     ! Transport and dispersion parameters
@@ -104,7 +64,6 @@ module scepter_variables
     real(kind=8) rectime_flx(nrec_flx)
     character(3) chr
     character(256) runname,workdir, chrz(3), chrq(3),base,fname, chrrain, cwd,flxdir, profdir
-    character(500),intent(in):: runname_save
     character(500) loc_runname_save
     integer irec_prof, irec_flx, iter
     logical flx_recorded
@@ -161,7 +120,6 @@ module scepter_variables
     logical :: flx_save_alltime = .false.
 #endif
 
-    real(kind=8),intent(in) :: step_tau ! = 0.1d0 ! yr time duration during which dust is added
     real(kind=8) :: tol_step_tau = 1d-6 ! yr time duration during which dust is added
     real(kind=8) :: wave_tau = 2d0 ! yr periodic time for wave 
     real(kind=8) :: dust_norm = 0d0
@@ -220,42 +178,25 @@ module scepter_variables
     logical :: flgreducedt_prev = .false.
     real(kind=8) time_start, time_fin, progress_rate, progress_rate_prev
     integer count_dtunchanged,count_dtunchanged_Max_loc  
-    integer,intent(in):: count_dtunchanged_Max  
 
-    !-----------------------------
-    ! Species parameters
-    !-----------------------------
     integer :: nsp_sld != 5
-    integer,intent(in)::nsp_sld_2 != 25
     integer ::nsp_sld_cnst != nsp_sld_all - nsp_sld
-    integer,intent(in)::nsp_aq != 5
     integer ::nsp_aq_cnst != nsp_aq_all - nsp_aq
-    integer,intent(in)::nsp_gas != 2
     integer ::nsp_gas_cnst != nsp_gas_all - nsp_gas
     integer ::nsp3 != nsp_sld + nsp_aq + nsp_gas
-    integer,intent(in)::nrxn_ext != 1
     integer :: nflx ! = 5 + nrxn_ext + nsp_sld  
-    integer,intent(in)::nsld_kinspc_in
     integer :: nsld_kinspc,nsld_kinspc_add
 
-    !-----------------------------
-    ! Species names and identifiers
-    !-----------------------------
-    character(5),dimension(nsp_sld),intent(in)::chrsld
     character(5),dimension(:),allocatable::chrsld_2
     character(5),dimension(nsp_sld_all)::chrsld_all
     character(5),dimension(nsp_sld_all - nsp_sld)::chrsld_cnst
-    character(5),dimension(nsp_aq),intent(in)::chraq
     character(5),dimension(nsp_aq_ph)::chraq_ph
     character(5),dimension(nsp_aq_all)::chraq_all
     character(5),dimension(nsp_aq_all - nsp_aq)::chraq_cnst
-    character(5),dimension(nsp_gas),intent(in)::chrgas
     character(5),dimension(nsp_gas_ph)::chrgas_ph
     character(5),dimension(nsp_gas_all)::chrgas_all
     character(5),dimension(nsp_gas_all - nsp_gas)::chrgas_cnst
-    character(5),dimension(nrxn_ext),intent(in)::chrrxn_ext
     character(5),dimension(nrxn_ext_all)::chrrxn_ext_all
-    character(5),dimension(nsld_kinspc_in),intent(in)::chrsld_kinspc_in
     character(5),dimension(:),allocatable ::chrsld_kinspc
 
     !-----------------------------
@@ -279,7 +220,6 @@ module scepter_variables
     real(kind=8),dimension(nrxn_ext,nsp_gas)::stgas_ext,stgas_dext
     real(kind=8),dimension(nrxn_ext,nsp_aq)::staq_ext,staq_dext
     real(kind=8),dimension(nrxn_ext,nsp_sld)::stsld_ext,stsld_dext
-    real(kind=8),dimension(nsld_kinspc_in),intent(in)::kin_sld_spc_in
     real(kind=8),dimension(:),allocatable::kin_sld_spc
 
     !-----------------------------
@@ -418,17 +358,11 @@ module scepter_variables
     real(kind=8),dimension(nsp_sld_all,nsp_aq_all):: logkhaq_all,logkhaq_all_def
     real(kind=8),dimension(nsp_sld_all):: beta_all,beta_all_def
 
-    !-----------------------------
-    ! Precipitation parameters
-    !-----------------------------
     character(10),dimension(nsp_sld)::precstyle
     real(kind=8),dimension(nsp_sld,nz)::solmod,fkin
     logical:: anealing_dust = .false.
     logical,dimension(nsp_sld_all)::cec_pH_depend
 
-    !-----------------------------
-    ! Equilibrium indices
-    !-----------------------------
     integer ieqgas_h0,ieqgas_h1,ieqgas_h2
     data ieqgas_h0,ieqgas_h1,ieqgas_h2/1,2,3/
 
@@ -458,43 +392,23 @@ module scepter_variables
     character(5),dimension(nsp_saveall)::chrsp_saveall
 #endif 
 
-    !-----------------------------
-    ! Profile indices
-    !-----------------------------
     integer isldprof,isldprof2,isldprof3,iaqprof,igasprof,isldsat,ibsd,irate,ipsd,ipsdv,ipsds,ipsdflx  &
         & ,isa,isa2,iaqprof2,iaqprof3,iaqprof4,iaqprof5,iaqprof6
 
-    !-----------------------------
-    ! Mixing parameters
-    !-----------------------------
     integer,dimension(nsp_sld)::imix
     real(kind=8),dimension(nz,nz,nsp_sld)::trans
     real(kind=8),dimension(nsp_sld)::zml
-    real(kind=8),intent(in)::zml_ref
     real(kind=8) zml_background,zml_OM,zml_dust
     real(kind=8) dbl_ref
     integer :: nz_disp = 10
 
-    !-----------------------------
-    ! Sulfate and nitrate parameters
-    !-----------------------------
     real(kind=8),dimension(nz)::so4f,no3f,so4fprev
 
-    !-----------------------------
-    ! Time step parameters
-    !-----------------------------
     real(kind=8) dt_prev
 
-    !-----------------------------
-    ! Output control parameters
-    !-----------------------------
     logical print_cb,ph_error,save_trans,ads_error
     character(500) print_loc
-    character(500),intent(in):: sim_name
 
-    !-----------------------------
-    ! Default parameters
-    !-----------------------------
     real(kind=8) def_dust,def_rain,def_pr,def_OM_frc
     character(5),dimension(5 + nrxn_ext + nsp_sld)::chrflx
     character(3) chriz

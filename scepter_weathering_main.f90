@@ -41,6 +41,41 @@ module scepter_weathering_main
 #include <basalt_defines.h>
 #endif                                    
 !-------------------------
+        real(kind=8),intent(in) :: ztot != 3.0d0 ! m
+        real(kind=8),intent(in) :: ttot  ! yr
+        integer,intent(in) :: nz != 30 
+        real(kind=8) z(nz),dz(nz)
+        real(kind=8),intent(in) :: tcin != 15.0d0 ! deg celsius
+        real(kind=8),intent(in)::plant_rain != 1d2 ! 1 t/ha/yr; approximate values from Vanveen et al. 1991 ! 
+        real(kind=8),intent(in)::rainpowder != 30d2 !  g/m2/yr 
+        real(kind=8),intent(in)::rainpowder_2nd != 30d2 !  g/m2/yr 
+        real(kind=8),intent(in)::zsupp != 0.3d0 !  e-folding decrease
+        real(kind=8),intent(in) :: poroi != 0.5d0
+        real(kind=8),intent(in) :: satup0 != 0.10d0
+        real(kind=8),intent(in) :: zsat != 5d0  ! water table depth [m] 
+        real(kind=8),intent(in) :: w0 != 5.0d-5 ! m yr^-1, uplift rate ** default 
+        real(kind=8),intent(in) :: q0 != 10d-1 ! m yr^-1
+        real(kind=8),intent(in) :: p80 != 1d-6 ! m 
+        
+        character(500),intent(in):: runname_save
+        real(kind=8),intent(in) :: step_tau ! = 0.1d0 ! yr time duration during which dust is added
+        integer,intent(in):: count_dtunchanged_Max  
+        integer,intent(in)::nsp_sld_2 != 25
+        integer,intent(in)::nsp_aq != 5
+        integer,intent(in)::nsp_gas != 2
+        integer,intent(in)::nrxn_ext != 1
+        integer,intent(in)::nrxn_ext != 1
+        integer,intent(in)::nsld_kinspc_in
+        character(5),dimension(nsp_sld),intent(in)::chrsld
+        character(5),dimension(nsp_aq),intent(in)::chraq
+        character(5),dimension(nsp_gas),intent(in)::chrgas
+        character(5),dimension(nrxn_ext),intent(in)::chrrxn_ext
+        character(5),dimension(nsld_kinspc_in),intent(in)::chrsld_kinspc_in
+
+        real(kind=8),dimension(nsld_kinspc_in),intent(in)::kin_sld_spc_in
+        real(kind=8),intent(in)::zml_ref
+        character(500),intent(in):: sim_name
+
 
         tc = tcin
         qin = q0
