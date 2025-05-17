@@ -1,7 +1,6 @@
 module scepter_thermodynamics
     use scepter_constants
     use scepter_variables
-    use scepter_concentration
     use scepter_findloc
     implicit none
     private
@@ -619,8 +618,6 @@ contains
 
     endsubroutine sld_therm
 
-
-
     subroutine calc_gamma_davies( &
         & nz,iosx,tc,charge &
         & ,gamma,dgamma_dis &
@@ -664,4 +661,4 @@ contains
     endfunction k_q10
     !ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 
-end module scepter_thermodynamics 
+endmodule scepter_thermodynamics 

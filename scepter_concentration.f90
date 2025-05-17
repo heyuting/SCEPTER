@@ -288,9 +288,11 @@ module scepter_concentration
                         & + fkeq*keqaq_nh3(ispa,ispa_nh3)*1d0*(pnh3x*knh3/k1nh3*prox)**rspa_nh3 &
                         & )
                     dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) &
-                        & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(pnh3x*knh3/k1nh3)**rspa_nh3*rspa_nh3*prox**(rspa_nh3-1d0)
+                        & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(pnh3x*knh3/k1nh3)&
+                        & **rspa_nh3*rspa_nh3*prox **(rspa_nh3-1d0)
                     dmaqft_dmgas(ispa,ipnh3,:) = dmaqft_dmgas(ispa,ipnh3,:) &
-                        & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(knh3/k1nh3*prox)**rspa_nh3*rspa_nh3*pnh3x**(rspa_nh3-1d0)
+                        & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(knh3/k1nh3*prox)&
+                        & **rspa_nh3*rspa_nh3*pnh3x**(rspa_nh3-1d0)
                     dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + ( &
                         & + dfkeq_dios*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(pnh3x*knh3/k1nh3*prox)**rspa_nh3 & 
                         & )
@@ -349,7 +351,8 @@ module scepter_concentration
                         endif 
                         maqft_loc(ispa,:) = maqft_loc(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**rspa_h
                         dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**rspa_h
-                        dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*rspa_h*prox**(rspa_h-1d0)
+                        dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + &
+                                & fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*rspa_h*prox**(rspa_h-1d0)
                         dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**rspa_h
                     endif 
                 enddo 
@@ -369,7 +372,8 @@ module scepter_concentration
                             dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + ( &
                                 & + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(-rspa_h)/prox**(1d0+rspa_h) &
                                 & )
-                            dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)/prox**rspa_h
+                            dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + &
+                                &  dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)/prox**rspa_h
                         endif 
                     elseif(ispa_h==2)then
                         rspa_h = real(ispa_h-1,kind=8)
@@ -378,8 +382,10 @@ module scepter_concentration
                             dfkeq_dios = 2d0*gamma(1,:)*dgamma_dios(1,:)
                             maqft_loc(ispa,:) = maqft_loc(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**rspa_h
                             dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**rspa_h
-                            dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*rspa_h*prox**(rspa_h-1d0)
-                            dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**rspa_h
+                            dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + &
+                            & fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*rspa_h*prox**(rspa_h-1d0)
+                            dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + &
+                            & dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**rspa_h
                         endif 
                     endif 
                 enddo 
@@ -422,7 +428,8 @@ module scepter_concentration
                         endif 
                         maqft_loc(ispa,:) = maqft_loc(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)/prox**rspa_h
                         dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*1d0/prox**rspa_h
-                        dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(-rspa_h)/prox**(1d0+rspa_h)
+                        dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) + &
+                        &  fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(-rspa_h)/prox**(1d0+rspa_h)
                         dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)/prox**rspa_h
                     endif 
                 enddo 
@@ -460,8 +467,10 @@ module scepter_concentration
                                 print *, 'something is wrong'
                                 stop
                             endif 
-                            maqft_loc(ispa,:) = maqft_loc(ispa,:) + fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x/prox**2d0
-                            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x/prox**2d0
+                            maqft_loc(ispa,:) = maqft_loc(ispa,:) +&
+                                & fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x/prox**2d0
+                            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + &
+                                & fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x/prox**2d0
                             dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) &
                                 & + fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(-2d0)/prox**3d0
                             dmaqft_dmgas(ispa,ipco2,:) = dmaqft_dmgas(ispa,ipco2,:) &
@@ -504,8 +513,10 @@ module scepter_concentration
                                 print *, 'something is wrong'
                                 stop
                             endif 
-                            maqft_loc(ispa,:) = maqft_loc(ispa,:) + fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x/prox
-                            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x/prox
+                            maqft_loc(ispa,:) = maqft_loc(ispa,:) + &
+                                & fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x/prox
+                            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + &
+                                & fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x/prox
                             dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:) &
                                 & + fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(-1d0)/prox**2d0
                             dmaqft_dmgas(ispa,ipco2,:) = dmaqft_dmgas(ispa,ipco2,:) &
@@ -563,7 +574,8 @@ module scepter_concentration
                         dmaqft_dmaqf(iso4,ispa,:) = dmaqft_dmaqf(iso4,ispa,:) + ( &
                             & + rspa_s*fkeq*keqaq_s(ispa,ispa_s)*1d0*so4f**rspa_s &
                             & )
-                        dmaqft_dios(iso4,:) = dmaqft_dios(iso4,:) + rspa_s*dfkeq_dios*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s
+                        dmaqft_dios(iso4,:) = dmaqft_dios(iso4,:) + &
+                                &rspa_s*dfkeq_dios*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s
                     endif 
                 enddo 
                 ! account for complexation with free NO3
@@ -604,9 +616,11 @@ module scepter_concentration
                         dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_no3(ispa,ispa_no3)*1d0*no3f**rspa_no3
                         dmaqft_dmaqf(ispa,ino3,:) = dmaqft_dmaqf(ispa,ino3,:) &
                             & + fkeq*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*rspa_no3*no3f**(rspa_no3-1d0)
-                        dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3
+                        dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + &
+                            & dfkeq_dios*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3
                         
-                        maqft_loc(ino3,:) = maqft_loc(ino3,:) + rspa_no3*fkeq*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3
+                        maqft_loc(ino3,:) = maqft_loc(ino3,:) + &
+                            & rspa_no3*fkeq*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3
                         dmaqft_dmaqf(ino3,ino3,:) = dmaqft_dmaqf(ino3,ino3,:) + ( &
                             & + rspa_no3*fkeq*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*rspa_no3*no3f**(rspa_no3-1d0) &
                             & )
@@ -656,7 +670,8 @@ module scepter_concentration
                         dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:) + fkeq*keqaq_cl(ispa,ispa_cl)*1d0*clf**rspa_cl
                         dmaqft_dmaqf(ispa,icl,:) = dmaqft_dmaqf(ispa,icl,:) &
                             & + fkeq*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*rspa_cl*clf**(rspa_cl-1d0)
-                        dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + dfkeq_dios*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl
+                        dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:) + &
+                            & dfkeq_dios*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl
                         
                         maqft_loc(icl,:) = maqft_loc(icl,:) + rspa_cl*fkeq*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl
                         dmaqft_dmaqf(icl,icl,:) = dmaqft_dmaqf(icl,icl,:) + ( &
@@ -665,7 +680,8 @@ module scepter_concentration
                         dmaqft_dmaqf(icl,ispa,:) = dmaqft_dmaqf(icl,ispa,:) + ( &
                             & + rspa_cl*fkeq*keqaq_cl(ispa,ispa_cl)*1d0*clf**rspa_cl &
                             & )
-                        dmaqft_dios(icl,:) = dmaqft_dios(icl,:) + rspa_cl*dfkeq_dios*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl
+                        dmaqft_dios(icl,:) = dmaqft_dios(icl,:) + &
+                            &rspa_cl*dfkeq_dios*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl
                     endif 
                 enddo 
                 ! account for complexation with HOxa-
@@ -728,13 +744,15 @@ module scepter_concentration
                         maqft_loc(ioxa,:) = maqft_loc(ioxa,:) &
                             & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)*oxaf**rspa_oxa_3/prox**rspa_oxa
                         dmaqft_dmaqf(ioxa,ioxa,:) = dmaqft_dmaqf(ioxa,ioxa,:) + ( &
-                            & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)*rspa_oxa_3*oxaf**(rspa_oxa_3-1d0)/prox**rspa_oxa &
+                            & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)&
+                            &*rspa_oxa_3*oxaf**(rspa_oxa_3-1d0)/prox**rspa_oxa &
                             & )
                         dmaqft_dmaqf(ioxa,ispa,:) = dmaqft_dmaqf(ioxa,ispa,:) + ( &
                             & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*1d0*oxaf**rspa_oxa_3/prox**rspa_oxa &
                             & )
                         dmaqft_dpro(ioxa,:) = dmaqft_dpro(ioxa,:) &
-                            & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)*oxaf**rspa_oxa_3*(-rspa_oxa)/prox**(rspa_oxa+1d0)
+                            & + rspa_oxa_2*fkeq*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)&
+                            & *oxaf**rspa_oxa_3*(-rspa_oxa)/prox**(rspa_oxa+1d0)
                         dmaqft_dios(ioxa,:) = dmaqft_dios(ioxa,:) &
                             & + rspa_oxa_2*dfkeq_dios*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,:)*oxaf**rspa_oxa_3/prox**rspa_oxa
                     endif 
@@ -747,7 +765,8 @@ module scepter_concentration
             dmaqft_dpro(ispa,:) = dmaqft_dpro(ispa,:)/maqf_loc(ispa,:)
             dmaqft_dios(ispa,:) = dmaqft_dios(ispa,:)/maqf_loc(ispa,:)
             
-            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:)/maqf_loc(ispa,:) + maqft_loc(ispa,:)*(-1d0)/maqf_loc(ispa,:)**2d0
+            dmaqft_dmaqf(ispa,ispa,:) = dmaqft_dmaqf(ispa,ispa,:)/maqf_loc(ispa,:) + &
+            & maqft_loc(ispa,:)*(-1d0)/maqf_loc(ispa,:)**2d0
             do ispa2 = 1,nsp_aq_all
                 if (ispa2==ispa) cycle 
                 dmaqft_dmaqf(ispa,ispa2,:) = dmaqft_dmaqf(ispa,ispa2,:)/maqf_loc(ispa,:)
@@ -930,14 +949,16 @@ module scepter_concentration
                         selectcase(trim(adjustl(chraq_all(ispa))))
                             ! case('na','k','mg','ca')
                             case('na','k','mg','ca','al')
-                                a = a - keqiex_all(isps,ispa)* maqf_loc(ispa,:)*(x/prox)**base_charge(ispa)*gamma**base_charge(ispa)
+                                a = a - keqiex_all(isps,ispa)* maqf_loc(ispa,:)*&
+                                    & (x/prox)**base_charge(ispa)*gamma**base_charge(ispa)
                                 da = da - keqiex_all(isps,ispa)* maqf_loc(ispa,:)*(1d0/prox)**base_charge(ispa) &
                                     &   *base_charge(ispa)*x**(base_charge(ispa)-1d0)*gamma**base_charge(ispa) &
                                     & - keqiex_all(isps,ispa)* maqf_loc(ispa,:)*(x/prox)**base_charge(ispa) &
                                     &   *base_charge(ispa)*gamma**(base_charge(ispa)-1d0)*dgamma
                                 da_dmaqf(ispa,:) = da_dmaqf(ispa,:) &
                                     & - keqiex_all(isps,ispa)*1d0*(x/prox)**base_charge(ispa)*gamma**base_charge(ispa)
-                                da_dpro = da_dpro - keqiex_all(isps,ispa)*maqf_loc(ispa,:)*x**base_charge(ispa)*gamma**base_charge(ispa) &
+                                da_dpro = da_dpro -&
+                                    & keqiex_all(isps,ispa)*maqf_loc(ispa,:)*x**base_charge(ispa)*gamma**base_charge(ispa) &
                                     & *(-base_charge(ispa))*(1d0/prox)**(base_charge(ispa)+1d0)
                             case default 
                                 ! do nothing
@@ -1070,18 +1091,21 @@ module scepter_concentration
                                 
                             maqfads_sld_loc(ispa,isps,:) = maqfads_sld_loc(ispa,isps,:)  &
                                 & + (1d0/base_charge(ispa)) * ( &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(msldf_loc(isps,:)/prox)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*&
+                                & keqiex_all(isps,ispa)*(msldf_loc(isps,:)/prox)**base_charge(ispa) &
                                 &   *gamma_loc(isps,:)**base_charge(ispa) &
                                 & )
                             dmaqfads_sld_dpro(ispa,isps,:) = dmaqfads_sld_dpro(ispa,isps,:) &
                                 & + (1d0/base_charge(ispa)) * ( &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*msldf_loc(isps,:)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*&
+                                & msldf_loc(isps,:)**base_charge(ispa) &
                                 &   *(-1d0*base_charge(ispa))/(prox**(base_charge(ispa)+1d0))  &
                                 &   *gamma_loc(isps,:)**base_charge(ispa) &
                                 & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(1d0/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*msldf_loc(isps,:)**(base_charge(ispa)-1d0) * dmsldf_dpro(isps,:) &
                                 &   *gamma_loc(isps,:)**base_charge(ispa) &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(msldf_loc(isps,:)/prox)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*&
+                                & (msldf_loc(isps,:)/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*gamma_loc(isps,:)**(base_charge(ispa)-1d0)*dgamma_dpro(isps,:) &
                                 & )
                             do ispa2=1,nsp_aq_all
@@ -1090,7 +1114,8 @@ module scepter_concentration
                                 & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(1d0/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*msldf_loc(isps,:)**(base_charge(ispa)-1d0) * dmsldf_dmaqf(isps,ispa2,:)  &
                                 &   *gamma_loc(isps,:)**base_charge(ispa) &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(msldf_loc(isps,:)/prox)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*&
+                                & (msldf_loc(isps,:)/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*gamma_loc(isps,:)**(base_charge(ispa)-1d0)*dgamma_dmaqf(isps,ispa2,:) &
                                 & )
                             enddo 
@@ -1102,14 +1127,16 @@ module scepter_concentration
                                 & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa) *(1d0/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*msldf_loc(isps,:)**(base_charge(ispa)-1d0) * dmsldf_dmsld(isps,:)   &
                                 &   *gamma_loc(isps,:)**base_charge(ispa) &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*(msldf_loc(isps,:)/prox)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*&
+                                & (msldf_loc(isps,:)/prox)**base_charge(ispa) &
                                 &   *base_charge(ispa)*gamma_loc(isps,:)**(base_charge(ispa)-1d0)*dgamma_dmsld(isps,:) &
                                 & )
                         else 
                                 
                             maqfads_sld_loc(ispa,isps,:) = maqfads_sld_loc(ispa,isps,:) &
                                 & + (1d0/base_charge(ispa)) *fact * ( &
-                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*msldf_loc(isps,:)**base_charge(ispa) &
+                                & + keqcec_all(isps)*msldx_loc(isps,:)*keqiex_all(isps,ispa)*&
+                                & msldf_loc(isps,:)**base_charge(ispa) &
                                 & )
                             dmaqfads_sld_dpro(ispa,isps,:) = dmaqfads_sld_dpro(ispa,isps,:) &
                                 & + (1d0/base_charge(ispa)) *fact * ( &

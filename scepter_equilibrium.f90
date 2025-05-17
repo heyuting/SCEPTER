@@ -274,7 +274,8 @@ module scepter_equilibrium
                             stop
                         endif 
                         f1(iz) = f1(iz) &
-                            & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(rspa_h+ss_add(iz))
+                            & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)&
+                            & *maqf_loc(ispa,iz)*prox(iz)**(rspa_h+ss_add(iz))
                         df1(iz) = df1(iz) &
                             & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(rspa_h+ss_add(iz)) &
                             & * prox(iz)**(rspa_h+ss_add(iz)-1d0)
@@ -303,13 +304,16 @@ module scepter_equilibrium
                                 & + (base_charge(ispa) - rspa_h)*fkeq(iz) &
                                 &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(ss_add(iz)-rspa_h)
                             df1(iz) = df1(iz) &
-                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
+                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*&
+                                & maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
                                 & * prox(iz)**(ss_add(iz)-rspa_h-1d0)
                             d2f1(iz) = d2f1(iz) &
-                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
+                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*&
+                                & maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
                                 & * (ss_add(iz)-rspa_h-1d0)* prox(iz)**(ss_add(iz)-rspa_h-2d0)
                             df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz) &
-                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*1d0*prox(iz)**(ss_add(iz)-rspa_h)
+                                & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*&
+                                & 1d0*prox(iz)**(ss_add(iz)-rspa_h)
                         endif 
                     elseif(ispa_h==2)then
                         if ( keqaq_h(ispa,ispa_h) > 0d0) then 
@@ -320,11 +324,11 @@ module scepter_equilibrium
                                 & + (base_charge(ispa) + rspa_h)*fkeq(iz) &
                                 &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(rspa_h+ss_add(iz))
                             df1(iz) = df1(iz) &
-                                & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(rspa_h+ss_add(iz)) &
-                                & * prox(iz)**(rspa_h+ss_add(iz)-1d0)
+                                & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)&
+                                & *(rspa_h+ss_add(iz)) * prox(iz)**(rspa_h+ss_add(iz)-1d0)
                             d2f1(iz) = d2f1(iz) &
-                                & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(rspa_h+ss_add(iz)) &
-                                & * (rspa_h+ss_add(iz)-1d0)*prox(iz)**(rspa_h+ss_add(iz)-2d0)
+                                & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)&
+                                & *(rspa_h+ss_add(iz)) * (rspa_h+ss_add(iz)-1d0)*prox(iz)**(rspa_h+ss_add(iz)-2d0)
                             df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz) &
                                 & + (base_charge(ispa) + rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*1d0*prox(iz)**(rspa_h+ss_add(iz))
                         endif 
@@ -370,13 +374,15 @@ module scepter_equilibrium
                             stop
                         endif 
                         f1(iz) = f1(iz) &
-                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(ss_add(iz)-rspa_h)
+                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)&
+                            & *maqf_loc(ispa,iz)*prox(iz)**(ss_add(iz)-rspa_h)
                         df1(iz) = df1(iz) &
-                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
+                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)& 
+                            & *maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
                             & * prox(iz)**(ss_add(iz)-rspa_h-1d0)
                         d2f1(iz) = d2f1(iz) &
-                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*(ss_add(iz)-rspa_h) &
-                            & * (ss_add(iz)-rspa_h-1d0)* prox(iz)**(ss_add(iz)-rspa_h-2d0)
+                            & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)&
+                            & *(ss_add(iz)-rspa_h) * (ss_add(iz)-rspa_h-1d0)* prox(iz)**(ss_add(iz)-rspa_h-2d0)
                         df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz) &
                             & + (base_charge(ispa) - rspa_h)*fkeq(iz)*keqaq_h(ispa,ispa_h)*1d0*prox(iz)**(ss_add(iz)-rspa_h)
                     endif 
@@ -518,16 +524,19 @@ module scepter_equilibrium
                             stop
                         endif 
                         f1(iz) = f1(iz)  + (base_charge(ispa)-2d0*rspa_s) &
-                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*so4f(iz)**rspa_s*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*&
+                            & so4f(iz)**rspa_s*prox(iz)**ss_add(iz)
                         df1(iz) = df1(iz)  + (base_charge(ispa)-2d0*rspa_s) &
-                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*so4f(iz)**rspa_s*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
+                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*so4f(iz)&
+                            & **rspa_s*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
                         d2f1(iz) = d2f1(iz)  + (base_charge(ispa)-2d0*rspa_s) &
                             & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*so4f(iz)**rspa_s*ss_add(iz) &
                             & *(ss_add(iz)-1d0)*prox(iz)**(ss_add(iz)-2d0)
                         df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz)  + (base_charge(ispa)-2d0*rspa_s) &
                             & *fkeq(iz)*keqaq_s(ispa,ispa_s)*1d0*so4f(iz)**rspa_s*prox(iz)**ss_add(iz)
                         df1dmaqf(iso4,iz) = df1dmaqf(iso4,iz)  + (base_charge(ispa)-2d0*rspa_s) &
-                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*rspa_s*so4f(iz)**(rspa_s-1d0)*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,iz)*rspa_s*so4f(iz)&
+                            & **(rspa_s-1d0)*prox(iz)**ss_add(iz)
                     endif 
                 enddo 
                 if (print_res .and. f1(iz)<0d0) then 
@@ -543,9 +552,10 @@ module scepter_equilibrium
                             fkeq(iz) = gamma(ic1,iz)*gamma(1,iz)**rspa_no3/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
                                 & + dgamma_dios(ic1,iz)*gamma(1,iz)**rspa_no3/gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*rspa_no3*gamma(1,iz)**(rspa_no3-1d0)*dgamma_dios(1,iz)/gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*gamma(1,iz)**rspa_no3*(-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz) &
-                                & )
+                                & + gamma(ic1,iz)*rspa_no3*gamma(1,iz)**(rspa_no3-1d0)* &
+                                & dgamma_dios(1,iz)/gamma(ic2,iz) &
+                                & + gamma(ic1,iz)*gamma(1,iz)**rspa_no3*(-1d0)/gamma(ic2,iz)** &
+                                & 2d0*dgamma_dios(ic2,iz))
                         elseif ( ic1==0 .and. ic2 > 0) then  
                             fkeq(iz) = gamma(1,iz)**rspa_no3/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
@@ -568,16 +578,19 @@ module scepter_equilibrium
                             stop
                         endif 
                         f1(iz) = f1(iz)  + (base_charge(ispa)+base_charge(ino3)*rspa_no3) &
-                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*no3f(iz)**rspa_no3*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz) &
+                            & *no3f(iz)**rspa_no3*prox(iz)**ss_add(iz)
                         df1(iz) = df1(iz)  + (base_charge(ispa)+base_charge(ino3)*rspa_no3) &
-                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*no3f(iz)**rspa_no3*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
+                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*no3f(iz)** &
+                            & rspa_no3*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
                         d2f1(iz) = d2f1(iz)  + (base_charge(ispa)+base_charge(ino3)*rspa_no3) &
-                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*no3f(iz)**rspa_no3*ss_add(iz) &
-                            & *(ss_add(iz)-1d0)*prox(iz)**(ss_add(iz)-2d0)
+                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*no3f(iz)** &
+                            & rspa_no3*ss_add(iz)*(ss_add(iz)-1d0)*prox(iz)**(ss_add(iz)-2d0)
                         df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz)  + (base_charge(ispa)+base_charge(ino3)*rspa_no3) &
                             & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*1d0*no3f(iz)**rspa_no3*prox(iz)**ss_add(iz)
                         df1dmaqf(ino3,iz) = df1dmaqf(ino3,iz)  + (base_charge(ispa)+base_charge(ino3)*rspa_no3) &
-                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)*rspa_no3*no3f(iz)**(rspa_no3-1d0)*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,iz)* &
+                            & rspa_no3*no3f(iz)**(rspa_no3-1d0)*prox(iz)**ss_add(iz)
                     endif 
                 enddo 
                 if (print_res .and. f1(iz)<0d0) then 
@@ -593,9 +606,9 @@ module scepter_equilibrium
                             fkeq(iz) = gamma(ic1,iz)*gamma(1,iz)**rspa_cl/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
                                 & + dgamma_dios(ic1,iz)*gamma(1,iz)**rspa_cl/gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*rspa_cl*gamma(1,iz)**(rspa_cl-1d0)*dgamma_dios(1,iz)/gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*gamma(1,iz)**rspa_cl*(-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz) &
-                                & )
+                                & + gamma(ic1,iz)*rspa_cl*gamma(1,iz)**(rspa_cl-1d0) &
+                                & *dgamma_dios(1,iz)/gamma(ic2,iz) + gamma(ic1,iz)*gamma(1,iz) &
+                                & **rspa_cl*(-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz))
                         elseif ( ic1==0 .and. ic2 > 0) then  
                             fkeq(iz) = gamma(1,iz)**rspa_cl/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
@@ -618,16 +631,19 @@ module scepter_equilibrium
                             stop
                         endif 
                         f1(iz) = f1(iz)  + (base_charge(ispa)+base_charge(icl)*rspa_cl) &
-                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz)**rspa_cl*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz) &
+                            & **rspa_cl*prox(iz)**ss_add(iz)
                         df1(iz) = df1(iz)  + (base_charge(ispa)+base_charge(icl)*rspa_cl) &
-                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz)**rspa_cl*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
+                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz) &
+                            & **rspa_cl*ss_add(iz)*prox(iz)**(ss_add(iz)-1d0)
                         d2f1(iz) = d2f1(iz)  + (base_charge(ispa)+base_charge(icl)*rspa_cl) &
-                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz)**rspa_cl*ss_add(iz) &
-                            & *(ss_add(iz)-1d0)*prox(iz)**(ss_add(iz)-2d0)
+                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*clf(iz)** & 
+                            & rspa_cl*ss_add(iz)*(ss_add(iz)-1d0)*prox(iz)**(ss_add(iz)-2d0)
                         df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz)  + (base_charge(ispa)+base_charge(icl)*rspa_cl) &
                             & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*1d0*clf(iz)**rspa_cl*prox(iz)**ss_add(iz)
                         df1dmaqf(icl,iz) = df1dmaqf(icl,iz)  + (base_charge(ispa)+base_charge(icl)*rspa_cl) &
-                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)*rspa_cl*clf(iz)**(rspa_cl-1d0)*prox(iz)**ss_add(iz)
+                            & *fkeq(iz)*keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,iz)* &
+                            & rspa_cl*clf(iz)**(rspa_cl-1d0)*prox(iz)**ss_add(iz)
                     endif 
                 enddo 
                 if (print_res .and. f1(iz)<0d0) then 
@@ -652,42 +668,46 @@ module scepter_equilibrium
                             fkeq(iz) = gamma(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa)/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
                                 & + dgamma_dios(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa)/gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*(rspa_oxa_3-rspa_oxa)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz) &
-                                &       /gamma(ic2,iz) &
-                                & + gamma(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa)*(-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz) &
-                                & )
+                                & + gamma(ic1,iz)*(rspa_oxa_3-rspa_oxa)*gamma(1,iz)** &
+                                & (rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz)/gamma(ic2,iz) &
+                                & + gamma(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa)*(-1d0)/gamma(ic2,iz) &
+                                & **2d0*dgamma_dios(ic2,iz))
                         elseif ( ic1==0 .and. ic2 > 0) then  
                             fkeq(iz) = gamma(1,iz)**(rspa_oxa_3-rspa_oxa)/gamma(ic2,iz)
                             dfkeq_dios(iz) = ( &
-                                & + (rspa_oxa_3-rspa_oxa)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz)/gamma(ic2,iz) &
-                                & + gamma(1,iz)**(rspa_oxa_3-rspa_oxa)*(-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz) &
-                                & )
+                                & + (rspa_oxa_3-rspa_oxa)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa-1d0)* &
+                                & dgamma_dios(1,iz)/gamma(ic2,iz) + gamma(1,iz)**(rspa_oxa_3-rspa_oxa)* &
+                                & (-1d0)/gamma(ic2,iz)**2d0*dgamma_dios(ic2,iz))
                         elseif ( ic1>0 .and. ic2 == 0) then  
                             fkeq(iz) = gamma(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa)
                             dfkeq_dios(iz) = ( &
                                 & + dgamma_dios(ic1,iz)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa) &
-                                & + gamma(ic1,iz)*(rspa_oxa_3-rspa_oxa)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz) &
-                                & )
+                                & + gamma(ic1,iz)*(rspa_oxa_3-rspa_oxa)*gamma(1,iz)** &
+                                & (rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz))
                         elseif ( ic1==0 .and. ic2 == 0) then
                             fkeq(iz) = gamma(1,iz)**(rspa_oxa_3-rspa_oxa)
                             dfkeq_dios(iz) = ( &
-                                & + (rspa_oxa_3-rspa_oxa)*gamma(1,iz)**(rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz) &
-                                & )
+                                & + (rspa_oxa_3-rspa_oxa)*gamma(1,iz)** &
+                                & (rspa_oxa_3-rspa_oxa-1d0)*dgamma_dios(1,iz))
                         else    
                             print *, 'something is wrong'
                             stop
                         endif 
                         f1(iz) = f1(iz)  + (base_charge(ispa)-rspa_oxa_2) &
-                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3*prox(iz)**(ss_add(iz)-rspa_oxa)
+                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)* &
+                            & oxaf(iz)**rspa_oxa_3*prox(iz)**(ss_add(iz)-rspa_oxa)
                         df1(iz) = df1(iz)  + (base_charge(ispa)-rspa_oxa_2)*fkeq(iz)*keqaq_oxa(ispa,ispa_oxa) &
-                            & *maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3*(ss_add(iz)-rspa_oxa)*prox(iz)**(ss_add(iz)-rspa_oxa-1d0)
+                            & *maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3*(ss_add(iz)-rspa_oxa)* & 
+                            & prox(iz)**(ss_add(iz)-rspa_oxa-1d0)
                         d2f1(iz) = d2f1(iz)  + (base_charge(ispa)-rspa_oxa_2) &
-                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3*(ss_add(iz)-rspa_oxa) &
-                            & *(ss_add(iz)-rspa_oxa-1d0)*prox(iz)**(ss_add(iz)-rspa_oxa-2d0)
+                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3* &
+                            & (ss_add(iz)-rspa_oxa)*(ss_add(iz)-rspa_oxa-1d0)*prox(iz)**(ss_add(iz)-rspa_oxa-2d0)
                         df1dmaqf(ispa,iz) = df1dmaqf(ispa,iz)  + (base_charge(ispa)-rspa_oxa_2) &
-                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*1d0*oxaf(iz)**rspa_oxa_3*prox(iz)**(ss_add(iz)-rspa_oxa)
-                        df1dmaqf(ioxa,iz) = df1dmaqf(ioxa,iz)  + (base_charge(ispa)-rspa_oxa_2)*fkeq(iz)*keqaq_oxa(ispa,ispa_oxa) &
-                            & *maqf_loc(ispa,iz)*rspa_oxa_3*oxaf(iz)**(rspa_oxa_3-1d0)*prox(iz)**(ss_add(iz)-rspa_oxa)
+                            & *fkeq(iz)*keqaq_oxa(ispa,ispa_oxa)*1d0*oxaf(iz)**rspa_oxa_3* &
+                            & prox(iz)**(ss_add(iz)-rspa_oxa)
+                        df1dmaqf(ioxa,iz) = df1dmaqf(ioxa,iz)  + (base_charge(ispa)-rspa_oxa_2)*fkeq(iz)* &
+                        & keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*rspa_oxa_3*oxaf(iz) &
+                        & **(rspa_oxa_3-1d0)*prox(iz)**(ss_add(iz)-rspa_oxa)
                     endif  
                 enddo 
                 if (print_res .and. f1(iz)<0d0) then 
