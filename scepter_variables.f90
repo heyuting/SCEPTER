@@ -4,7 +4,7 @@ module scepter_variables
 
     public
 
-    integer nsp_sld,nsp_aq,nsp_gas,nrxn_ext,nsld_kinspc
+    integer nsp_gas,nrxn_ext
     character(5),dimension(:),allocatable::chraq,chrsld,chrgas,chrrxn_ext,chrsld_kinspc 
     real(kind=8),dimension(:),allocatable::kin_sld_spc
     character(500) sim_name,runname_save,cwd,path,path2,cmd
@@ -43,7 +43,7 @@ module scepter_variables
     real(kind=8) rectime_prof(nrec_prof)
     real(kind=8) rectime_flx(nrec_flx)
     character(3) chr
-    character(256) runname,workdir, chrz(3), chrq(3),base,fname, chrrain, cwd,flxdir, profdir
+    character(256) runname,workdir, chrz(3), chrq(3),base,fname, chrrain, flxdir, profdir
     character(500) loc_runname_save
     integer irec_prof, irec_flx, iter
     logical flx_recorded
@@ -155,7 +155,6 @@ module scepter_variables
     real(kind=8) time_start, time_fin, progress_rate, progress_rate_prev
     integer count_dtunchanged,count_dtunchanged_Max_loc  
 
-    integer :: nsp_sld != 5
     integer ::nsp_sld_cnst != nsp_sld_all - nsp_sld
     integer ::nsp_aq_cnst != nsp_aq_all - nsp_aq
     integer ::nsp_gas_cnst != nsp_gas_all - nsp_gas
@@ -165,15 +164,11 @@ module scepter_variables
 
     character(5),dimension(:),allocatable::chrsld_2
     character(5),dimension(nsp_sld_all)::chrsld_all
-    character(5),dimension(nsp_sld_all - nsp_sld)::chrsld_cnst
     character(5),dimension(nsp_aq_ph)::chraq_ph
     character(5),dimension(nsp_aq_all)::chraq_all
-    character(5),dimension(nsp_aq_all - nsp_aq)::chraq_cnst
     character(5),dimension(nsp_gas_ph)::chrgas_ph
     character(5),dimension(nsp_gas_all)::chrgas_all
-    character(5),dimension(nsp_gas_all - nsp_gas)::chrgas_cnst
     character(5),dimension(nrxn_ext_all)::chrrxn_ext_all
-    character(5),dimension(:),allocatable ::chrsld_kinspc
 
     real(kind=8) psu_pr,pssigma_pr,psu_rain,psw_rain,pssigma_rain,ps_new,ps_newp,dvd_res,error_psd,volsld,flx_max_max,psd_th_flex
     real(kind=8) p80_tmp

@@ -13,23 +13,19 @@ module scepter_input
     contains
 
     subroutine get_clim_num( &
-        & nz,ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,zml_ref,w,qin,p80,sim_name,plant_rain,runname_save &! output
-        & ,count_dtunchanged_Max,tc,rainpowder_2nd,step_tau &
+        & file_in &! in 
+        & ,n_file &! output
         & )
         implicit none
 
-        integer,intent(out):: nz,count_dtunchanged_Max
-        real(kind=8),intent(out):: ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,zml_ref,w,qin,p80,tc,rainpowder_2nd,step_tau
-        character(256),intent(out):: sim_name,plant_rain,runname_save
-
+        character(50),intent(in)::file_in
+        integer,intent(out):: n_file
         character(500) file_name
-        integer i
 
-        file_name = './clim.in'
-        open(50,file=trim(adjustl(file_name)),status = 'old',action='read')
-        read(50,'()')
-        read(50,*) nz,ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,zml_ref,w,qin,p80,sim_name,plant_rain,runname_save,count_dtunchanged_Max,tc,rainpowder_2nd,step_tau
-        close(50)
+    file_name = './'//trim(adjustl(file_in)) 
+    call Console4(file_name,n_file)
+
+    n_file = n_file - 1
 
     endsubroutine get_clim_num
 
@@ -39,14 +35,43 @@ module scepter_input
         & )
         implicit none
 
-        integer,intent(out):: nz,count_dtunchanged_Max
-        real(kind=8),intent(out):: ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,zml_ref,w,qin,p80,tc,rainpowder_2nd,step_tau
-        character(256),intent(out):: sim_name,plant_rain,runname_save
+        integer,intent(out):: nz
+        real(kind=8),intent(out)::ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,w,qin,p80,plant_rain,zml_ref,tc,rainpowder_2nd &
+            & ,step_tau
+        character(500),intent(out)::sim_name,runname_save
+        integer,intent(out)::count_dtunchanged_Max
 
-        call get_clim_num( &
-            & nz,ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,zml_ref,w,qin,p80,sim_name,plant_rain,runname_save &! output
-            & ,count_dtunchanged_Max,tc,rainpowder_2nd,step_tau &
-            & )
+        character(500) file_name
+
+        file_name = './frame.in'
+        open(50,file=trim(adjustl(file_name)),status = 'old',action='read')
+        read(50,'()')
+        read(50,*) ztot
+        read(50,*) nz
+        read(50,*) ttot
+        read(50,*) tc
+        read(50,*) rainpowder
+        read(50,*) rainpowder_2nd
+        read(50,*) step_tau
+        read(50,*) plant_rain
+        read(50,*) zsupp
+        read(50,*) poroi
+        read(50,*) satup
+        read(50,*) zsat
+        read(50,*) zml_ref
+        read(50,*) w
+        read(50,*) qin
+        read(50,*) p80
+        read(50,*) count_dtunchanged_Max
+        read(50,*) runname_save
+        read(50,'()')
+        read(50,*) sim_name
+        close(50)
+
+        print*,'nz,ztot,ttot,rainpowder,rainpowder_2nd,zsupp,poroi,satup,zsat,w,qin,p80,sim_name,plant_rain'// &
+            & ',runname_save,count_dtunchanged_Max,step_tau'
+        print*,nz,ztot,ttot,rainpowder,rainpowder_2nd,zsupp,poroi,satup,zsat,w,qin,p80,sim_name,plant_rain &
+            & ,runname_save,count_dtunchanged_Max,step_tau
 
     endsubroutine get_bsdvalues
 
@@ -241,7 +266,6 @@ module scepter_input
             endif 
         enddo 
         close(50)
-
 
     endsubroutine get_parentrock
 

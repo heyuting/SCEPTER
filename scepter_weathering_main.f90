@@ -77,7 +77,9 @@ module scepter_weathering_main
         character(5),dimension(nsp_gas),intent(in)::chrgas
         character(5),dimension(nrxn_ext),intent(in)::chrrxn_ext
         character(5),dimension(nsld_kinspc_in),intent(in)::chrsld_kinspc_in
-
+        character(5),dimension(nsp_sld_all - nsp_sld)::chrsld_cnst
+        character(5),dimension(nsp_aq_all - nsp_aq)::chraq_cnst
+        character(5),dimension(nsp_gas_all - nsp_gas)::chrgas_cnst
         real(kind=8),dimension(nsld_kinspc_in),intent(in)::kin_sld_spc_in
         real(kind=8),intent(in)::zml_ref
         character(500),intent(in):: sim_name
@@ -113,7 +115,6 @@ module scepter_weathering_main
         real(kind=8),dimension(nrxn_ext,nsp_aq)::staq_ext,staq_dext
         real(kind=8),dimension(nrxn_ext,nsp_sld)::stsld_ext,stsld_dext
         real(kind=8),dimension(:),allocatable::kin_sld_spc
-
         !-----------------------------
         ! All species arrays
         !-----------------------------
