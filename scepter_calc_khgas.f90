@@ -336,17 +336,21 @@ module scepter_calc_khgas
                                     &       *maqf_loc_prev(ispa,:)*(knh3/k1nh3*pro)**rspa_nh3*pnh3**(rspa_nh3-1d0) &
                                     & )
                                 khgasx(ispg,:) = khgasx(ispg,:) + ( &
-                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(knh3/k1nh3*prox)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
+                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
+                                    & *(knh3/k1nh3*prox)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
                                     & )
                                 dkhgas_dpro(ispg,:) = dkhgas_dpro(ispg,:) + ( &
-                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(knh3/k1nh3)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
+                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
+                                    & *(knh3/k1nh3)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
                                     & *rspa_nh3*rspa_nh3**(rspa_nh3-1d0) &
                                     & )
                                 dkhgas_dmaq(ispg,ispa,:) = dkhgas_dmaq(ispg,ispa,:) + ( &
-                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*1d0*(knh3/k1nh3*prox)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
+                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*1d0 &
+                                    & *(knh3/k1nh3*prox)**rspa_nh3*pnh3x**(rspa_nh3-1d0) &
                                     & )
                                 dkhgas_dmgas(ispg,ipnh3,:) = dkhgas_dmgas(ispg,ipnh3,:) + ( &
-                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(knh3/k1nh3*prox)**rspa_nh3 &
+                                    & + fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
+                                    & *(knh3/k1nh3*prox)**rspa_nh3 &
                                     & *(rspa_nh3-1d0)*pnh3x**(rspa_nh3-2d0) &
                                     & )
                                 dkhgas_dios(ispg,:) = dkhgas_dios(ispg,:) + ( &
