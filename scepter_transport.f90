@@ -416,8 +416,6 @@ module scepter_transport
                 & ,prox,ph_error,ph_iter &! output
                 & ) 
             
-
-
             if (ph_error) then 
                 print *, 'error issued from ph calculation: raising flag and return to main' 
                 flgback = .true.

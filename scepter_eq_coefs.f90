@@ -34,7 +34,6 @@ module scepter_eq_coefs
         & ,ksld_all,keqsld_all,krxn1_ext_all,krxn2_ext_all &! output
         & ,keqcec_all,keqiex_all &! output 
         & ) 
-        
         implicit none
 
         integer,intent(in)::nz
@@ -43,6 +42,9 @@ module scepter_eq_coefs
         real(kind=8),dimension(nz)::oh,po2,kin,dkin_dmsp
         real(kind=8) kho,po2th,mv_tmp,therm,ss_x,ss_y,ss_z,ss_tmp,therm_tmp,mwt_tmp,visc
         real(kind=8),intent(out)::ucv,kw
+
+        ! real(kind=8) k_arrhenius
+        real(kind=8) :: cal2j = 4.184d0 
 
         integer,intent(in)::nsp_aq_all,nsp_gas_all,nsp_sld_all,nrxn_ext_all
         character(5),dimension(nsp_aq_all),intent(in)::chraq_all
@@ -54,7 +56,42 @@ module scepter_eq_coefs
         real(kind=8),dimension(nsp_gas_all,3),intent(out)::keqgas_h
         real(kind=8),dimension(nsp_aq_all,4),intent(out)::keqaq_h
         real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_c
+        real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_s
+        real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_no3
+        real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_nh3
+        real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_oxa
+        real(kind=8),dimension(nsp_aq_all,2),intent(out)::keqaq_cl
+        real(kind=8),dimension(nsp_sld_all,nz),intent(out)::ksld_all
+        real(kind=8),dimension(nsp_sld_all),intent(in)::mv_all,mwt_all,mcec_all
+        real(kind=8),dimension(nsp_sld_all,nsp_aq_all),intent(in)::logkhaq_all
+        real(kind=8),dimension(nsp_sld_all,nsp_aq_all),intent(in)::staq_all
+        real(kind=8),dimension(nsp_sld_all,nsp_aq_all),intent(out)::keqiex_all
+        real(kind=8),dimension(nsp_sld_all),intent(out)::keqsld_all,keqcec_all
+        real(kind=8),dimension(nrxn_ext_all,nz),intent(out)::krxn1_ext_all
+        real(kind=8),dimension(nrxn_ext_all,nz),intent(out)::krxn2_ext_all
+
+        integer,intent(in)::nsp_gas,nsp_gas_cnst,nsp_aq,nsp_aq_cnst
+        character(5),dimension(nsp_gas),intent(in)::chrgas
+        character(5),dimension(nsp_gas_cnst),intent(in)::chrgas_cnst
+        character(5),dimension(nsp_aq),intent(in)::chraq
+        character(5),dimension(nsp_aq_cnst),intent(in)::chraq_cnst
+        real(kind=8),dimension(nsp_gas,nz),intent(in)::mgas
+        real(kind=8),dimension(nsp_gas_cnst,nz),intent(in)::mgasc
+        real(kind=8),dimension(nsp_aq,nz),intent(in)::maq
         real(kind=8),dimension(nsp_aq_cnst,nz),intent(in)::maqc
+        real(kind=8),dimension(nsp_gas_all),intent(in)::mgasth_all
+
+        logical,dimension(nsp_sld_all),intent(in)::cec_pH_depend
+
+        real(kind=8),dimension(nsp_gas_all,nz)::mgas_loc
+        real(kind=8),dimension(nsp_aq_all,nz)::maqf_loc
+        real(kind=8),dimension(nsp_aq_all)::base_charge
+
+        integer ieqgas_h0,ieqgas_h1,ieqgas_h2
+        data ieqgas_h0,ieqgas_h1,ieqgas_h2/1,2,3/
+
+        integer ieqaq_h1,ieqaq_h2,ieqaq_h3,ieqaq_h4
+        data ieqaq_h1,ieqaq_h2,ieqaq_h3,ieqaq_h4/1,2,3,4/
 
         integer ieqaq_co3,ieqaq_hco3
         data ieqaq_co3,ieqaq_hco3/1,2/
@@ -259,7 +296,7 @@ module scepter_eq_coefs
         keqaq_h(findloc(chraq_all,'tea',dim=1),ieqaq_h1) =  &
             & k_arrhenius(10d0**(8.09d0),25d0+tempk_0,tc+tempk_0,-33.6d0,rg)  
 #endif 
-            
+        
         ! Mehlich buffer (consts from Goldberg et al., 2002)
 
         !  GlpH- = Glp= + H+ 
@@ -285,14 +322,14 @@ module scepter_eq_coefs
         ! Al3+ + 4H2O = Al(OH)4- + 4H+
         keqaq_h(findloc(chraq_all,'al',dim=1),ieqaq_h4) = &
             & k_arrhenius(10d0**(-22.7d0),25d0+tempk_0,tc+tempk_0,42.30d0*cal2j,rg) ! from PHREEQC.DAT 
-        ! Al3+ + SO4-2 = AlSO4+
+        ! Al+3 + SO4-2 = AlSO4+
         keqaq_s(findloc(chraq_all,'al',dim=1),ieqaq_so4) = &
             & k_arrhenius(10d0**(3.5d0),25d0+tempk_0,tc+tempk_0,2.29d0*cal2j,rg) ! from PHREEQC.DAT 
-        ! Al3+ + 2SO4-2 = Al(SO4)2-
+        ! Al+3 + 2SO4-2 = Al(SO4)2-
         ! ignoring for now
         ! keqaq_s(findloc(chraq_all,'al',dim=1),ieqaq_so42) = &
             ! & k_arrhenius(10d0**(5.0d0),25d0+tempk_0,tc+tempk_0,3.11d0*cal2j,rg) ! from PHREEQC.DAT 
-        ! Al3+ + OxaH- = AlOxa+ + H+ (Al3+ + Oxa= = AlOxa+  plus OxaH- = Oxa= + H+ )
+        ! Al+3 + OxaH- = AlOxa+ + H+ (Al+3 + Oxa= = AlOxa+  plus OxaH- = Oxa= + H+ )
         ! keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa) = 1d0/(10d0**-7.26d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
         ! Al3+ + H2O + Oxa= = Al(OH)Oxa + H+ (dominant reaction according to Lawrence et al., GCA, 2014)
         ! Al3+ + H2O + HOxa- = Al(OH)Oxa + 2H+ <----> Al3+ + H2O + Oxa= = Al(OH)Oxa + H+  plus  OxaH- = Oxa= + H+
@@ -653,6 +690,13 @@ module scepter_eq_coefs
         ksld_all = 0d0 
         keqsld_all = 0d0
 
+        ! call get_mgasx_all( &
+            ! & nz,nsp_gas_all,nsp_gas,nsp_gas_cnst &
+            ! & ,chrgas,chrgas_all,chrgas_cnst &
+            ! & ,mgas,mgasc &
+            ! & ,mgas_loc  &! output
+            ! & )
+
         call get_maqgasx_all( &
             & nz,nsp_aq_all,nsp_gas_all,nsp_aq,nsp_gas,nsp_aq_cnst,nsp_gas_cnst &
             & ,chraq,chraq_all,chraq_cnst,chrgas,chrgas_all,chrgas_cnst &
@@ -786,8 +830,6 @@ module scepter_eq_coefs
         krxn1_ext_all(findloc(chrrxn_ext_all,'g2k',dim=1),:) = ksld_all(findloc(chrsld_all,'g2',dim=1),:)
         krxn1_ext_all(findloc(chrrxn_ext_all,'g2ca',dim=1),:) = ksld_all(findloc(chrsld_all,'g2',dim=1),:)
         krxn1_ext_all(findloc(chrrxn_ext_all,'g2mg',dim=1),:) = ksld_all(findloc(chrsld_all,'g2',dim=1),:)
-
-
     endsubroutine coefs_v2
     
 endmodule scepter_eq_coefs

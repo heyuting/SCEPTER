@@ -23,7 +23,7 @@ module scepter_eq_ph
         & nz,kw,nsp_aq,nsp_gas,nsp_aq_all,nsp_gas_all,nsp_aq_cnst,nsp_gas_cnst &! input
         & ,poro,sat,tc &! input  
         & ,chraq,chraq_cnst,chraq_all,chrgas,chrgas_cnst,chrgas_all &!input
-        & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3 &! input
+        & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,maqth_all, keqaq_no3,keqaq_nh3 &! input
         & ,keqaq_oxa,keqaq_cl &! input
         & ,print_cb,print_loc,z,act_ON &! input 
         & ,dprodmaq_all,dprodmgas_all &! output
@@ -71,6 +71,7 @@ module scepter_eq_ph
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_no3
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_oxa
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_cl
+        real(kind=8),dimension(nsp_aq_all),intent(in)::maqth_all
 
         real(kind=8),dimension(nsp_aq_all)::base_charge
         real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,maqf_loc
