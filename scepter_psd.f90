@@ -1,6 +1,7 @@
 module scepter_psd
     use scepter_constants
     use scepter_variables
+    use scepter_kinetics
     implicit none
     public :: calc_psd_pr
     public :: calc_p80
@@ -255,7 +256,8 @@ contains
                             if (.not.incld_rough) then 
                                 dVd_tmp(ips+1:) = ( psd (ips+1:,iz) * (10d0**ps(ips+1:))**2d0 )
                             else
-                                dVd_tmp(ips+1:) = ( psd (ips+1:,iz) * (10d0**ps(ips+1:))**2d0 *rough_c0*(10d0**ps(ips+1:))**rough_c1 )
+                                dVd_tmp(ips+1:) = ( psd (ips+1:,iz) * (10d0**ps(ips+1:))**2d0 &
+                                & *rough_c0*(10d0**ps(ips+1:))**rough_c1 )
                             endif 
                             
                             if (all(dVd_tmp == 0d0)) then 

@@ -18,7 +18,7 @@ module scepter_weathering_main
     use scepter_psd_implicit
     use scepter_concentration
     use scepter_findloc
-    
+    use scepter_kinetics
     implicit none
 
     private
