@@ -107,14 +107,13 @@ module scepter_kinetics
                                 drxnsld_dmgas(isps,:,iz) = 0d0
                             else 
                                 drxnsld_dmsld(isps,iz) = ksld(isps,iz)*poro(iz)*hr(isps,iz)*mv(isps)*1d-6*1d0*(1d0-omega(isps,iz)) 
-                                drxnsld_dmaq(isps,:,iz) = ( &
-                                    & +ksld(isps,iz)*poro(iz)*hr(isps,iz)*mv(isps)*1d-6*msldx(isps,iz)*(-domega_dmaq(isps,:,iz)) &
-                                    & +dksld_dmaq(isps,:,iz)*poro(iz)*hr(isps,iz)*mv(isps)*1d-6*msldx(isps,iz)*(1d0-omega(isps,iz)) &
-                                    & )
-                                drxnsld_dmgas(isps,:,iz) = ( &
-                                    & +ksld(isps,iz)*poro(iz)*hr(isps,iz)*mv(isps)*1d-6*msldx(isps,iz)*(-domega_dmgas(isps,:,iz)) &
-                                    & +dksld_dmgas(isps,:,iz)*poro(iz)*hr(isps,iz)*mv(isps)*1d-6*msldx(isps,iz)*(1d0-omega(isps,iz)) &
-                                    & )
+                                drxnsld_dmaq(isps,:,iz) = ( +ksld(isps,iz)*poro(iz)*hr(isps,iz)* &
+                                    & mv(isps)*1d-6*msldx(isps,iz)* (-domega_dmaq(isps,:,iz)) + & 
+                                    & dksld_dmaq(isps,:,iz)*poro(iz)*hr(isps,iz)*mv(isps) &
+                                    & *1d-6*msldx(isps,iz)*(1d0-omega(isps,iz)))
+                                drxnsld_dmgas(isps,:,iz) = ( +ksld(isps,iz)*poro(iz)*hr(isps,iz)*mv(isps) & 
+                                    &*1d-6*msldx(isps,iz)*(-domega_dmgas(isps,:,iz)) + dksld_dmgas(isps,:,iz)* &
+                                    & poro(iz)*hr(isps,iz)*mv(isps)*1d-6*msldx(isps,iz) *(1d0-omega(isps,iz)))
                             endif 
                         elseif (1d0-omega(isps,iz) < 0d0) then 
                             if (nonprec(isps,iz)==1d0) then 
@@ -148,7 +147,8 @@ module scepter_kinetics
             
                 case ('full') 
                     rxnsld(isps,:) = ( &
-                        & + min(ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:)*(1d0-omega(isps,:))/(1d0-poro),maxdis(isps,:)) &
+                        & + min(ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:) &
+                        & *(1d0-omega(isps,:))/(1d0-poro),maxdis(isps,:)) &
                         & *merge(0d0,1d0,1d0-omega(isps,:) < 0d0) &
                         &  + max(ksld(isps,:)*poro*hr(isps,:)*(1d0-omega(isps,:)),maxprec(isps,:)) &
                         & *merge(0d0,1d0,1d0-omega(isps,:)*(1d0-nonprec(isps,:)) > 0d0) &
@@ -201,18 +201,22 @@ module scepter_kinetics
                     
                     do ispa = 1, nsp_aq
                         drxnsld_dmaq(isps,ispa,:) = ( &
-                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*(msldx(isps,:)+msld_seed)*(-domega_dmaq(isps,ispa,:)) &
+                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
+                            & *(msldx(isps,:)+msld_seed)*(-domega_dmaq(isps,ispa,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
-                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps)*1d-6*(msldx(isps,:)+msld_seed)*(1d0-omega(isps,:)) &
+                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps)*1d-6*\&
+                            & *(msldx(isps,:)+msld_seed)*(1d0-omega(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
                             & )
                     enddo 
                     
                     do ispg = 1, nsp_gas
                         drxnsld_dmgas(isps,ispg,:) = ( &
-                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*(msldx(isps,:)+msld_seed)*(-domega_dmgas(isps,ispg,:)) &
+                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
+                            & *(msldx(isps,:)+msld_seed)*(-domega_dmgas(isps,ispg,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
-                            & + dksld_dmgas(isps,ispg,:)*poro*hr(isps,:)*mv(isps)*1d-6*(msldx(isps,:)+msld_seed)*(1d0-omega(isps,:)) &
+                            & + dksld_dmgas(isps,ispg,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
+                            & *(msldx(isps,:)+msld_seed)*(1d0-omega(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
                             & )
                     enddo 
@@ -281,7 +285,8 @@ module scepter_kinetics
                 
                 case('2/3')
                     rxnsld(isps,:) = ( &
-                        & + ksld(isps,:)*poro**(2d0/3d0)*hr(isps,:)*(mv(isps)*1d-6*msldx(isps,:))**(2d0/3d0)*(1d0-omega(isps,:)) &
+                        & + ksld(isps,:)*poro**(2d0/3d0)*hr(isps,:)*(mv(isps)*1d-6 &
+                        & *msldx(isps,:))**(2d0/3d0)*(1d0-omega(isps,:)) &
                         & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
                         & )
                 
@@ -352,18 +357,22 @@ module scepter_kinetics
                     
                     do ispa = 1, nsp_aq
                         drxnsld_dmaq(isps,ispa,:) = ( &
-                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:)*(-domega_dmaq(isps,ispa,:)*solmod(isps,:)) &
+                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
+                            & *msldx(isps,:)*(-domega_dmaq(isps,ispa,:)*solmod(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*solmod(isps,:)*nonprec(isps,:) < 0d0) &
-                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:)*(1d0-omega(isps,:)*solmod(isps,:)) &
+                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps) &
+                            & *1d-6*msldx(isps,:)*(1d0-omega(isps,:)*solmod(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*solmod(isps,:)*nonprec(isps,:) < 0d0) &
                             & )
                     enddo 
                     
                     do ispg = 1, nsp_gas
                         drxnsld_dmgas(isps,ispg,:) = ( &
-                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:)*(-domega_dmgas(isps,ispg,:)*solmod(isps,:)) &
+                            & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:) &
+                            & *(-domega_dmgas(isps,ispg,:)*solmod(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*solmod(isps,:)*nonprec(isps,:) < 0d0) &
-                            & + dksld_dmgas(isps,ispg,:)*poro*hr(isps,:)*mv(isps)*1d-6*msldx(isps,:)*(1d0-omega(isps,:)*solmod(isps,:)) &
+                            & + dksld_dmgas(isps,ispg,:)*poro*hr(isps,:)*mv(isps) &
+                            & *1d-6*msldx(isps,:)*(1d0-omega(isps,:)*solmod(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*solmod(isps,:)*nonprec(isps,:) < 0d0) &
                             & )
                     enddo 
