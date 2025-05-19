@@ -85,7 +85,8 @@ module scepter_transport
         real(kind=8),dimension(nsp_sld,nz),intent(inout)::ksld
         real(kind=8),dimension(nz,nz,nsp_sld),intent(in)::trans
         real(kind=8),dimension(nsp_sld,nz),intent(inout)::msldx,omega,nonprec,rxnsld
-        real(kind=8),dimension(nsp_sld,nz)::domega_dpro,dmsld,dksld_dpro,drxnsld_dmsld,dksld_dso4f,domega_dso4f,dksld_dios,domega_dios
+        real(kind=8),dimension(nsp_sld,nz)::domega_dpro,dmsld,dksld_dpro,drxnsld_dmsld &
+            & ,dksld_dso4f,domega_dso4f,dksld_dios,domega_dios
         real(kind=8),dimension(nsp_sld,nsp_aq,nz)::domega_dmaq,dksld_dmaq,drxnsld_dmaq
         real(kind=8),dimension(nsp_sld,nsp_gas,nz)::domega_dmgas,dksld_dmgas,drxnsld_dmgas
         real(kind=8),dimension(nsp_sld,nflx,nz),intent(out)::flx_sld
@@ -99,8 +100,8 @@ module scepter_transport
         real(kind=8),dimension(nsp_aq,nflx,nz),intent(out)::flx_aq
         real(kind=8),dimension(nsp_gas,nz),intent(in)::mgas,mgassupp
         real(kind=8),dimension(nsp_gas,nz),intent(inout)::mgasx 
-        real(kind=8),dimension(nsp_gas,nz)::khgasx,khgas,dgas,agasx,agas,rxngas,dkhgas_dpro,dprodmgas,dmgas,dso4fdmgas,dkhgas_dso4f &
-            & ,mgasx_save,dmgasx,dkhgas_dios
+        real(kind=8),dimension(nsp_gas,nz)::khgasx,khgas,dgas,agasx,agas,rxngas,dkhgas_dpro,dprodmgas & 
+            & ,dmgas,dso4fdmgas,dkhgas_dso4f,mgasx_save,dmgasx,dkhgas_dios
         real(kind=8),dimension(nsp_gas,nz)::diosdmgas
         real(kind=8),dimension(nsp_gas,nsp_aq,nz)::dkhgas_dmaq,ddgas_dmaq,dagas_dmaq,drxngas_dmaq 
         real(kind=8),dimension(nsp_gas,nsp_sld,nz)::drxngas_dmsld 
@@ -553,7 +554,8 @@ module scepter_transport
                         enddo
                         
                         dmaqfads_sld_dmsld(ispa,isps,:) &
-                            & = dmaqfads_sld_dmsld_loc(findloc(chraq_all,chraq(ispa),dim=1),findloc(chrsld_all,chrsld(isps),dim=1),:) 
+                            & = dmaqfads_sld_dmsld_loc(findloc(chraq_all,chraq(ispa),dim=1), &
+                            & findloc(chrsld_all,chrsld(isps),dim=1),:) 
                         
                     enddo
                 enddo 
@@ -737,10 +739,9 @@ module scepter_transport
                 do ispg = 1, nsp_gas
                     if (any (chrgas_ph == chrgas(ispg)) .or. stgas(isps,ispg)/=0d0) then 
                     
-                        domega_dmgas(isps,ispg,:) = domega_dmgas_all(findloc(chrgas_all,chrgas(ispg),dim=1),:)+ ( &
-                            & + domega_dpro(isps,:)*dprodmgas(ispg,:) &
-                            & + domega_dios(isps,:)*diosdmgas(ispg,:) &
-                            & )
+                        domega_dmgas(isps,ispg,:) = domega_dmgas_all(findloc(chrgas_all,chrgas(ispg),dim=1),:) &
+                            & + (+ domega_dpro(isps,:)*dprodmgas(ispg,:) &
+                            & + domega_dios(isps,:)*diosdmgas(ispg,:) )
                     endif 
                 enddo
             enddo 
@@ -954,14 +955,16 @@ module scepter_transport
                     if (act_ON) dkhgas_dios(ispg,:)=dkhgas_dios_all(findloc(chrgas_all,chrgas(ispg),dim=1),:)
                     do ispa=1,nsp_aq
                         dkhgas_dmaq(ispg,ispa,:)= ( &
-                            & + dkhgas_dmaq_all(findloc(chrgas_all,chrgas(ispg),dim=1),findloc(chraq_all,chraq(ispa),dim=1),:) &
+                            & + dkhgas_dmaq_all(findloc(chrgas_all,chrgas(ispg),dim=1) & 
+                            & ,findloc(chraq_all,chraq(ispa),dim=1),:) &
                             & + dkhgas_dpro(ispg,:)*dprodmaq(ispa,:) &
                             & + dkhgas_dios(ispg,:)*diosdmaq(ispa,:) &
                             & )
                     enddo 
                     do ispg2=1,nsp_gas
                         dkhgas_dmgas(ispg,ispg2,:)= ( &
-                            & + dkhgas_dmgas_all(findloc(chrgas_all,chrgas(ispg),dim=1),findloc(chrgas_all,chrgas(ispg2),dim=1),:) &
+                            & + dkhgas_dmgas_all(findloc(chrgas_all,chrgas(ispg),dim=1), &
+                            & findloc(chrgas_all,chrgas(ispg2),dim=1),:) &
                             & + dkhgas_dpro(ispg,:)*dprodmgas(ispg2,:) & 
                             & + dkhgas_dios(ispg,:)*diosdmgas(ispg2,:) &
                             & )
@@ -1516,7 +1519,8 @@ module scepter_transport
                             &   * merge(0d0,maqx(ispa,iz)*dmaqft_dmaqf(ispa,ispa2,iz),iz==1 .and. aq_diff_close) &
                             &   /( 0.5d0*(dz(iz)+dz(izn)) ))/dz(iz) &
                             & *merge(dt,1d0,dt_norm) &
-                            & + poro(iz)*sat(iz)*1d3*v(iz)*(maqx(ispa,iz)*dmaqft_dmaqf(ispa,ispa2,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
+                            & + poro(iz)*sat(iz)*1d3*v(iz)*(maqx(ispa,iz) &
+                            & *dmaqft_dmaqf(ispa,ispa2,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
                             & - sum(staq(:,ispa)*drxnsld_dmaq(:,ispa2,iz))*merge(dt,1d0,dt_norm) &
                             & - sum(staq_ext(:,ispa)*drxnext_dmaq(:,ispa2,iz))*merge(dt,1d0,dt_norm) &
                             & ) &
@@ -1560,7 +1564,8 @@ module scepter_transport
                             &   * merge(0d0,maqx(ispa,iz)*dmaqft_dmgas(ispa,ispg,iz),iz==1 .and. aq_diff_close) &
                             &   /( 0.5d0*(dz(iz)+dz(izn)) ))/dz(iz) &
                             &   *merge(dt,1d0,dt_norm) &
-                            & + poro(iz)*sat(iz)*1d3*v(iz)*(maqx(ispa,iz)*dmaqft_dmgas(ispa,ispg,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
+                            & + poro(iz)*sat(iz)*1d3*v(iz)*(maqx(ispa,iz) &
+                            & *dmaqft_dmgas(ispa,ispg,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
                             & - sum(staq(:,ispa)*drxnsld_dmgas(:,ispg,iz))*merge(dt,1d0,dt_norm) &
                             & - sum(staq_ext(:,ispa)*drxnext_dmgas(:,ispg,iz))*merge(dt,1d0,dt_norm) &
                             & ) &
@@ -1648,8 +1653,8 @@ module scepter_transport
                             if (ispa2 == ispa) cycle
 
                             amx3(row,col) = amx3(row,col) + ( &
-                                & + maqx(ispa,iz)*dmaqfads_dmaqf(ispa,ispa2,iz) /merge(1d0,dt,dt_norm)     &
-                                & + w_tmp *maqx(ispa,iz)*dmaqfads_dmaqf(ispa,ispa2,iz) /dz(iz)*merge(dt,1d0,dt_norm)    &
+                                & + maqx(ispa,iz)*dmaqfads_dmaqf(ispa,ispa2,iz) /merge(1d0,dt,dt_norm) &
+                                & + w_tmp *maqx(ispa,iz)*dmaqfads_dmaqf(ispa,ispa2,iz) /dz(iz)*merge(dt,1d0,dt_norm) &
                                 & ) &
                                 & *maqx(ispa2,iz) &
                                 & *merge(0.0d0,1d0,m_tmp<mth_tmp*sw_red)
@@ -1720,7 +1725,8 @@ module scepter_transport
                                     if (trans(iiz,iz,isps)==0d0) cycle
                                         
                                     amx3(row,col) = amx3(row,col) &
-                                        & - trans(iiz,iz,isps)*maqx(ispa,iiz)*dmaqfads_sld_dmsld(ispa,isps,iiz)* merge(dt,1d0,dt_norm) &
+                                        & - trans(iiz,iz,isps)*maqx(ispa,iiz)& 
+                                        & *dmaqfads_sld_dmsld(ispa,isps,iiz)* merge(dt,1d0,dt_norm) &
                                         & *merge(0.0d0,msldx(isps,iiz),m_tmp<mth_tmp*sw_red)
                                     ymx3(row) = ymx3(row) &
                                         & - trans(iiz,iz,isps)*maqx(ispa,iiz)*maqfads_sld(ispa,isps,iiz)* merge(dt,1d0,dt_norm) &
@@ -1853,7 +1859,8 @@ module scepter_transport
                         &   ,iz==1 .and. aq_diff_close) &
                         &       )/dz(iz)  &
                         & *merge(dt,1d0,dt_norm) &
-                        & +poro(iz)*sat(iz)*v(iz)*1d3*(khgasx(ispg,iz)*mgasx(ispg,iz)-khco2n_tmp*pco2n_tmp)/dz(iz)*merge(dt,1d0,dt_norm) &
+                        & +poro(iz)*sat(iz)*v(iz)*1d3*(khgasx(ispg,iz)*mgasx(ispg,iz)-khco2n_tmp*pco2n_tmp) &
+                        & /dz(iz)*merge(dt,1d0,dt_norm) &
                         & -sum(stgas_ext(:,ispg)*rxnext(:,iz))*merge(dt,1d0,dt_norm) &
                         & -rxngas(ispg,iz)*merge(dt,1d0,dt_norm) &
                         & -mgassupp(ispg,iz)*merge(dt,1d0,dt_norm) &
@@ -1876,7 +1883,8 @@ module scepter_transport
                             & - 0.5d0*(ddgas_dmgas(ispg,ispg,izn))*(mgasx(ispg,iz)-mgasx(ispg,izn)) &
                             &       /(0.5d0*(dz(iz)+dz(izn))))/dz(iz)*merge(dt,1d0,dt_norm)  &
                             & +poro(iz)*sat(iz)*v(iz)*1d3*(-khgasx(ispg,izn)*1d0)/dz(iz)*merge(dt,1d0,dt_norm) &
-                            & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmgas(ispg,ispg,izn)*mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
+                            & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmgas(ispg,ispg,izn) &
+                            & *mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
                             & ) &
                             & *merge(0.0d0,mgasx(ispg,izn),mgasx(ispg,iz)<mgasth(ispg)*sw_red)
                     endif 
@@ -1927,7 +1935,8 @@ module scepter_transport
                             amx3(row,col-nsp3) = ( &
                                 & -(- 0.5d0*(ddgas_dmaq(ispg,ispa,izn))*(mgasx(ispg,iz)-mgasx(ispg,izn)) &
                                 &       /(0.5d0*(dz(iz)+dz(izn))))/dz(iz)*merge(dt,1d0,dt_norm)  &
-                                & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmaq(ispg,ispa,izn)*mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
+                                & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmaq(ispg,ispa,izn) &
+                                & *mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
                                 & ) &
                                 & *merge(0.0d0,maqx(ispa,izn),mgasx(ispg,iz)<mgasth(ispg)*sw_red)
                         endif  
@@ -1948,7 +1957,8 @@ module scepter_transport
                             &   ,iz==1 .and. aq_diff_close &
                             &       ) &
                             & )/dz(iz)*merge(dt,1d0,dt_norm)  &
-                            & +poro(iz)*sat(iz)*v(iz)*1d3*(dkhgas_dmgas(ispg,ispg2,iz)*mgasx(ispg,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
+                            & +poro(iz)*sat(iz)*v(iz)*1d3*(dkhgas_dmgas(ispg,ispg2,iz) &
+                            & *mgasx(ispg,iz))/dz(iz)*merge(dt,1d0,dt_norm) &
                             & -drxngas_dmgas(ispg,ispg2,iz)*merge(dt,1d0,dt_norm) &
                             & -sum(stgas_ext(:,ispg)*drxnext_dmgas(:,ispg2,iz))*merge(dt,1d0,dt_norm) &
                             & ) &
@@ -1966,7 +1976,8 @@ module scepter_transport
                             amx3(row,col-nsp3) = ( &
                                 & -(- 0.5d0*(ddgas_dmgas(ispg,ispg2,izn))*(mgasx(ispg,iz)-mgasx(ispg,izn)) &
                                 &       /(0.5d0*(dz(iz)+dz(izn))))/dz(iz)*merge(dt,1d0,dt_norm)  &
-                                & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmgas(ispg,ispg2,izn)*mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
+                                & +poro(iz)*sat(iz)*v(iz)*1d3*(-dkhgas_dmgas(ispg,ispg2,izn) &
+                                & *mgasx(ispg,izn))/dz(iz)*merge(dt,1d0,dt_norm) &
                                 & ) &
                                 & *merge(0.0d0,mgasx(ispg2,izn),mgasx(ispg,iz)<mgasth(ispg)*sw_red)
                         endif  
@@ -2887,7 +2898,8 @@ module scepter_transport
                 if (iz==1) edifn_tmp = 0d0
                 
                 flx_co2sp(3,itflx,iz) = ( &
-                    & (poro(iz)*sat(iz)*kco2*k1/prox(iz)*1d3*mgasx(ispg,iz)-poroprev(iz)*sat(iz)*kco2*k1/pro(iz)*1d3*mgas(ispg,iz))/dt &
+                    & (poro(iz)*sat(iz)*kco2*k1/prox(iz)*1d3*mgasx(ispg,iz) &
+                    & -poroprev(iz)*sat(iz)*kco2*k1/pro(iz)*1d3*mgas(ispg,iz))/dt &
                     & )  
                 flx_co2sp(3,idif,iz) = ( &
                     & -( 0.5d0*(poro(iz)*sat(iz)*kco2*k1/prox(iz)*1d3*(tora(iz)*dgasa(ispg)+disp(iz)) &
