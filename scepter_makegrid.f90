@@ -9,11 +9,11 @@ module scepter_makegrid
     implicit none
 
     private
-    public :: make_grid
+    public :: makegrid
 
     contains
     !-----------------------------------------------------------------------
-    ! Subroutine: make_grid
+    ! Subroutine: makegrid
     ! Purpose: create computational grid, after Hoffmann & Chiang, 2000
     ! Creates either regular or non-uniform grid based on beta parameter
     ! For non-uniform grid, uses transformation to concentrate points near surface     

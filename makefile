@@ -75,6 +75,13 @@ SRC           = \
                 scepter_kinetics.f90 \
                 scepter_psd.f90 \
                 scepter_eq_charge.f90 \
+                scepter_calc_rxn_ext.f90 \
+                scepter_calc_khgas.f90 \
+                scepter_psd_implicit.f90 \
+                scepter_psd_pbe.f90 \
+                scepter_sld_kin.f90 \
+                scepter_eq_pH.f90 \
+                scepter_makegrid.f90 \
                 $(wildcard scepter*.f90)
 PROGRAM       = scepter
 OBJS          = $(SRC:.f90=.o)

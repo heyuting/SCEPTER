@@ -205,7 +205,8 @@ module scepter_psd_implicit
                         trans_tmp = sum(trans(iiz,iz,:))/nsp_sld
                         if (trans_tmp == 0d0) cycle
                             
-                        amx3(row,col) = amx3(row,col) - trans_tmp * sporo(iiz) * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
+                        amx3(row,col) = amx3(row,col) - trans_tmp * sporo(iiz) &
+                        & * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
                         ymx3(row) = ymx3(row) - trans_tmp * sporo(iiz) * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
                     enddo
                     
@@ -697,7 +698,8 @@ module scepter_psd_implicit
                         trans_tmp = sum(trans(iiz,iz,:))/nsp_sld
                         if (trans_tmp == 0d0) cycle
                             
-                        amx3(row,col) = amx3(row,col) - trans_tmp * sporo(iiz) * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
+                        amx3(row,col) = amx3(row,col) - trans_tmp * &
+                        & sporo(iiz) * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
                         ymx3(row) = ymx3(row) - trans_tmp * sporo(iiz) * vol * psdx(ips,iiz) * dps(ips)  * merge(dt,1d0,dt_norm) 
                     enddo
                     
@@ -824,7 +826,8 @@ module scepter_psd_implicit
                 exit
             endif
 
-            print '(a,E11.3,a,i0,a,E11.3)', 'PSD--'//chrsp//': iteration error = ',error, ', iteration = ',iter,', time step [yr] = ',dt
+            print '(a,E11.3,a,i0,a,E11.3)', 'PSD--'//chrsp &
+                &//': iteration error = ',error, ', iteration = ',iter,', time step [yr] = ',dt
             iter = iter + 1 
             
             if (iter > iter_Max ) then
