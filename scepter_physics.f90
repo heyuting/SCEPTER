@@ -3,7 +3,7 @@ module scepter_physics
     use scepter_variables
     implicit none
     private
-    public :: make_transmx, calc_poro   
+    public :: make_transmx, calc_poro, calc_uplift, calcupwindscheme
 
     contains
 

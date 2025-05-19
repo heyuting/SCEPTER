@@ -766,7 +766,8 @@ module scepter_eq_coefs
                             & ) 
                         ! required oxide mole per basalt mole
                         ss_tmp = staq_all(isps, findloc(chraq_all,trim(adjustl(ssaq)),dim=1)) &! contained cation per basalt
-                            & /staq_all(findloc(chrsld_all,trim(adjustl(sssld)),dim=1), findloc(chraq_all,trim(adjustl(ssaq)),dim=1)) ! divided by cation per oxide
+                            & /staq_all(findloc(chrsld_all,trim(adjustl(sssld)),dim=1)& 
+                            & , findloc(chraq_all,trim(adjustl(ssaq)),dim=1)) ! divided by cation per oxide
                         therm = therm + ss_tmp*log(therm_tmp) + ss_tmp*log(ss_tmp) 
                     enddo
                     

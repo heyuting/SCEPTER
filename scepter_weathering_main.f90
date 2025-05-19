@@ -19,6 +19,7 @@ module scepter_weathering_main
     use scepter_concentration
     use scepter_findloc
     use scepter_kinetics
+    use scepter_makegrid
     implicit none
 
     private
@@ -69,7 +70,6 @@ module scepter_weathering_main
         integer,intent(in)::nsp_sld_2 != 25
         integer,intent(in)::nsp_aq != 5
         integer,intent(in)::nsp_gas != 2
-        integer,intent(in)::nrxn_ext != 1
         integer,intent(in)::nrxn_ext != 1
         integer,intent(in)::nsld_kinspc_in
         character(5),dimension(nsp_sld),intent(in)::chrsld
@@ -131,7 +131,8 @@ module scepter_weathering_main
         real(kind=8),dimension(nsp_sld_all,nz)::ksld_all
         real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::staq_all
         real(kind=8),dimension(nsp_sld_all,nsp_gas_all)::stgas_all
-        real(kind=8),dimension(nsp_sld_all)::keqsld_all,mv_all,msldi_all,msldth_all,rfrc_sld_all,mwt_all,rfrc_sld_plant_all,msldi_allx
+        real(kind=8),dimension(nsp_sld_all)::keqsld_all,mv_all,msldi_all & 
+            & ,msldth_all,rfrc_sld_all,mwt_all,rfrc_sld_plant_all,msldi_allx
         real(kind=8),dimension(nsp_sld_all)::keqcec_all
         real(kind=8),dimension(nsp_sld_all,nsp_aq_all)::keqiex_all
         real(kind=8),dimension(nsp_sld_all)::rfrc_sld_all_2nd
@@ -3168,7 +3169,8 @@ module scepter_weathering_main
                             else
                                 psu_rain = log10(p80)
                                 pssigma_rain = ps_sigma_std
-                                psd_rain(:,iz) = 1d0/pssigma_rain/sqrt(2d0*pi)*exp( -0.5d0*( (ps(:) - psu_rain)/pssigma_rain )**2d0 )
+                                psd_rain(:,iz) = 1d0/pssigma_rain/sqrt(2d0*pi) &
+                                    & *exp( -0.5d0*( (ps(:) - psu_rain)/pssigma_rain )**2d0 )
                             endif 
                             ! to ensure sum is 1
                             ! print *, sum(psd_rain*dps)
@@ -5003,7 +5005,8 @@ module scepter_weathering_main
                         close(ico2flx(ico2))
                         
                         open(ico2flx(ico2), file=trim(adjustl(flxdir))//'/' &
-                            & //'int_flx_co2sp-'//trim(adjustl(chrco2sp(ico2)))//'.txt', action='write',status='old',position='append')
+                            & //'int_flx_co2sp-'//trim(adjustl(chrco2sp(ico2))) &
+                            &//'.txt', action='write',status='old',position='append')
                         write(ico2flx(ico2),*) time,(int_flx_co2sp(ico2,iflx)/time,iflx=1,nflx)
                         close(ico2flx(ico2))
                     enddo 
