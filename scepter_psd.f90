@@ -370,6 +370,7 @@ contains
                         endif 
                         
                     else 
+                        ips_new = -1
                         ! new r*
                         ps_new =  ps_new**(1d0/3d0) 
                         if (ps_new <= ps_min) then 
@@ -387,6 +388,10 @@ contains
                                     exit 
                                 endif 
                             enddo 
+                        endif 
+                        if (ips_new == -1) then 
+                            print *,chrsp,'error: ips_new is not initialized'
+                            stop
                         endif 
                         ps_newp = 10d0**ps(ips_new)  ! closest binned particle radius to r*
                         dpsd_tmp(ips_new,iz) = dpsd_tmp(ips_new,iz) + psd(ips,iz)*(ps_new/ps_newp)**3d0
@@ -710,6 +715,7 @@ contains
                     endif 
                     
                 else 
+                    ips_new = -1
                     ! new r*
                     ps_new =  ps_new**(1d0/3d0) 
                     if (ps_new <= ps_min) then 
@@ -727,6 +733,10 @@ contains
                                 exit 
                             endif 
                         enddo 
+                    endif 
+                    if (ips_new == -1) then 
+                        print *,chrsp,'error: ips_new is not initialized'
+                        stop
                     endif 
                     ps_newp = 10d0**ps(ips_new)  ! closest binned particle radius to r*
                     dpsd_tmp(ips_new,iz) = dpsd_tmp(ips_new,iz) + psd(ips,iz)*(ps_new/ps_newp)**3d0

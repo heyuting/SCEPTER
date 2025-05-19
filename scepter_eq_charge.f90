@@ -188,10 +188,12 @@ module scepter_eq_charge
         dfkeq_dios = -1d0/gamma(2,:)**2d0*dgamma_dios(2,:)
 
         f1 = f1  -  fkw*k1*kco2*pco2x*prox**(ss_add-1d0)  -  2d0*fkeq*fkw*k2*k1*kco2*pco2x*prox**(ss_add-2d0)
-        df1 = df1  -  fkw*k1*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0)  -  2d0*fkeq*fkw*k2*k1*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0)
+        df1 = df1  -  fkw*k1*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0) & 
+            & - 2d0*fkeq*fkw*k2*k1*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0)
         d2f1 = d2f1  -  fkw*k1*kco2*pco2x*(ss_add-1d0)*(ss_add-2d0)*prox**(ss_add-3d0)  &
             & -  2d0*fkeq*fkw*k2*k1*kco2*pco2x*(ss_add-2d0)*(ss_add-3d0)*prox**(ss_add-4d0)
-        df1dmgas(ipco2,:) = df1dmgas(ipco2,:) -  fkw*k1*kco2*1d0*prox**(ss_add-1d0)  -  2d0*fkeq*fkw*k2*k1*kco2*1d0*prox**(ss_add-2d0)
+        df1dmgas(ipco2,:) = df1dmgas(ipco2,:) -  fkw*k1*kco2*1d0*prox**(ss_add-1d0) &
+            & -  2d0*fkeq*fkw*k2*k1*kco2*1d0*prox**(ss_add-2d0)
         df1df2 = df1df2  + ( &
             & -  dfkw_dios*k1*kco2*pco2x*prox**(ss_add-1d0)  &
             & -  2d0*dfkeq_dios*fkw*k2*k1*kco2*pco2x*prox**(ss_add-2d0) &
@@ -204,8 +206,10 @@ module scepter_eq_charge
             & +  4d0*fkeq*dfkw_dios*k2*k1*kco2*pco2x*prox**(ss_add-2d0) &
             & )
         df2df1 = df2df1  &
-            & +  fkw*k1*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0)  +  4d0*fkeq*fkw*k2*k1*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0)
-        df2dmgas(ipco2,:) = df2dmgas(ipco2,:) +  fkw*k1*kco2*1d0*prox**(ss_add-1d0)  +  4d0*fkeq*fkw*k2*k1*kco2*1d0*prox**(ss_add-2d0)
+            & +  fkw*k1*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0) & 
+            & +  4d0*fkeq*fkw*k2*k1*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0)
+        df2dmgas(ipco2,:) = df2dmgas(ipco2,:) +  fkw*k1*kco2*1d0*prox**(ss_add-1d0) &
+            & +  4d0*fkeq*fkw*k2*k1*kco2*1d0*prox**(ss_add-2d0)
         if (print_res) write(88,'(2A11)', advance='no') 'hco3','co3'
         if (print_res) write(99,'(2A11)', advance='no') 'hco3','co3'
         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) print*,'nan found f1 and df1: point 2'
@@ -239,7 +243,9 @@ module scepter_eq_charge
             df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + base_charge(ispa)**2d0*1d0*prox**(ss_add)
             if (print_res) write(88,'(A11)', advance='no') trim(adjustl(chraq_all(ispa)))
             if (print_res) write(99,'(A11)', advance='no') trim(adjustl(chraq_all(ispa)))
-            if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) print*,'nan found f1 and df1: point 4 | '//trim(adjustl(chraq_all(ispa)))
+            if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
+                print*,'nan found f1 and df1: point 4 | '//trim(adjustl(chraq_all(ispa)))
+            endif 
             
             ! account for speces associated with NH4+ (both anions and cations: X + NH4+ = XNH4+)
             do ispa_nh3 = 1,2
@@ -289,7 +295,8 @@ module scepter_eq_charge
                         & )
                     d2f1 = d2f1 + ( & 
                         & + (base_charge(ispa) + rspa_nh3)*fkeq &
-                        & *keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(rspa_nh3+ss_add)*(rspa_nh3+ss_add-1d0)*(pnh3x*knh3/k1nh3)**rspa_nh3 &
+                        & *keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:)*(rspa_nh3+ss_add) & 
+                        & *(rspa_nh3+ss_add-1d0)*(pnh3x*knh3/k1nh3)**rspa_nh3 &
                         & *prox**(rspa_nh3+ss_add-2d0) &
                         & )
                     df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + (& 
@@ -300,7 +307,8 @@ module scepter_eq_charge
                         & + (base_charge(ispa) + rspa_nh3)*fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
                         & *(knh3/k1nh3)**rspa_nh3*rspa_nh3*rspa_nh3**(rspa_nh3-1d0)*prox**(rspa_nh3+ss_add) &
                         & )
-                    df1df2 = df1df2 + (base_charge(ispa) + rspa_nh3)*dfkeq_dios*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
+                    df1df2 = df1df2 + (base_charge(ispa) + rspa_nh3)*dfkeq_dios &
+                        & *keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
                         & *(pnh3x*knh3/k1nh3)**rspa_nh3*prox**(rspa_nh3+ss_add)
                     f2 = f2 + (base_charge(ispa) + rspa_nh3)**2d0*fkeq*keqaq_nh3(ispa,ispa_nh3)*maqf_loc(ispa,:) &
                         & *(pnh3x*knh3/k1nh3)**rspa_nh3*prox**(rspa_nh3+ss_add)
@@ -326,7 +334,8 @@ module scepter_eq_charge
                     endif 
                     if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                         write(chrint,'(I1)') ispa_nh3
-                        print'("nan found f1 and df1: point 5 | ",A11)', '(nh4)'//trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
+                        print'("nan found f1 and df1: point 5 | ",A11)', '(nh4)' &
+                        & //trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
                     endif 
                     
                 endif 
@@ -386,19 +395,22 @@ module scepter_eq_charge
                         f1 = f1 + (base_charge(ispa) + rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
                         df1 = df1 + ( & 
                             & + (base_charge(ispa) + rspa_h)*fkeq &
-                            &        *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*prox**(rspa_h+ss_add-1d0) &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*prox**(rspa_h+ss_add-1d0) &
                             & )
                         d2f1 = d2f1 + ( & 
                             & + (base_charge(ispa) + rspa_h)*fkeq &
-                            &        *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*(rspa_h+ss_add-1d0)*prox**(rspa_h+ss_add-2d0) &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add) &
+                            &*(rspa_h+ss_add-1d0)*prox**(rspa_h+ss_add-2d0) &
                             & )
                         df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + (& 
                             & + (base_charge(ispa) + rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(rspa_h+ss_add) &
                             & )
                         df1df2 = df1df2 + ( &
-                            & + (base_charge(ispa) + rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add) &
+                            & + (base_charge(ispa) + rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h) &
+                            & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add) &
                             & )
-                        f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
+                        f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h) &
+                            & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
                         df2df1 = df2df1 + ( & 
                             & + (base_charge(ispa) + rspa_h)**2d0*fkeq &
                             &        *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*prox**(rspa_h+ss_add-1d0) &
@@ -406,7 +418,8 @@ module scepter_eq_charge
                         df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + (& 
                             & + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(rspa_h+ss_add) &
                             & )
-                        df2 = df2 + (base_charge(ispa) + rspa_h)**2d0*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
+                        df2 = df2 + (base_charge(ispa) + rspa_h)**2d0*dfkeq_dios &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
                         if (print_res) then 
                             write(chrint,'(I1)') ispa_h
                             write(88,'(A11)', advance='no') 'h'//trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
@@ -414,7 +427,8 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_h
-                            print'("nan found f1 and df1: point 6 | ",A11)', 'h'//trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
+                            print'("nan found f1 and df1: point 6 | ",A11)', 'h' &
+                            & //trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
                         endif 
                         
                     endif 
@@ -431,22 +445,25 @@ module scepter_eq_charge
                             fkeq = 1d0/gamma(2,:)
                             dfkeq_dios = -1d0/gamma(2,:)**2d0*dgamma_dios(2,:)
                             fkeqaq_h(ispa,ispa_h,:) = fkeq
-                            f1 = f1 + (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                            f1 = f1 + (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h) &
+                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
                             df1 = df1 + ( &
                                 & + (base_charge(ispa) - rspa_h)*fkeq &
-                                &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*prox**(ss_add-rspa_h-1d0) &
+                                & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*prox**(ss_add-rspa_h-1d0) &
                                 & )
                             d2f1 = d2f1 + ( &
                                 & + (base_charge(ispa) - rspa_h)*fkeq &
-                                &   *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) &
+                                & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h) &
+                                & *(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) &
                                 & )
                             df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( &
                                 & + (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(ss_add-rspa_h) &
                                 & )
                             df1df2 = df1df2 + ( &
-                                & + (base_charge(ispa) - rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h) &
-                                & )
-                            f2 = f2 + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                                & + (base_charge(ispa) - rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h) &
+                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                            f2 = f2 + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h) &
+                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
                             df2df1 = df2df1 + ( &
                                 & + (base_charge(ispa) - rspa_h)**2d0*fkeq &
                                 &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*prox**(ss_add-rspa_h-1d0) &
@@ -482,15 +499,18 @@ module scepter_eq_charge
                                 & )
                             d2f1 = d2f1 + ( & 
                                 & + (base_charge(ispa) + rspa_h)*fkeq &
-                                &   *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*(rspa_h+ss_add-1d0)*prox**(rspa_h+ss_add-2d0) &
+                                & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add) &
+                                & *(rspa_h+ss_add-1d0)*prox**(rspa_h+ss_add-2d0) &
                                 & )
                             df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + (& 
                                 & + (base_charge(ispa) + rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(rspa_h+ss_add) &
                                 & )
                             df1df2 = df1df2 + ( &
-                                & + (base_charge(ispa) + rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add) &
+                                & + (base_charge(ispa) + rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h) &
+                                & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add) &
                                 & )
-                            f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
+                            f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_ h(ispa,ispa_h) &
+                                & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
                             df2df1 = df2df1 + ( & 
                                 & + (base_charge(ispa) + rspa_h)**2d0*fkeq &
                                 &        *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(rspa_h+ss_add)*prox**(rspa_h+ss_add-1d0) &
@@ -509,7 +529,8 @@ module scepter_eq_charge
                             endif 
                             if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                                 write(chrint,'(I1)') ispa_h-1
-                                print'("nan found f1 and df1: point 8 | ",A11)', 'h'//trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
+                                print'("nan found f1 and df1: point 8 | ",A11)', &
+                                    & 'h'//trim(adjustl(chrint))//trim(adjustl(chraq_all(ispa)))
                             endif 
                             
                         endif 
@@ -559,15 +580,18 @@ module scepter_eq_charge
                             & )
                         d2f1 = d2f1 + ( &
                             & + (base_charge(ispa) - rspa_h)*fkeq &
-                            &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h) &
+                            & *(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) &
                             & )
                         df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( &
                             & + (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(ss_add-rspa_h) &
                             & )
                         df1df2 = df1df2 + ( & 
-                            & + (base_charge(ispa) - rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h) &
+                            & + (base_charge(ispa) - rspa_h)*dfkeq_dios &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h) &
                             & )
-                        f2 = f2 + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                        f2 = f2 + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h) &
+                            & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
                         df2df1 = df2df1 + ( &
                             & + (base_charge(ispa) - rspa_h)**2d0*fkeq &
                             &       *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*prox**(ss_add-rspa_h-1d0) &
@@ -575,7 +599,8 @@ module scepter_eq_charge
                         df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + ( &
                             & + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h)*1d0*prox**(ss_add-rspa_h) &
                             & )
-                        df2 = df2 + (base_charge(ispa) - rspa_h)**2d0*dfkeq_dios*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                        df2 = df2 + (base_charge(ispa) - rspa_h)**2d0*dfkeq_dios &
+                            & *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
                         if (print_res) then 
                             write(chrint,'(I1)') ispa_h
                             write(88,'(A11)', advance='no') trim(adjustl(chraq_all(ispa)))//'(oh)'//trim(adjustl(chrint))
@@ -583,11 +608,14 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_h
-                            print'("nan found f1 and df1: point 9 | ",A11)', trim(adjustl(chraq_all(ispa)))//'(oh)'//trim(adjustl(chrint))
+                            print'("nan found f1 and df1: point 9 | ",A11)', &
+                                & trim(adjustl(chraq_all(ispa)))//'(oh)'//trim(adjustl(chrint))
                             print* &
-                                & , (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*prox**(ss_add-rspa_h) &
+                                & , (base_charge(ispa) - rspa_h)*fkeq*keqaq_h(ispa,ispa_h)&
+                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h) &
                                 & , (base_charge(ispa) - rspa_h)*fkeq &
-                                &   *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h)*(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) 
+                                &   *keqaq_h(ispa,ispa_h)*maqf_loc(ispa,:)*(ss_add-rspa_h) &
+                                &   *(ss_add-rspa_h-1d0)*prox**(ss_add-rspa_h-2d0) 
                         endif 
                     endif 
                 enddo 
@@ -626,20 +654,23 @@ module scepter_eq_charge
                                 stop
                             endif 
                             fkeqaq_c(ispa,ispa_c,:) = fkeq
-                            f1 = f1 + (base_charge(ispa)-2d0)*fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*prox**(ss_add-2d0)
+                            f1 = f1 + (base_charge(ispa)-2d0)*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *maqf_loc(ispa,:)*k1*k2*kco2*pco2x*prox**(ss_add-2d0)
                             df1 = df1 + ( & 
                                 & + (base_charge(ispa)-2d0)*fkeq &
-                                &       *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0) &
+                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-2d0)*prox**(ss_add-3d0) &
                                 & )
                             d2f1 = d2f1 + ( & 
                                 & + (base_charge(ispa)-2d0)*fkeq &
-                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-2d0)*(ss_add-3d0)*prox**(ss_add-4d0) &
+                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2 &
+                                & *pco2x*(ss_add-2d0)*(ss_add-3d0)*prox**(ss_add-4d0) &
                                 & )
                             df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( & 
                                 & + (base_charge(ispa)-2d0)*fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x*prox**(ss_add-2d0) &
                                 & )
                             df1dmgas(ipco2,:) = df1dmgas(ipco2,:) + ( & 
-                                & + (base_charge(ispa)-2d0)*fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*1d0*prox**(ss_add-2d0) &
+                                & + (base_charge(ispa)-2d0)*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *maqf_loc(ispa,:)*k1*k2*kco2*1d0*prox**(ss_add-2d0) &
                                 & )
                             df1df2 = df1df2 + ( &
                                 & + (base_charge(ispa)-2d0)*dfkeq_dios &
@@ -705,20 +736,24 @@ module scepter_eq_charge
                                 stop
                             endif 
                             fkeqaq_c(ispa,ispa_c,:) = fkeq
-                            f1 = f1 + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*prox**(ss_add-1d0)
+                            f1 = f1 + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *maqf_loc(ispa,:)*k1*k2*kco2*pco2x*prox**(ss_add-1d0)
                             df1 = df1 + ( & 
                                 & + (base_charge(ispa)-1d0)*fkeq &
                                 &       *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0) &
                                 & )
                             d2f1 = d2f1 + ( & 
                                 & + (base_charge(ispa)-1d0)*fkeq &
-                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-1d0)*(ss_add-2d0)*prox**(ss_add-3d0) &
+                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x &
+                                & *(ss_add-1d0)*(ss_add-2d0)*prox**(ss_add-3d0) &
                                 & )
                             df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( & 
-                                & + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x*prox**(ss_add-1d0) &
+                                & + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *1d0*k1*k2*kco2*pco2x*prox**(ss_add-1d0) &
                                 & )
                             df1dmgas(ipco2,:) = df1dmgas(ipco2,:) + ( & 
-                                & + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*1d0*prox**(ss_add-1d0) &
+                                & + (base_charge(ispa)-1d0)*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *maqf_loc(ispa,:)*k1*k2*kco2*1d0*prox**(ss_add-1d0) &
                                 & )
                             df1df2 = df1df2 + ( &
                                 & + (base_charge(ispa)-1d0)*dfkeq_dios &
@@ -730,10 +765,12 @@ module scepter_eq_charge
                                 & )
                             df2df1 = df2df1 + ( & 
                                 & + (base_charge(ispa)-1d0)**2d0*fkeq &
-                                &       *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2*pco2x*(ss_add-1d0)*prox**(ss_add-2d0) &
+                                & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,:)*k1*k2*kco2 &
+                                & *pco2x*(ss_add-1d0)*prox**(ss_add-2d0) &
                                 & )
                             df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + ( & 
-                                & + (base_charge(ispa)-1d0)**2d0*fkeq*keqaq_c(ispa,ispa_c)*1d0*k1*k2*kco2*pco2x*prox**(ss_add-1d0) &
+                                & + (base_charge(ispa)-1d0)**2d0*fkeq*keqaq_c(ispa,ispa_c) &
+                                & *1d0*k1*k2*kco2*pco2x*prox**(ss_add-1d0) &
                                 & )
                             df2dmgas(ipco2,:) = df2dmgas(ipco2,:) + ( & 
                                 & + (base_charge(ispa)-1d0)**2d0*fkeq &
@@ -786,7 +823,8 @@ module scepter_eq_charge
                             stop
                         endif 
                         fkeqaq_s(ispa,ispa_s,:) = fkeq
-                        f1 = f1 + (base_charge(ispa)-2d0*rspa_s)*fkeq*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add
+                        f1 = f1 + (base_charge(ispa)-2d0*rspa_s)*fkeq*keqaq_s(ispa,ispa_s) &
+                            & *maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add
                         df1 = df1 + ( & 
                             & + (base_charge(ispa)-2d0*rspa_s)*fkeq &
                             &       *keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s*ss_add*prox**(ss_add-1d0) & 
@@ -803,10 +841,12 @@ module scepter_eq_charge
                             & *maqf_loc(ispa,:)*rspa_s*so4f**(rspa_s-1d0)*prox**ss_add & 
                             & )
                         df1df2 = df1df2 + ( &
-                            & + (base_charge(ispa)-2d0*rspa_s)*dfkeq_dios*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add &
+                            & + (base_charge(ispa)-2d0*rspa_s)*dfkeq_dios &
+                            & *keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add &
                             & )
                         f2 = f2 + ( & 
-                            & + (base_charge(ispa)-2d0*rspa_s)**2d0*fkeq*keqaq_s(ispa,ispa_s)*maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add &
+                            & + (base_charge(ispa)-2d0*rspa_s)**2d0*fkeq*keqaq_s(ispa,ispa_s) &
+                            & *maqf_loc(ispa,:)*so4f**rspa_s*prox**ss_add &
                             & )
                         df2df1 = df2df1 + ( & 
                             & + (base_charge(ispa)-2d0*rspa_s)**2d0*fkeq &
@@ -830,7 +870,8 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_s
-                            print*,'nan found f1 and df1: point 12 | '//trim(adjustl(chraq_all(ispa)))//'(so4)'//trim(adjustl(chrint))
+                            print*,'nan found f1 and df1: point 12 | ' &
+                                & //trim(adjustl(chraq_all(ispa)))//'(so4)'//trim(adjustl(chrint))
                         endif 
                             
                     endif 
@@ -880,15 +921,15 @@ module scepter_eq_charge
                             & )
                         d2f1 = d2f1 + ( & 
                             & + (base_charge(ispa)-1d0*rspa_no3)*fkeq &
-                            &       *keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3*ss_add*(ss_add-1d0)*prox**(ss_add-2d0) & 
+                            & *keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3 &
+                            & *ss_add*(ss_add-1d0)*prox**(ss_add-2d0) & 
                             & )
                         df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( & 
-                            & + (base_charge(ispa)-1d0*rspa_no3)*fkeq*keqaq_no3(ispa,ispa_no3)*1d0*no3f**rspa_no3*prox**ss_add & 
-                            & )
-                        df1dmaqf(ino3,:) = df1dmaqf(ino3,:) + ( & 
                             & + (base_charge(ispa)-1d0*rspa_no3)*fkeq*keqaq_no3(ispa,ispa_no3) &
-                            &   *maqf_loc(ispa,:)*rspa_no3*no3f**(rspa_no3-1d0)*prox**ss_add & 
-                            & )
+                            & *1d0*no3f**rspa_no3*prox**ss_add )
+                        df1dmaqf(ino3,:) = df1dmaqf(ino3,:) + (& 
+                            & + (base_charge(ispa)-1d0*rspa_no3)*fkeq*keqaq_no3(ispa,ispa_no3) &
+                            &   *maqf_loc(ispa,:)*rspa_no3*no3f**(rspa_no3-1d0)*prox**ss_add)
                         df1df2 = df1df2 + ( &
                             & + (base_charge(ispa)-1d0*rspa_no3)*dfkeq_dios &
                             &       *keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3*prox**ss_add &
@@ -902,8 +943,8 @@ module scepter_eq_charge
                             &       *keqaq_no3(ispa,ispa_no3)*maqf_loc(ispa,:)*no3f**rspa_no3*ss_add*prox**(ss_add-1d0) & 
                             & )
                         df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + ( & 
-                            & + (base_charge(ispa)-1d0*rspa_no3)**2d0*fkeq*keqaq_no3(ispa,ispa_no3)*1d0*no3f**rspa_no3*prox**ss_add & 
-                            & )
+                            & + (base_charge(ispa)-1d0*rspa_no3)**2d0*fkeq*keqaq_no3(ispa,ispa_no3) &
+                            & *1d0*no3f**rspa_no3*prox**ss_add )
                         df2dmaqf(ino3,:) = df2dmaqf(ino3,:) + ( & 
                             & + (base_charge(ispa)-1d0*rspa_no3)**2d0*fkeq*keqaq_no3(ispa,ispa_no3) &
                             &   *maqf_loc(ispa,:)*rspa_no3*no3f**(rspa_no3-1d0)*prox**ss_add & 
@@ -919,7 +960,8 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_no3
-                            print*,'nan found f1 and df1: point 13 | '//trim(adjustl(chraq_all(ispa)))//'(no3)'//trim(adjustl(chrint))
+                            print*,'nan found f1 and df1: point 13 | ' &
+                                &  //trim(adjustl(chraq_all(ispa)))//'(no3)'//trim(adjustl(chrint))
                         endif 
                             
                     endif 
@@ -969,10 +1011,12 @@ module scepter_eq_charge
                             & )
                         d2f1 = d2f1 + ( & 
                             & + (base_charge(ispa)-1d0*rspa_cl)*fkeq &
-                            &       *keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl*ss_add*(ss_add-1d0)*prox**(ss_add-2d0) & 
+                            & *keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl &
+                            & *ss_add*(ss_add-1d0)*prox**(ss_add-2d0) & 
                             & )
                         df1dmaqf(ispa,:) = df1dmaqf(ispa,:) + ( & 
-                            & + (base_charge(ispa)-1d0*rspa_cl)*fkeq*keqaq_cl(ispa,ispa_cl)*1d0*clf**rspa_cl*prox**ss_add & 
+                            & + (base_charge(ispa)-1d0*rspa_cl)*fkeq*keqaq_cl(ispa,ispa_cl) &
+                            & *1d0*clf**rspa_cl*prox**ss_add & 
                             & )
                         df1dmaqf(icl,:) = df1dmaqf(icl,:) + ( & 
                             & + (base_charge(ispa)-1d0*rspa_cl)*fkeq*keqaq_cl(ispa,ispa_cl) &
@@ -991,7 +1035,8 @@ module scepter_eq_charge
                             &       *keqaq_cl(ispa,ispa_cl)*maqf_loc(ispa,:)*clf**rspa_cl*ss_add*prox**(ss_add-1d0) & 
                             & )
                         df2dmaqf(ispa,:) = df2dmaqf(ispa,:) + ( & 
-                            & + (base_charge(ispa)-1d0*rspa_cl)**2d0*fkeq*keqaq_cl(ispa,ispa_cl)*1d0*clf**rspa_cl*prox**ss_add & 
+                            & + (base_charge(ispa)-1d0*rspa_cl)**2d0*fkeq*keqaq_cl(ispa,ispa_cl) &
+                            & *1d0*clf**rspa_cl*prox**ss_add & 
                             & )
                         df2dmaqf(icl,:) = df2dmaqf(icl,:) + ( & 
                             & + (base_charge(ispa)-1d0*rspa_cl)**2d0*fkeq*keqaq_cl(ispa,ispa_cl) &
@@ -1008,7 +1053,8 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_cl
-                            print*,'nan found f1 and df1: point 14 | '//trim(adjustl(chraq_all(ispa)))//'(cl)'//trim(adjustl(chrint))
+                            print*,'nan found f1 and df1: point 14 | ' &
+                                & //trim(adjustl(chraq_all(ispa)))//'(cl)'//trim(adjustl(chrint))
                         endif 
                             
                     endif 
@@ -1115,7 +1161,8 @@ module scepter_eq_charge
                         endif 
                         if ( debug.and.(any(isnan(f1)).or.any(isnan(df1))) ) then 
                             write(chrint,'(I1)') ispa_oxa
-                            print*,'nan found f1 and df1: point 15 | '//trim(adjustl(chraq_all(ispa)))//'(oxa)'//trim(adjustl(chrint))
+                            print*,'nan found f1 and df1: point 15 | ' &
+                                & //trim(adjustl(chraq_all(ispa)))//'(oxa)'//trim(adjustl(chrint))
                         endif 
                             
                     endif 
@@ -1198,8 +1245,8 @@ module scepter_eq_charge
                             if ( keqaq_h(ispa,ispa_h) > 0d0) then 
                                 rspa_h = real(ispa_h,kind=8)
                                 f1_chk(iz) = f1_chk(iz) &
-                                    & + (base_charge(ispa) + rspa_h)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(rspa_h+ss_add(iz)) &
-                                    & *fkeqaq_h(ispa,ispa_h,iz)
+                                    & + (base_charge(ispa) + rspa_h)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz) &
+                                    & *prox(iz)**(rspa_h+ss_add(iz))*fkeqaq_h(ispa,ispa_h,iz)
                                 write(88,'(E25.16)', advance='no') keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**rspa_h &
                                     & *fkeqaq_h(ispa,ispa_h,iz)
                                 write(99,'(E25.16)', advance='no') (base_charge(ispa) + rspa_h) &
@@ -1248,8 +1295,8 @@ module scepter_eq_charge
                             if ( keqaq_h(ispa,ispa_h) > 0d0) then 
                                 rspa_h = real(ispa_h,kind=8)
                                 f1_chk(iz) = f1_chk(iz) &
-                                    & + (base_charge(ispa) - rspa_h)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)*prox(iz)**(ss_add(iz)-rspa_h) &
-                                    & *fkeqaq_h(ispa,ispa_h,iz)
+                                    & + (base_charge(ispa) - rspa_h)*keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz) &
+                                    & *prox(iz)**(ss_add(iz)-rspa_h)*fkeqaq_h(ispa,ispa_h,iz)
                                 write(88,'(E25.16)', advance='no') keqaq_h(ispa,ispa_h)*maqf_loc(ispa,iz)/prox(iz)**rspa_h &
                                     & *fkeqaq_h(ispa,ispa_h,iz)
                                 write(99,'(E25.16)', advance='no') (base_charge(ispa) - rspa_h) &
@@ -1262,8 +1309,8 @@ module scepter_eq_charge
                             if ( keqaq_c(ispa,ispa_c) > 0d0) then 
                                 if (ispa_c == 1) then ! with CO3--
                                     f1_chk(iz) = f1_chk(iz) + (base_charge(ispa)-2d0) &
-                                        & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz)*prox(iz)**(ss_add(iz)-2d0) &
-                                        & *fkeqaq_c(ispa,ispa_c,iz)
+                                        & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz) &
+                                        & *prox(iz)**(ss_add(iz)-2d0)*fkeqaq_c(ispa,ispa_c,iz)
                                     write(88,'(E25.16)', advance='no') &
                                         & keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz)/prox(iz)**2d0 &
                                         & *fkeqaq_c(ispa,ispa_c,iz)
@@ -1272,8 +1319,8 @@ module scepter_eq_charge
                                         & *fkeqaq_c(ispa,ispa_c,iz)
                                 elseif (ispa_c == 2) then ! with HCO3-
                                     f1_chk(iz) = f1_chk(iz) + (base_charge(ispa)-1d0) &
-                                        & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz)*prox(iz)**(ss_add(iz)-1d0) &
-                                        & *fkeqaq_c(ispa,ispa_c,iz)
+                                        & *keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz) &
+                                        & *prox(iz)**(ss_add(iz)-1d0)*fkeqaq_c(ispa,ispa_c,iz)
                                     write(88,'(E25.16)', advance='no') &
                                         & keqaq_c(ispa,ispa_c)*maqf_loc(ispa,iz)*k1*k2*kco2*pco2x(iz)/prox(iz) &
                                         & *fkeqaq_c(ispa,ispa_c,iz)
@@ -1337,8 +1384,8 @@ module scepter_eq_charge
                             endif 
                             if ( keqaq_oxa(ispa,ispa_oxa) > 0d0) then 
                                 f1_chk(iz) = f1_chk(iz)  + (base_charge(ispa)-rspa_oxa_2) &
-                                    & *keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3*prox(iz)**(ss_add(iz)-rspa_oxa) &
-                                    & *fkeqaq_oxa(ispa,ispa_oxa,iz)
+                                    & *keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3 &
+                                    & *prox(iz)**(ss_add(iz)-rspa_oxa) *fkeqaq_oxa(ispa,ispa_oxa,iz)
                                 write(88,'(E25.16)', advance='no') &
                                     & keqaq_oxa(ispa,ispa_oxa)*maqf_loc(ispa,iz)*oxaf(iz)**rspa_oxa_3/prox(iz)**rspa_oxa &
                                     & *fkeqaq_oxa(ispa,ispa_oxa,iz)
