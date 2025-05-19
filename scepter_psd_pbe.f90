@@ -8,6 +8,7 @@ module scepter_psd_pbe
     use scepter_constants
     use scepter_variables
     use scepter_psd
+    use lapack95
     implicit none
 
     private
@@ -239,8 +240,8 @@ module scepter_psd_pbe
                         else
                             ! & + ( psdxx(iips,iz) -  psdx(iips,iz) ) /dt * dpsx(iips) &
                             ! & - kpsdx(iz) * ( lambda(iips+1)*psdxx(iips+1,iz) - lambda(iips)*psdxx(iips,iz) )  &
-                            psdxx(iips,iz) = psdx(iips,iz) + kpsdx(iz) * ( lambda(iips+1)*psdx(iips+1,iz) - lambda(iips)*psdx(iips,iz) ) &
-                                & *dt/dpsx(iips)
+                            psdxx(iips,iz) = psdx(iips,iz) + kpsdx(iz) & 
+                            & * ( lambda(iips+1)*psdx(iips+1,iz) - lambda(iips)*psdx(iips,iz) ) *dt/dpsx(iips)
                         endif
                     
                     else
@@ -257,8 +258,8 @@ module scepter_psd_pbe
                         else
                             ! & + ( psdxx(iips,iz) -  psdx(iips,iz) ) /dt * dpsx(iips) &
                             ! & - kpsdx(iz) * ( lambda(iips)*psdxx(iips,iz) - lambda(iips-1)*psdxx(iips-1,iz) )  &
-                            psdxx(iips,iz) = psdx(iips,iz) + kpsdx(iz) * ( lambda(iips)*psdx(iips,iz) - lambda(iips-1)*psdx(iips-1,iz) ) &
-                                & *dt/dpsx(iips)
+                            psdxx(iips,iz) = psdx(iips,iz) + kpsdx(iz) & 
+                            & * (lambda(iips)*psdx(iips,iz) - lambda(iips-1)*psdx(iips-1,iz))*dt/dpsx(iips)
                         endif
                         
                     endif 

@@ -9,7 +9,7 @@ module scepter_psd_implicit
     use scepter_constants
     use scepter_variables
     use scepter_kinetics
-    
+    use lapack95
     implicit none
     public :: psd_implicit_all_v2
     public :: psd_implicit_all_v4

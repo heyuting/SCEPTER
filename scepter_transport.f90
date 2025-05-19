@@ -14,7 +14,7 @@ module scepter_transport
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_kinetics ! Kinetic reaction calculations
     use scepter_findloc ! Find location of a value in an array
-    
+    use lapack95 ! to call DGESV
     implicit none
     private
     public :: alsilicate_aq_gas_1D_v3_2

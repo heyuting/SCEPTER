@@ -44,15 +44,13 @@ module scepter_calc_khgas
         real(kind=8),dimension(nsp_gas_cnst,nz),intent(in)::mgasc
         real(kind=8),dimension(nz),intent(in)::pro,prox,ios,iosx
         real(kind=8),dimension(nsp_gas_all,3),intent(in)::keqgas_h
-        real(kind=8),dimension(nsp_aq_all,4),intent(in)::keqaq_h
-        real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3
+        real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_c,keqaq_nh3
         ! output 
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::khgas,khgasx,dkhgas_dpro,dkhgas_dios
         real(kind=8),dimension(nsp_gas_all,nsp_gas_all,nz),intent(out)::dkhgas_dmgas
         real(kind=8),dimension(nsp_gas_all,nsp_aq_all,nz),intent(out)::dkhgas_dmaq
 
         ! local 
-        real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,maq_loc
         real(kind=8),dimension(nsp_aq_all,nz)::maqf_loc,maqf_loc_prev
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc,mgas_loc
 
