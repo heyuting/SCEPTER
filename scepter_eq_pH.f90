@@ -10,7 +10,6 @@ module scepter_eq_ph
     use scepter_equilibrium ! Equilibrium calculations
     use scepter_eq_charge ! Charge balance calculations
     use scepter_findloc ! Find location of a value in an array
-    use lapack95
     implicit none
     private
     public :: calc_pH_v7_4
