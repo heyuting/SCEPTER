@@ -15,7 +15,7 @@ module scepter_kinetics
     ! Purpose: Calculate reaction rates for solid dissolution/precipitation
     !-----------------------------------------------------------------------
     subroutine sld_rxn( &
-        & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx,dz &! input 
+        & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx &! input 
         & ,dksld_dmaq,domega_dmaq,dksld_dmgas,domega_dmgas,precstyle,solmod &! input
         & ,msld,msldth,dt,sat,maq,maqth,agas,mgas,mgasth,staq,stgas,chrsld &! input
         & ,rxnsld,drxnsld_dmsld,drxnsld_dmaq,drxnsld_dmgas &! output
@@ -44,8 +44,6 @@ module scepter_kinetics
 
         integer ispa,isps,ispg,iz
         real(kind=8),dimension(nsp_sld,nz)::maxdis,maxprec
-
-        real(kind=8)::auth_th = 1d2
         real(kind=8),parameter::infinity = huge(0d0)
             
             
@@ -204,7 +202,7 @@ module scepter_kinetics
                             & + ksld(isps,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
                             & *(msldx(isps,:)+msld_seed)*(-domega_dmaq(isps,ispa,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
-                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps)*1d-6*\&
+                            & + dksld_dmaq(isps,ispa,:)*poro*hr(isps,:)*mv(isps)*1d-6 &
                             & *(msldx(isps,:)+msld_seed)*(1d0-omega(isps,:)) &
                             & *merge(0d0,1d0,1d0-omega(isps,:)*nonprec(isps,:) < 0d0) &
                             & )

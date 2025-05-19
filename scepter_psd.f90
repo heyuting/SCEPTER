@@ -148,7 +148,7 @@ contains
         logical,intent(inout)::psd_error_flg
         ! local 
         real(kind=8),dimension(nps,nz)::dVd,psd_old,psd_new,dpsd_tmp
-        real(kind=8),dimension(nps)::psd_tmp,dvd_tmp
+        real(kind=8),dimension(nps):: dvd_tmp
         real(kind=8) ps_new,ps_newp,dvd_res
         integer ips,iips,ips_new,iz,isps
         logical :: safe_mode = .false.
@@ -484,9 +484,9 @@ contains
         logical,intent(inout)::psd_error_flg
         ! local 
         real(kind=8),dimension(nps,nz)::dVd,psd_old,psd_new,dpsd_tmp
-        real(kind=8),dimension(nps)::psd_tmp,dvd_tmp,rough_tmp
+        real(kind=8),dimension(nps)::dvd_tmp,rough_tmp
         real(kind=8) ps_new,ps_newp,dvd_res
-        integer ips,iips,ips_new,isps
+        integer ips,iips,ips_new
         logical :: safe_mode = .false.
         ! logical :: safe_mode = .true.
 

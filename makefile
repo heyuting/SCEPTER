@@ -73,6 +73,8 @@ SRC           = \
                 scepter_concentration.f90 \
                 scepter_equilibrium.f90 \
                 scepter_kinetics.f90 \
+                scepter_psd.f90 \
+                scepter_eq_charge.f90 \
                 $(wildcard scepter*.f90)
 PROGRAM       = scepter
 OBJS          = $(SRC:.f90=.o)
