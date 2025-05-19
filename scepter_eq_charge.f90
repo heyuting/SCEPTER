@@ -63,13 +63,13 @@ module scepter_eq_charge
         data ieqgas_h0,ieqgas_h1,ieqgas_h2/1,2,3/
 
         integer ispa,ispa_h,ispa_c,ispa_s,iz,ipco2,ipnh3,iso4,ioxa,ispa_no3,ino3,ispa_nh3,ispa_oxa,ispa_cl &
-            & ,icl,icharge,ic1,ic2,ic3
+            & ,icl,icharge,ic1,ic2
 
         real(kind=8) kco2,k1,k2,knh3,k1nh3,rspa_h,rspa_s,rspa_no3,rspa_nh3,rspa_oxa,rspa_oxa_2,rspa_oxa_3 &
             & ,rspa_cl,rcharge
         ! real(kind=8) tc
         real(kind=8),dimension(nz)::pco2x,pnh3x,so4f,no3f,oxaf,clf
-        real(kind=8),dimension(nz)::isf,fkw,fkeq,dfkw_dios,dfkeq_dios
+        real(kind=8),dimension(nz)::fkw,fkeq,dfkw_dios,dfkeq_dios
         real(kind=8),dimension(nz)::gamma_tmp,dgamma_dios_tmp
         real(kind=8),dimension(4,nz)::gamma,dgamma_dios
         real(kind=8),dimension(nz)::f1_chk,ss_add,back
@@ -461,7 +461,7 @@ module scepter_eq_charge
                                 & )
                             df1df2 = df1df2 + ( &
                                 & + (base_charge(ispa) - rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h) &
-                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
+                                & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h))
                             f2 = f2 + (base_charge(ispa) - rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h) &
                                 & *maqf_loc(ispa,:)*prox**(ss_add-rspa_h)
                             df2df1 = df2df1 + ( &
@@ -509,7 +509,7 @@ module scepter_eq_charge
                                 & + (base_charge(ispa) + rspa_h)*dfkeq_dios*keqaq_h(ispa,ispa_h) &
                                 & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add) &
                                 & )
-                            f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_ h(ispa,ispa_h) &
+                            f2 = f2 + (base_charge(ispa) + rspa_h)**2d0*fkeq*keqaq_h(ispa,ispa_h) &
                                 & *maqf_loc(ispa,:)*prox**(rspa_h+ss_add)
                             df2df1 = df2df1 + ( & 
                                 & + (base_charge(ispa) + rspa_h)**2d0*fkeq &

@@ -277,8 +277,10 @@ module scepter_calc_rxn_ext
                             & + poro*sat*1d3*fe2f*( &
                             & + k_arrhenius(10d0**(1.46d0),25d0+tempk_0,tc+tempk_0,46d0,rg) &
                             & + k_arrhenius(10d0**(8.34d0),25d0+tempk_0,tc+tempk_0,21.6d0,rg)*k1fe2/prox &
-                            & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
-                            & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2hco3*k1*k2*kco2*pco2x/prox &
+                            & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                            &       *k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
+                            & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                            &       *k1fe2hco3*k1*k2*kco2*pco2x/prox &
                             & )*po2x &
                             & )
                         
@@ -286,7 +288,8 @@ module scepter_calc_rxn_ext
                             case('pro')
                                 drxnext_dmsp = ( &
                                     & + poro*sat*1d3*fe2f*( &
-                                    & + k_arrhenius(10d0**(8.34d0),25d0+tempk_0,tc+tempk_0,21.6d0,rg)*k1fe2*(-1d0)/prox**2d0 &
+                                    & + k_arrhenius(10d0**(8.34d0),25d0+tempk_0,tc+tempk_0,21.6d0,rg) &
+                                    &       *k1fe2*(-1d0)/prox**2d0 &
                                     & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
                                     &       *k1fe2co3*k1*k2*kco2*pco2x*(-2d0)/prox**3d0 &
                                     & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
@@ -298,15 +301,19 @@ module scepter_calc_rxn_ext
                                     & + poro*sat*1d3*fe2f*( &
                                     & + k_arrhenius(10d0**(1.46d0),25d0+tempk_0,tc+tempk_0,46d0,rg) &
                                     & + k_arrhenius(10d0**(8.34d0),25d0+tempk_0,tc+tempk_0,21.6d0,rg)*k1fe2/prox &
-                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
-                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2hco3*k1*k2*kco2*pco2x/prox &
+                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                                    &       *k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
+                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                                    &       *k1fe2hco3*k1*k2*kco2*pco2x/prox &
                                     & )*1d0 &
                                     & )
                             case('pco2')
                                 drxnext_dmsp = ( &
                                     & + poro*sat*1d3*fe2f*( &
-                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2co3*k1*k2*kco2*1d0/prox**2d0 &
-                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2hco3*k1*k2*kco2*1d0/prox &
+                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                                    &       *k1fe2co3*k1*k2*kco2*1d0/prox**2d0 &
+                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                                    &       *k1fe2hco3*k1*k2*kco2*1d0/prox &
                                     & )*po2x &
                                     & )
                             case('fe2')
@@ -314,8 +321,10 @@ module scepter_calc_rxn_ext
                                     & + poro*sat*1d3*1d0*( &
                                     & + k_arrhenius(10d0**(1.46d0),25d0+tempk_0,tc+tempk_0,46d0,rg) &
                                     & + k_arrhenius(10d0**(8.34d0),25d0+tempk_0,tc+tempk_0,21.6d0,rg)*k1fe2/prox &
-                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
-                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg)*k1fe2hco3*k1*k2*kco2*pco2x/prox &
+                                    & + k_arrhenius(10d0**(6.27d0),25d0+tempk_0,tc+tempk_0,29d0,rg  ) &
+                                    &       *k1fe2co3*k1*k2*kco2*pco2x/prox**2d0 &
+                                    & + k_arrhenius(10d0**(5.12d0),25d0+tempk_0,tc+tempk_0,29d0,rg) &
+                                    &       *k1fe2hco3*k1*k2*kco2*pco2x/prox &
                                     & )*po2x &
                                     & )
                             case default

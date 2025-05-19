@@ -24,7 +24,7 @@ module scepter_eq_ph
         & nz,kw,nsp_aq,nsp_gas,nsp_aq_all,nsp_gas_all,nsp_aq_cnst,nsp_gas_cnst &! input
         & ,poro,sat,tc &! input  
         & ,chraq,chraq_cnst,chraq_all,chrgas,chrgas_cnst,chrgas_all &!input
-        & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,maqth_all,keqaq_no3,keqaq_nh3 &! input
+        & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3 &! input
         & ,keqaq_oxa,keqaq_cl &! input
         & ,print_cb,print_loc,z,act_ON &! input 
         & ,dprodmaq_all,dprodmgas_all &! output
@@ -40,16 +40,14 @@ module scepter_eq_ph
 
         integer,intent(in)::nz
         real(kind=8),intent(in)::kw,tc
-        real(kind=8) so4th
-        real(kind=8),dimension(nz)::so4x,prox_save,error_save,prox_save_newton,prox_save_bisec,prox_init
+        real(kind=8),dimension(nz)::so4x,prox_save,error_save,prox_save_newton,prox_init
         real(kind=8),dimension(nz)::iosx_save,ios_new
         real(kind=8),dimension(nz),intent(in)::z,poro,sat
         real(kind=8),dimension(nz),intent(inout)::prox
         logical,intent(out)::ph_error
 
-        real(kind=8),dimension(nz)::prox_max,prox_min,ph_add_order,prox_tmp1,prox_tmp2
-        real(kind=8),dimension(nz)::f1_max,f1_min
-        real(kind=8),dimension(nz)::df1,f1,f2,df2,df21,df12,d2f1
+        real(kind=8),dimension(nz)::ph_add_order,prox_tmp1,prox_tmp2
+        real(kind=8),dimension(nz)::df1,f1,f2,df2,df12,d2f1
         real(kind=8),dimension(nz),intent(inout)::iosx
         real(kind=8) k_order,ph_inflex,a_order,c_order
         real(kind=8) error,tol,dconc 
@@ -74,13 +72,11 @@ module scepter_eq_ph
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_no3
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_oxa
         real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_cl
-        real(kind=8),dimension(nsp_aq_all),intent(in)::maqth_all
 
         real(kind=8),dimension(nsp_aq_all)::base_charge
         real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,maqf_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::dmaqf_dpro,dmaqf_dso4f,dmaqf_dmaq,dmaqf_dpco2
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::df1dmaq,df2dmaq,df1dmaqf,d2f1dmaqf
+        real(kind=8),dimension(nsp_aq_all,nz)::df1dmaq,df1dmaqf,d2f1dmaqf
         real(kind=8),dimension(nsp_gas_all,nz)::df1dmgas,df2dmgas,d2f1dmgas
 
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::dprodmaq_all
@@ -89,16 +85,15 @@ module scepter_eq_ph
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::diosdmaq_all
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::diosdmgas_all
 
-        real(kind=8),dimension(nsp_aq_all,nz)::dmaq,maqtmp_loc
+        real(kind=8),dimension(nsp_aq_all,nz)::maqtmp_loc
         real(kind=8),dimension(nsp_gas_all,nz)::dmgas,mgastmp_loc
-        real(kind=8),dimension(nz)::df1_dum,f1_dum,d2f1_dum,fact,f1_tmp,df1_tmp,d2f1_tmp
+        real(kind=8),dimension(nz)::df1_dum,f1_dum,d2f1_dum,f1_tmp
         real(kind=8),dimension(nz)::f1_tmp1,df1_tmp1,d2f1_tmp1
         real(kind=8),dimension(nz)::f1_tmp2,df1_tmp2,d2f1_tmp2
         real(kind=8),dimension(nsp_aq_all,nz)::df1dmaqf_dum,d2f1dmaqf_dum,df1dmaqf_tmp,d2f1dmaqf_tmp
         real(kind=8),dimension(nsp_gas_all,nz)::df1dmgas_dum,d2f1dmgas_dum,df1dmgas_tmp,d2f1dmgas_tmp
-        real(kind=8),dimension(nz)::d2f2,df1df2,df2df1
-        real(kind=8),dimension(nsp_aq_all,nz)::df2dmaqf,d2f2dmaqf
-        real(kind=8),dimension(nsp_gas_all,nz)::d2f2dmgas
+        real(kind=8),dimension(nz)::df1df2,df2df1
+        real(kind=8),dimension(nsp_aq_all,nz)::df2dmaqf
 
         real(kind=8),dimension(nsp_aq_all,nz)::dmaqft_dpro_loc,maqft_loc,dmaqft_dios_loc
         real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqft_dmaqf_loc
@@ -114,7 +109,7 @@ module scepter_eq_ph
 
         logical,intent(in)::print_cb,act_ON
         character(500),intent(in)::print_loc
-        logical so4_error,print_res
+        logical print_res
         logical bisec_chk,bisec_chk_ON,bisec_only,mod_ph_order,calc_simple,halley,first_chk_done
 
         real(kind=8),allocatable::amx(:,:),ymx(:)
@@ -122,7 +117,6 @@ module scepter_eq_ph
         integer info,nmx
 
         real(kind=8),parameter :: threshold = 10d0
-        real(kind=8),parameter :: corr = exp(threshold)
 
         real(kind=8) ph_tmp,ph_fact,err1,err2,slp,slplog,ph_tmp_min,ph_tmp_max,slp_save
         real(kind=8) ph_max,ph_min 
@@ -428,8 +422,8 @@ module scepter_eq_ph
                         ph_tmp_max = 1d100
                         ! ph_tmp_min = ph_init_min
                         ! ph_tmp_max = ph_init_max
-                        ph_tmp_min = 10d0**-ph_max
-                        ph_tmp_max = 10d0**-ph_min
+                        ph_tmp_min = 10d0**(-ph_max) 
+                        ph_tmp_max = 10d0**(-ph_min)
 
                         ! initially give slp a random negative value to be saved to slp_save
                         slp = -100d0
@@ -437,7 +431,7 @@ module scepter_eq_ph
                         do iph2=1,nph2 ! start from alkaline pH
                             ph_tmp = ph_max + (ph_min - ph_max) &
                                 & * (real(iph2,kind=8)-1d0)/(real(nph2,kind=8)-1d0) 
-                            ph_tmp = 10d0**-ph_tmp
+                            ph_tmp = 10d0**(-ph_tmp) 
                             
                             dconc = ph_tmp*1d-6
                             
@@ -521,7 +515,7 @@ module scepter_eq_ph
                         do iph2=nph2,1,-1 ! start from acidic pH
                             ph_tmp = ph_max + (ph_min - ph_max) &
                                 & * (real(iph2,kind=8)-1d0)/(real(nph2,kind=8)-1d0) 
-                            ph_tmp = 10d0**-ph_tmp
+                            ph_tmp = 10d0**(-ph_tmp) 
                             
                             dconc = ph_tmp*1d-6
                             
@@ -603,7 +597,7 @@ module scepter_eq_ph
                         enddo 
                         ph_max = -log10(ph_tmp_min)
                         ph_min = -log10(ph_tmp_max)
-                        error = abs( 10d0**-ph_min -  10d0**-ph_max)/10d0**-ph_max
+                        error = abs( 10d0**(-ph_min) -  10d0**(-ph_max))/10d0**(-ph_max)
                         
                         ! if (iph3 /= nph3) then 
                             ! if ( abs((ph_tmp_min - ph_init_min)/ph_init_min) < 1d-6 &
