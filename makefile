@@ -63,16 +63,17 @@ else
   # Not found
 endif
 
-SRC             = \
-                 scepter_constants.f90 \
-                 scepter_variables.f90 \
-                 scepter_IO.f90 \
-                 scepter_findloc.f90 \
-                 scepter_input.f90 \
-                 scepter_concentration.f90 \
-                 scepter_thermodynamics.f90 \
-                 scepter_equilibrium.f90 \
-                 $(wildcard scepter*.f90)
+SRC           = \
+                scepter_constants.f90 \
+                scepter_variables.f90 \
+                scepter_IO.f90 \
+                scepter_findloc.f90 \
+                scepter_input.f90 \
+                scepter_thermodynamics.f90 \
+                scepter_concentration.f90 \
+                scepter_equilibrium.f90 \
+                scepter_kinetics.f90 \
+                $(wildcard scepter*.f90)
 PROGRAM       = scepter
 OBJS          = $(SRC:.f90=.o)
 

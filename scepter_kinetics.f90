@@ -1,12 +1,10 @@
 module scepter_kinetics
     use scepter_constants
     use scepter_variables
-    use scepter_equilibrium
-    use scepter_transport
-    use scepter_findloc
+    
     implicit none
     private
-    public :: sld_kin, sld_rxn, rough_f, calc_rxn_ext_dev_3
+    public :: sld_rxn, rough_f
     ! Constants
     real(kind=8), parameter :: cal2j = 4.184d0
 
@@ -62,9 +60,6 @@ module scepter_kinetics
             enddo 
             stop
         endif 
-        ! print *, 'in sld_rxn'
-        ! print *, ksld(findloc(chrsld,'kfs',dim=1),:)
-
             
         rxnsld = 0d0
         drxnsld_dmsld = 0d0

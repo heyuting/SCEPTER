@@ -12,6 +12,7 @@ module scepter_findloc
     public :: findloc
 
     contains 
+    
     !-----------------------------------------------------------------------
     ! Custom implementation of findloc for compatibility
     ! Searches for a specific string in an array of strings
