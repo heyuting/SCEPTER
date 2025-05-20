@@ -1750,7 +1750,7 @@ module scepter_weathering_main
         allocate(chrsld_nopsd(nsld_nopsd))
 
         call get_nopsd( &
-            & nsp_sld,chrsld,nsld_nopsd &! input
+            & nsp_sld,nsld_nopsd &! input
             & ,chrsld_nopsd &! output
             & )
 

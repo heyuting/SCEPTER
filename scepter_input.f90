@@ -538,14 +538,12 @@ module scepter_input
     endsubroutine get_nopsd_num
 
     subroutine get_nopsd( &
-subroutine get_nopsd( &
-        & nsp_sld,chrsld,nsld_nopsd &! input
+        & nsp_sld,nsld_nopsd &! input
         & ,chrsld_nopsd_dum &! output
         & )
     implicit none
 
     integer,intent(in):: nsp_sld,nsld_nopsd
-    character(5),dimension(nsp_sld),intent(in)::chrsld
     character(5),dimension(nsld_nopsd),intent(out)::chrsld_nopsd_dum
     character(5) chr_tmp
 
