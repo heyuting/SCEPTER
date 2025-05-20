@@ -76,6 +76,7 @@ module scepter_weathering_main
         character(5),dimension(nsp_gas),intent(in)::chrgas
         character(5),dimension(nrxn_ext),intent(in)::chrrxn_ext
         character(5),dimension(nsld_kinspc_in),intent(in)::chrsld_kinspc_in
+        character(5),dimension(nsp_sld),intent(in)::chrsld
         character(5),dimension(:),allocatable ::chrsld_kinspc
         character(5),dimension(nsp_sld_all - nsp_sld)::chrsld_cnst
         character(5),dimension(nsp_aq_all - nsp_aq)::chraq_cnst
