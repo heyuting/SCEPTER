@@ -1,6 +1,5 @@
 module scepter_kinetics
     use scepter_constants
-    use scepter_variables
     
     implicit none
     private

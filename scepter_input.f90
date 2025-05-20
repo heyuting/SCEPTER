@@ -1,6 +1,4 @@
 module scepter_input
-    use scepter_constants
-    use scepter_variables
     use scepter_IO
     use scepter_findloc
     implicit none

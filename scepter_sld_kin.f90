@@ -3,7 +3,6 @@
 !************************************************************************   
 module scepter_sld_kin
     use scepter_constants
-    use scepter_variables
     use scepter_thermodynamics
     implicit none
     private

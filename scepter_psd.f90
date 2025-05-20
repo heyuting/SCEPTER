@@ -1,6 +1,5 @@
 module scepter_psd
     use scepter_constants
-    use scepter_variables
     use scepter_kinetics
     implicit none
     public :: calc_psd_pr

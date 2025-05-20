@@ -5,7 +5,6 @@
 
 module scepter_eq_ph
     use scepter_constants ! Constants
-    use scepter_variables ! Variables
     use scepter_concentration ! Concentration calculations
     use scepter_equilibrium ! Equilibrium calculations
     use scepter_eq_charge ! Charge balance calculations

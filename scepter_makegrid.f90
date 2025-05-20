@@ -5,7 +5,6 @@
 
 module scepter_makegrid
     use scepter_constants
-    use scepter_variables
     implicit none
 
     private

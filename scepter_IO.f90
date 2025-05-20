@@ -1,6 +1,4 @@
 module scepter_IO
-    use scepter_constants
-    use scepter_variables
     implicit none
     private
     public :: get_variables_num, get_variables, get_saved_variables_num, get_saved_variables, Console4

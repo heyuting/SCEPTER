@@ -8,7 +8,6 @@
 program weathering
     ! Module imports for various components of the weathering simulation
     use scepter_constants    ! Physical and chemical constants
-    use scepter_variables    ! Global variables and arrays
     use scepter_IO          ! Input/Output operations
     use scepter_input       ! Input parameter handling
     use scepter_weathering_main  ! Main weathering simulation routines

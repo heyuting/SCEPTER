@@ -6,7 +6,6 @@
 !************************************************************************
 module scepter_psd_pbe
     use scepter_constants
-    use scepter_variables
     use scepter_psd
     implicit none
 

@@ -1,6 +1,5 @@
 module scepter_physics
     use scepter_constants
-    use scepter_variables
     implicit none
     private
     public :: make_transmx, calc_poro, calc_uplift, calcupwindscheme

@@ -4,7 +4,6 @@
 !************************************************************************
 module scepter_calc_rxn_ext
     use scepter_constants
-    use scepter_variables
     use scepter_findloc
     use scepter_concentration
     implicit none

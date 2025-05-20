@@ -4,8 +4,7 @@
 !************************************************************************
 
 module scepter_findloc
-    use scepter_constants
-    use scepter_variables
+
     implicit none
 
     private

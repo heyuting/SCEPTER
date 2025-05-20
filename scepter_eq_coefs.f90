@@ -5,7 +5,6 @@
 !-----------------------------------------------------------------------    
 module scepter_eq_coefs
     use scepter_constants
-    use scepter_variables
     use scepter_thermodynamics ! Thermodynamic calculations
     use scepter_concentration ! Concentration calculations
     use scepter_findloc
