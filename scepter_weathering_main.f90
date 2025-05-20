@@ -67,7 +67,7 @@ module scepter_weathering_main
         real(kind=8),intent(in) :: step_tau ! = 0.1d0 ! yr time duration during which dust is added
         integer,intent(in):: count_dtunchanged_Max 
         integer,intent(in)::nsp_sld != 5 
-        integer,intent(in)::nsp_sld_2 != 25
+        integer::nsp_sld_2 != 25
         integer,intent(in)::nsp_aq != 5
         integer,intent(in)::nsp_gas != 2
         integer,intent(in)::nrxn_ext != 1

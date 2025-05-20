@@ -538,29 +538,31 @@ module scepter_input
     endsubroutine get_nopsd_num
 
     subroutine get_nopsd( &
-        & nsld_nopsd &! input
+subroutine get_nopsd( &
+        & nsp_sld,chrsld,nsld_nopsd &! input
         & ,chrsld_nopsd_dum &! output
         & )
-        implicit none
+    implicit none
 
-        integer,intent(in):: nsld_nopsd
-        character(5),dimension(nsld_nopsd),intent(out)::chrsld_nopsd_dum
-        character(5) chr_tmp
+    integer,intent(in):: nsp_sld,nsld_nopsd
+    character(5),dimension(nsp_sld),intent(in)::chrsld
+    character(5),dimension(nsld_nopsd),intent(out)::chrsld_nopsd_dum
+    character(5) chr_tmp
 
-        character(500) file_name
-        integer i
+    character(500) file_name
+    integer i
 
-        file_name = './nopsd.in'
+    file_name = './nopsd.in'
 
-        if (nsld_nopsd <= 0) return
+    if (nsld_nopsd <= 0) return
 
-        open(50,file=trim(adjustl(file_name)),status = 'old',action='read')
-        read(50,'()')
-        do i =1,nsld_nopsd
-            read(50,*) chr_tmp
-            chrsld_nopsd_dum(i) = chr_tmp
-        enddo 
-        close(50)
+    open(50,file=trim(adjustl(file_name)),status = 'old',action='read')
+    read(50,'()')
+    do i =1,nsld_nopsd
+        read(50,*) chr_tmp
+        chrsld_nopsd_dum(i) = chr_tmp
+    enddo 
+    close(50)
 
 
     endsubroutine get_nopsd
