@@ -4,14 +4,6 @@ module scepter_variables
 
     public
 
-    integer nsp_gas,nrxn_ext
-    character(5),dimension(:),allocatable::chraq,chrsld,chrgas,chrrxn_ext,chrsld_kinspc 
-    real(kind=8),dimension(:),allocatable::kin_sld_spc
-    character(500) sim_name,runname_save,cwd,path,path2,cmd
-    real(kind=8) ztot,ttot,rainpowder,zsupp,poroi,satup,zsat,w,qin,p80,plant_rain,zml_ref,tc,rainpowder_2nd &
-        & ,step_tau
-    integer count_dtunchanged_Max
-
     real(kind=8) dt  ! yr 
     real(kind=8) time
     real(kind=8) pco2i,pnh3i,proi
