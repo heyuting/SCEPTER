@@ -82,7 +82,9 @@ SRC           = \
                 scepter_sld_kin.f90 \
                 scepter_eq_pH.f90 \
                 scepter_makegrid.f90 \
-                $(filter-out scepter_weathering_main.f90 scepter.f90, $(wildcard scepter*.f90)) \
+                scepter_physics.f90 \
+                scepter_transport.f90 \
+                scepter_eq_coefs.f90 \
                 scepter_weathering_main.f90 \
                 scepter.f90
 PROGRAM       = scepter
