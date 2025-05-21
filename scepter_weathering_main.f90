@@ -359,6 +359,19 @@ module scepter_weathering_main
         chrgas_ph = (/'pco2 ','pnh3 '/)
 
         chrco2sp = (/'co2g ','co2aq','hco3 ','co3  ','DIC  ','ALK  '/)
+        
+        if (nsp_aq_cnst .ne. 0) then 
+            do ispa = 1, nsp_aq_cnst
+                do ispa2=1,nsp_aq_all
+                    if (.not.any(chraq==chraq_all(ispa2)) .and. .not.any(chraq_cnst==chraq_all(ispa2))) then 
+                        chraq_cnst(ispa) = chraq_all(ispa2)
+                        exit 
+                    endif 
+                enddo
+            enddo 
+            print *, chraq_cnst
+            ! pause
+        endif 
 
         if (nsp_gas_cnst .ne. 0) then 
             do ispg = 1, nsp_gas_cnst

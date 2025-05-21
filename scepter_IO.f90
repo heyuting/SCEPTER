@@ -101,7 +101,6 @@ module scepter_IO
 
     endsubroutine get_variables
 
-
     subroutine get_saved_variables_num( &
         & workdir,runname_save &! input 
         & ,nsp_aq,nsp_sld,nsp_gas,nrxn_ext,nsld_kinspc,nsld_sa_save &! output
@@ -239,4 +238,4 @@ module scepter_IO
 
     end subroutine Console4
 
-end module scepter_IO
+endmodule scepter_IO

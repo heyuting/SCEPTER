@@ -1503,5 +1503,4 @@ module scepter_concentration
 
     endsubroutine calc_omega_v5
 
-
 end module scepter_concentration 
