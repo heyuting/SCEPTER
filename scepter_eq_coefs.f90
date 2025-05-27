@@ -254,9 +254,9 @@ module scepter_eq_coefs
         ! keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h2) = 1d0/(10d0**-5.516d0) ! from Lawrence et al., GCA, 2014
 
         !  OxaH- = Oxa= + H+ 
-        keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h1) = (10d0**-4.266d0) ! from Lawrence et al., GCA, 2014
+        keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h1) = (10d0**(-4.266d0)) ! from Lawrence et al., GCA, 2014
         !  OxaH- + H+ = OxaH2
-        keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h2) = 1d0/(10d0**-1.25d0) ! from Lawrence et al., GCA, 2014
+        keqaq_h(findloc(chraq_all,'oxa',dim=1),ieqaq_h2) = 1d0/(10d0**(-1.25d0)) ! from Lawrence et al., GCA, 2014
 
         ! Sikora buffer (consts from Goldberg et al., 2002)
 #ifdef Goldberg_Sikora
@@ -332,10 +332,10 @@ module scepter_eq_coefs
         ! keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa) = 1d0/(10d0**-7.26d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
         ! Al3+ + H2O + Oxa= = Al(OH)Oxa + H+ (dominant reaction according to Lawrence et al., GCA, 2014)
         ! Al3+ + H2O + HOxa- = Al(OH)Oxa + 2H+ <----> Al3+ + H2O + Oxa= = Al(OH)Oxa + H+  plus  OxaH- = Oxa= + H+
-        keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa) = 1d0/(10d0**-2.57d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa) = 1d0/(10d0**(-2.57d0))*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
         ! Al3+ + 2H2O + Oxa= = Al(OH)2Oxa- + 2H+ (dominant reaction according to Lawrence et al., GCA, 2014)
         ! Al3+ + 2H2O + HOxa- = Al(OH)2Oxa- + 3H+ <----> Al3+ + 2H2O + Oxa= = Al(OH)2Oxa + 2H+  plus  OxaH- = Oxa= + H+
-        keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa2) = 1d0/(10d0**3.12d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'al',dim=1),ieqaq_oxa2) = 1d0/(10d0**3.12d0)*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
 
         ! H4SiO4 = H3SiO4- + H+
         keqaq_h(findloc(chraq_all,'si',dim=1),ieqaq_h1) = &
@@ -358,7 +358,7 @@ module scepter_eq_coefs
         keqaq_s(findloc(chraq_all,'mg',dim=1),ieqaq_so4) = & 
             & k_arrhenius(10d0**(2.37d0),25d0+tempk_0,tc+tempk_0, 4.550d0*cal2j,rg) ! from PHREEQC.DAT 
         ! Mg2+ + OxaH- = MgOxa + H+ (Mg2+ + Oxa= = MgOxa  plus OxaH- = Oxa= + H+ )
-        keqaq_oxa(findloc(chraq_all,'mg',dim=1),ieqaq_oxa) = 1d0/(10d0**-3.43d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'mg',dim=1),ieqaq_oxa) = 1d0/(10d0**(-3.43d0))*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
         ! 1.0000 Mg++ + 1.0000 Cl-  =  MgCl+
         keqaq_cl(findloc(chraq_all,'mg',dim=1),ieqaq_cl) =  &
             & k_arrhenius(10d0**(-0.1349d0),25d0+tempk_0,tc+tempk_0,-0.58576d0,rg) ! from LLNL.DAT 
@@ -390,7 +390,7 @@ module scepter_eq_coefs
         ! Ca2+ + Oxa= = CaOxa
         ! keqaq_oxa(findloc(chraq_all,'ca',dim=1),ieqaq_oxa) = 1d0/(10d0**-3.19d0) ! from Prapaipong et al., GCA, 1999
         ! Ca2+ + OxaH- = CaOxa + H+ (Ca2+ + Oxa= = CaOxa  plus OxaH- = Oxa= + H+ )
-        keqaq_oxa(findloc(chraq_all,'ca',dim=1),ieqaq_oxa) = 1d0/(10d0**-3.19d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'ca',dim=1),ieqaq_oxa) = 1d0/(10d0**(-3.19d0))*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
         ! 1.0000 Cl- + 1.0000 Ca++  =  CaCl+
         keqaq_cl(findloc(chraq_all,'ca',dim=1),ieqaq_cl) =  &
             & k_arrhenius(10d0**(-0.6956d0),25d0+tempk_0,tc+tempk_0,2.02087d0,rg) ! from LLNL.DAT 
@@ -438,7 +438,7 @@ module scepter_eq_coefs
             & k_arrhenius(10d0**(1d0),25d0+tempk_0,tc+tempk_0,-37d0,rg) ! from MINTEQV4.DAT 
         ! Fe+3 + OxaH- = FeOxa+ + H+ (Fe+3 + Oxa= = FeOxa+  plus OxaH- = Oxa= + H+ )
         ! keqaq_oxa(findloc(chraq_all,'fe3',dim=1),ieqaq_oxa) = 1d0/(10d0**-9.33d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
-        keqaq_oxa(findloc(chraq_all,'fe3',dim=1),ieqaq_oxa) = 1d0/(10d0**-9.15d0)*(10d0**-4.266d0) ! from Perez-Fodich and Derry GCA, 2019
+        keqaq_oxa(findloc(chraq_all,'fe3',dim=1),ieqaq_oxa) = 1d0/(10d0**(-9.15d0))*(10d0**(-4.266d0)) ! from Perez-Fodich and Derry GCA, 2019
         ! Fe+3 + 2 OxaH- = Fe(Oxa)2- + 2 H+ (Fe+3 + 2Oxa= = Fe(Oxa)2-  plus 2  {OxaH- = Oxa= + H+} )
         ! keqaq_oxa(findloc(chraq_all,'fe3',dim=1),ieqaq_oxa) = 1d0/(10d0**-15.45d0)*(10d0**(-4.266d0*2d0)) ! from Perez-Fodich and Derry, 2019
         ! 1.0000 Fe+++ + 1.0000 Cl-  =  FeCl++
@@ -463,7 +463,7 @@ module scepter_eq_coefs
         ! Na+ + Oxa= = NaOxa-
         ! keqaq_oxa(findloc(chraq_all,'na',dim=1),ieqaq_oxa) = 1d0/(10d0**-0.86d0) ! from Prapaipong et al., GCA, 1999
         ! Na+ + OxaH- = NaOxa- + H+ (Na+ + Oxa= = NaOxa-  plus OxaH- = Oxa= + H+ )
-        keqaq_oxa(findloc(chraq_all,'na',dim=1),ieqaq_oxa) = 1d0/(10d0**-0.86d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'na',dim=1),ieqaq_oxa) = 1d0/(10d0**(-0.86d0))*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
         ! 1.0000 Na+ + 1.0000 Cl-  =  NaCl
         keqaq_cl(findloc(chraq_all,'na',dim=1),ieqaq_cl) =  &
             & k_arrhenius(10d0**(-0.777d0),25d0+tempk_0,tc+tempk_0,5.21326d0,rg) ! from LLNL.DAT 
@@ -477,7 +477,7 @@ module scepter_eq_coefs
         keqaq_no3(findloc(chraq_all,'k',dim=1),ieqaq_no3) = & 
             & k_arrhenius(10d0**(-0.15d0),25d0+tempk_0,tc+tempk_0, 0d0,rg) ! from SIT.DAT (no enthalpy data)
         ! K+ + OxaH- = KOxa- + H+ (K+ + Oxa= = KOxa-  plus OxaH- = Oxa= + H+ )
-        keqaq_oxa(findloc(chraq_all,'k',dim=1),ieqaq_oxa) = 1d0/(10d0**-0.80d0)*(10d0**-4.266d0) ! from Prapaipong et al., GCA, 1999
+        keqaq_oxa(findloc(chraq_all,'k',dim=1),ieqaq_oxa) = 1d0/(10d0**(-0.80d0))*(10d0**(-4.266d0)) ! from Prapaipong et al., GCA, 1999
         ! 1.0000 K+ + 1.0000 Cl-  =  KCl
         keqaq_cl(findloc(chraq_all,'k',dim=1),ieqaq_cl) =  &
             & k_arrhenius(10d0**(-1.4946d0),25d0+tempk_0,tc+tempk_0,14.1963d0,rg) ! from LLNL.DAT 

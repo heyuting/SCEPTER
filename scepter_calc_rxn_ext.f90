@@ -6,6 +6,7 @@ module scepter_calc_rxn_ext
     use scepter_constants
     use scepter_findloc
     use scepter_concentration
+    use scepter_thermodynamics
     implicit none
     private
     public :: calc_rxn_ext_dev_3
