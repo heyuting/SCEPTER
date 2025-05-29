@@ -188,7 +188,7 @@ module scepter_concentration
         integer ieqaq_h1,ieqaq_h2,ieqaq_h3,ieqaq_h4
         data ieqaq_h1,ieqaq_h2,ieqaq_h3,ieqaq_h4/1,2,3,4/
 
-        real(kind=8) kco2,k1,k2,k1no3,rspa_h,rspa_s,rspa_no3,rspa_nh3,knh3,k1nh3,rspa_oxa,rspa_oxa_2,rspa_oxa_3 &
+        real(kind=8) kco2,k1,k2,rspa_h,rspa_s,rspa_no3,rspa_nh3,knh3,k1nh3,rspa_oxa,rspa_oxa_2,rspa_oxa_3 &
             & ,rspa_cl,rcharge
         real(kind=8),dimension(nz)::pco2x,so4f,no3f,pnh3x,oxaf,clf,fkeq,dfkeq_dios,gamma_tmp,dgamma_dios_tmp
         real(kind=8),dimension(4,nz)::gamma,dgamma_dios
@@ -821,7 +821,7 @@ module scepter_concentration
         real(kind=8),dimension(nsp_sld_all,nz)::gamma_loc,dgamma_dmsld,dgamma_dmsldf,dgamma_dpro  
         real(kind=8),dimension(nsp_sld_all,nsp_aq_all,nz)::dmsldf_dmaqf
         real(kind=8),dimension(nsp_sld_all,nsp_aq_all,nz)::dgamma_dmaqf
-        real(kind=8),dimension(nz)::f,f_chk,x,dx
+        real(kind=8),dimension(nz)::f_chk,x,dx
         real(kind=8),dimension(nz)::a,da_dpro,da_dmsld,da
         real(kind=8),dimension(nz)::gamma,dgamma,beta,dbeta
         real(kind=8),dimension(nsp_aq_all,nz)::da_dmaqf
@@ -1187,16 +1187,14 @@ module scepter_concentration
         & nz,nsp_aq,nsp_gas,nsp_aq_all,nsp_sld_all,nsp_gas_all,nsp_aq_cnst,nsp_gas_cnst & 
         & ,chraq,chraq_cnst,chraq_all,chrsld_all,chrgas,chrgas_cnst,chrgas_all &
         & ,maqx,maqc,mgasx,mgasc,mgasth_all,prox,iosx,tc &
-        & ,keqsld_all,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3 &
-        & ,staq_all,stgas_all &
-        & ,mineral &
+        & ,keqsld_all,keqgas_h,staq_all,stgas_all, mineral &
         & ,domega_dmaq_all,domega_dmgas_all,domega_dpro_loc,domega_dios_loc &! output
         & ,omega,omega_error &! output
         & )
         ! this subroutine assumes to receive free ions
         implicit none
         integer,intent(in)::nz
-        real(kind=8):: k1,k2,kco2,po2th,mo2g1,mo2g2,mo2g3,keq_tmp,ss_x,ss_pro,ss_pco2,mo2_tmp,tc
+        real(kind=8):: k1,k2,kco2,po2th,mo2g1,mo2g2,mo2g3,keq_tmp,ss_pro,ss_pco2,mo2_tmp,tc
         real(kind=8),dimension(nz),intent(in):: prox,iosx
         real(kind=8),dimension(nz):: pco2x,po2x
         real(kind=8),dimension(nz),intent(out)::omega
@@ -1227,8 +1225,7 @@ module scepter_concentration
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::domega_dmgas_all
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::domega_dmaq_all
 
-        real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,maqf_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::dmaqf_dpro,dmaqf_dso4f,dmaqf_dmaq,dmaqf_dpco2
+        real(kind=8),dimension(nsp_aq_all,nz)::maqf_loc
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
 
         integer ieqgas_h0,ieqgas_h1,ieqgas_h2
@@ -1490,7 +1487,7 @@ module scepter_concentration
                 ! this should not be selected
                 omega = 1d0
                 print *, '*** CAUTION: mineral (',mineral,') saturation state is not defined --- > pause'
-                pause
+                ! pause
                 
         endselect
 

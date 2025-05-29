@@ -38,17 +38,17 @@ module scepter_psd_pbe
         real(kind=8),dimension(nps,nz),intent(inout)::dpsd
         logical,intent(inout)::psd_error_flg
         ! local 
-        real(kind=8),dimension(nps,nz)::dVd,psd_old,psd_new,dpsd_tmp,psdx,psdxx
-        real(kind=8),dimension(nps)::psd_tmp,dvd_tmp,dpsx,lambda
+        real(kind=8),dimension(nps,nz)::dpsd_tmp,psdx,psdxx
+        real(kind=8),dimension(nps)::dpsx,lambda
         real(kind=8),dimension(nz)::kpsd,kpsdx,DV_chk,DV_exist
-        real(kind=8) ps_new,ps_newp,dvd_res,error,vol,fact,surf
+        real(kind=8) error,vol,fact,surf
         real(kind=8),parameter::infinity = huge(0d0)
         real(kind=8),parameter::threshold = 20d0
         real(kind=8),parameter::corr = exp(threshold)
         real(kind=8),parameter::threshold_k = 2d0
         real(kind=8),parameter::corr_k = exp(threshold_k)
         integer,parameter :: iter_max = 50
-        integer ips,iips,ips_new,iz,isps,row,col,ie,ie2,iter,iiz
+        integer ips,iips,iz,row,col,ie,ie2,iter
 
         logical :: logcalc = .true.
         ! logical :: logcalc = .false.
@@ -193,7 +193,7 @@ module scepter_psd_pbe
                 dpsd_tmp = 0d0
                 call psd_diss_iz( &
                     & nz,nps,iz &! in
-                    & ,z,DV,dt,pi,tol,poro &! in 
+                    & ,DV,pi,tol &! in 
                     & ,incld_rough,roughref &! in
                     & ,psd,ps,dps,ps_min,ps_max &! in 
                     & ,chrsp &! in 

@@ -24,7 +24,7 @@ module scepter_eq_ph
         & ,chraq,chraq_cnst,chraq_all,chrgas,chrgas_cnst,chrgas_all &!input
         & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,maqth_all, keqaq_no3,keqaq_nh3 &! input
         & ,keqaq_oxa,keqaq_cl &! input
-        & ,print_cb,print_loc,z,act_ON &! input 
+        & ,print_cb,z,act_ON &! input 
         & ,dprodmaq_all,dprodmgas_all &! output
         & ,iosx,diosdmaq_all,diosdmgas_all &! output
         & ,prox,ph_error,ph_iter &! output
@@ -75,7 +75,7 @@ module scepter_eq_ph
         real(kind=8),dimension(nsp_aq_all)::base_charge
         real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,maqf_loc
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::df1dmaq,df1dmaqf,d2f1dmaqf
+        real(kind=8),dimension(nsp_aq_all,nz)::df1dmaqf,d2f1dmaqf
         real(kind=8),dimension(nsp_gas_all,nz)::df1dmgas,df2dmgas,d2f1dmgas
 
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::dprodmaq_all
@@ -84,8 +84,7 @@ module scepter_eq_ph
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::diosdmaq_all
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::diosdmgas_all
 
-        real(kind=8),dimension(nsp_aq_all,nz)::maqtmp_loc
-        real(kind=8),dimension(nsp_gas_all,nz)::dmgas,mgastmp_loc
+        real(kind=8),dimension(nsp_gas_all,nz)::dmgas
         real(kind=8),dimension(nz)::df1_dum,f1_dum,d2f1_dum,f1_tmp
         real(kind=8),dimension(nz)::f1_tmp1,df1_tmp1,d2f1_tmp1
         real(kind=8),dimension(nz)::f1_tmp2,df1_tmp2,d2f1_tmp2
@@ -114,8 +113,6 @@ module scepter_eq_ph
         real(kind=8),allocatable::amx(:,:),ymx(:)
         integer,allocatable::ipiv(:)
         integer info,nmx
-
-        real(kind=8),parameter :: threshold = 10d0
 
         real(kind=8) ph_tmp,ph_fact,err1,err2,slp,slplog,ph_tmp_min,ph_tmp_max,slp_save
         real(kind=8) ph_max,ph_min 
@@ -443,8 +440,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox_tmp1,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox_tmp1,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_tmp1,df1_tmp1,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_tmp1,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -455,8 +452,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox_tmp2,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox_tmp2,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_tmp2,df1_tmp2,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_tmp2,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -485,8 +482,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_dum,df1_dum,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_dum,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -527,8 +524,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox_tmp1,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox_tmp1,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_tmp1,df1_tmp1,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_tmp1,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -539,8 +536,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox_tmp2,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox_tmp2,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_tmp2,df1_tmp2,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_tmp2,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -571,8 +568,8 @@ module scepter_eq_ph
                                 & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                                 & ,base_charge &
                                 & ,mgasx_loc,maqf_loc &
-                                & ,z,prox,iz,iosx,tc &
-                                & ,print_loc,print_res,ph_add_order &
+                                & ,prox,iz,iosx,tc &
+                                & ,print_res,ph_add_order &
                                 & ,f1_dum,df1_dum,df1dmaqf_dum,df1dmgas_dum &!output
                                 & ,d2f1_dum,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                                 & )
@@ -690,8 +687,8 @@ module scepter_eq_ph
                             & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                             & ,base_charge &
                             & ,mgasx_loc,maqf_loc &
-                            & ,z,prox_tmp1,iz,iosx,tc &
-                            & ,print_loc,print_res,ph_add_order &
+                            & ,prox_tmp1,iz,iosx,tc &
+                            & ,print_res,ph_add_order &
                             & ,f1_tmp1,df1_tmp1,df1dmaqf_dum,df1dmgas_dum &!output
                             & ,d2f1_tmp1,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                             & )
@@ -702,8 +699,8 @@ module scepter_eq_ph
                             & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                             & ,base_charge &
                             & ,mgasx_loc,maqf_loc &
-                            & ,z,prox_tmp2,iz,iosx,tc &
-                            & ,print_loc,print_res,ph_add_order &
+                            & ,prox_tmp2,iz,iosx,tc &
+                            & ,print_res,ph_add_order &
                             & ,f1_tmp2,df1_tmp2,df1dmaqf_dum,df1dmgas_dum &!output
                             & ,d2f1_tmp2,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                             & )
@@ -738,8 +735,8 @@ module scepter_eq_ph
                             & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                             & ,base_charge &
                             & ,mgasx_loc,maqf_loc &
-                            & ,z,prox,iz,iosx,tc &
-                            & ,print_loc,print_res,ph_add_order &
+                            & ,prox,iz,iosx,tc &
+                            & ,print_res,ph_add_order &
                             & ,f1_dum,df1_dum,df1dmaqf_dum,df1dmgas_dum &!output
                             & ,d2f1_dum,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                             & )
@@ -769,8 +766,8 @@ module scepter_eq_ph
                             & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                             & ,base_charge &
                             & ,mgasx_loc,maqf_loc &
-                            & ,z,prox,iz,iosx,tc &
-                            & ,print_loc,print_res,ph_add_order &
+                            & ,prox,iz,iosx,tc &
+                            & ,print_res,ph_add_order &
                             & ,f1_dum,df1_dum,df1dmaqf_dum,df1dmgas_dum &!output
                             & ,d2f1_dum,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                             & )
@@ -852,8 +849,8 @@ module scepter_eq_ph
                 ! & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
                 ! & ,base_charge &
                 ! & ,mgasx_loc,maqf_loc &
-                ! & ,z,prox,iz &
-                ! & ,print_loc,print_res,ph_add_order &
+                ! & ,prox,iz &
+                ! & ,print_res,ph_add_order &
                 ! & ,f1_dum,df1_dum,df1dmaqf_dum,df1dmgas_dum &!output
                 ! & ,d2f1_dum,d2f1dmaqf_dum,d2f1dmgas_dum &!output
                 ! & )

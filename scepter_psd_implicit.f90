@@ -37,9 +37,8 @@ module scepter_psd_implicit
         real(kind=8),dimension(nps,nz),intent(in)::psd,dpsd,psd_rain
         real(kind=8),dimension(nps,nz),intent(out)::psdx
         ! local 
-        real(kind=8),dimension(nps,nz)::psd_old,dpsd_tmp
-        real(kind=8),dimension(nz)::DV,kpsd,sporo
-        integer iz,isps,ips,iiz,row,col,ie,ie2,iips
+        real(kind=8),dimension(nz)::kpsd,sporo
+        integer iz,ips,iiz,row,col,ie,ie2
         real(kind=8) vol,surf,m_tmp,mp_tmp,mi_tmp,mprev_tmp,rxn_tmp,drxn_tmp,w_tmp,wp_tmp,trans_tmp,msupp_tmp  &
             & ,sporo_tmp, sporop_tmp,sporoprev_tmp,dtinv,dzinv
 
@@ -51,7 +50,7 @@ module scepter_psd_implicit
         real(kind=8),parameter::corr = exp(threshold)
         integer,parameter :: iter_max = 50
         ! integer,parameter :: nflx_psd = 6
-        real(kind=8) error,fact,flx_max! ,flx_max_max
+        real(kind=8) error,flx_max! ,flx_max_max
         real(kind=8) :: flx_tol = 1d-3
         ! real(kind=8) :: flx_tol = 1d-4
         real(kind=8) :: flx_max_tol = 1d-6
@@ -63,7 +62,6 @@ module scepter_psd_implicit
         integer  itflx_psd,iadv_psd,idif_psd,irain_psd,irxn_psd,ires_psd
         data itflx_psd,iadv_psd,idif_psd,irain_psd,irxn_psd,ires_psd/1,2,3,4,5,6/
         character(5),dimension(nflx_psd)::chrflx_psd
-        character(20) chrfmt
         ! logical :: chkflx = .false.
         logical :: chkflx = .true.
 
@@ -511,10 +509,9 @@ module scepter_psd_implicit
         real(kind=8),dimension(nps,nz),intent(in)::psd,dpsd,psd_rain
         real(kind=8),dimension(nps,nz),intent(out)::psdx
         ! local 
-        real(kind=8),dimension(nps,nz)::psd_old,dpsd_tmp
         real(kind=8),dimension(nz)::kpsd,sporo,kpsdx
         real(kind=8),dimension(nps)::rough_tmp
-        integer iz,isps,ips,iiz,row,col,ie,ie2,iips
+        integer iz,ips,iiz,row,col,ie,ie2
         real(kind=8) vol,surf,m_tmp,mp_tmp,mi_tmp,mprev_tmp,rxn_tmp,drxn_tmp,w_tmp,wp_tmp,trans_tmp,msupp_tmp  &
             & ,sporo_tmp, sporop_tmp,sporoprev_tmp,dtinv,dzinv,drxndk_tmp
 
@@ -542,7 +539,6 @@ module scepter_psd_implicit
         integer  itflx_psd,iadv_psd,idif_psd,irain_psd,irxn_psd,ires_psd
         data itflx_psd,iadv_psd,idif_psd,irain_psd,irxn_psd,ires_psd/1,2,3,4,5,6/
         character(5),dimension(nflx_psd)::chrflx_psd
-        character(20) chrfmt
         ! logical :: chkflx = .false.
         logical :: chkflx = .true.
         logical :: explicit = .false.

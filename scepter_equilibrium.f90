@@ -22,8 +22,8 @@ module scepter_equilibrium
         & ,kw,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3,keqaq_oxa,keqaq_cl  &
         & ,base_charge &
         & ,mgasx_loc,maqf_loc &
-        & ,z,prox,iz,iosx,tc &
-        & ,print_loc,print_res,ph_add_order &
+        & ,prox,iz,iosx,tc &
+        & ,print_res,ph_add_order &
         & ,f1,df1,df1dmaqf,df1dmgas &!output
         & ,d2f1,d2f1dmaqf,d2f1dmgas &!output
         & )
@@ -45,7 +45,6 @@ module scepter_equilibrium
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::df1dmgas,d2f1dmgas
 
         logical,intent(in)::print_res
-        character(500),intent(in)::print_loc
 
         integer ieqgas_h0,ieqgas_h1,ieqgas_h2
         data ieqgas_h0,ieqgas_h1,ieqgas_h2/1,2,3/
@@ -55,15 +54,13 @@ module scepter_equilibrium
         real(kind=8) kco2,k1,k2,knh3,k1nh3,rspa_h,rspa_s,rspa_no3,rspa_nh3,rspa_oxa,rspa_oxa_2,rspa_oxa_3 &
             & ,rspa_cl
         real(kind=8),dimension(nz)::pco2x,pnh3x,so4f,no3f,oxaf,clf
-        real(kind=8),dimension(nz)::f1_chk,ss_add,back
+        real(kind=8),dimension(nz)::ss_add,back
 
         integer icharge,ic1,ic2
         ! real(kind=8) tc
         real(kind=8) rcharge
         real(kind=8),dimension(nz)::gamma_tmp,dgamma_dios_tmp,fkw,fkeq,dfkw_dios,dfkeq_dios 
         real(kind=8),dimension(4,nz)::gamma,dgamma_dios 
-
-        character(1) chrint
 
         ipco2   = findloc(chrgas_all,'pco2',dim=1)
         ipnh3   = findloc(chrgas_all,'pnh3',dim=1)

@@ -84,14 +84,14 @@ module scepter_transport
         real(kind=8),dimension(nsp_sld,nz),intent(inout)::ksld
         real(kind=8),dimension(nz,nz,nsp_sld),intent(in)::trans
         real(kind=8),dimension(nsp_sld,nz),intent(inout)::msldx,omega,nonprec,rxnsld
-        real(kind=8),dimension(nsp_sld,nz)::domega_dpro,dmsld,dksld_dpro,drxnsld_dmsld &
-            & ,dksld_dso4f,domega_dso4f,dksld_dios,domega_dios
+        real(kind=8),dimension(nsp_sld,nz)::domega_dpro,dksld_dpro,drxnsld_dmsld &
+            & ,dksld_dios,domega_dios
         real(kind=8),dimension(nsp_sld,nsp_aq,nz)::domega_dmaq,dksld_dmaq,drxnsld_dmaq
         real(kind=8),dimension(nsp_sld,nsp_gas,nz)::domega_dmgas,dksld_dmgas,drxnsld_dmgas
         real(kind=8),dimension(nsp_sld,nflx,nz),intent(out)::flx_sld
         real(kind=8),dimension(nsp_aq,nz),intent(in)::maq,maqsupp,maqft_prev,maqfads_prev
         real(kind=8),dimension(nsp_aq,nz),intent(inout)::maqx,maqft,maqfads 
-        real(kind=8),dimension(nsp_aq,nz)::dprodmaq,dmaq,maqf,dmaqft_dpro,dmaqfads_dpro,maqx_save,dmaqx,dmaqft_dios,dmaqfads_dios
+        real(kind=8),dimension(nsp_aq,nz)::dprodmaq,dmaqft_dpro,dmaqfads_dpro,maqx_save,dmaqx,dmaqft_dios,dmaqfads_dios
         real(kind=8),dimension(nsp_aq,nz)::diosdmaq
         real(kind=8),dimension(nsp_aq,nsp_aq,nz)::dmaqft_dmaqf,dmaqfads_dmaqf
         real(kind=8),dimension(nsp_aq,nsp_gas,nz)::dmaqft_dmgas,dmaqfads_dmgas
@@ -100,14 +100,14 @@ module scepter_transport
         real(kind=8),dimension(nsp_gas,nz),intent(in)::mgas,mgassupp
         real(kind=8),dimension(nsp_gas,nz),intent(inout)::mgasx 
         real(kind=8),dimension(nsp_gas,nz)::khgasx,khgas,dgas,agasx,agas,rxngas,dkhgas_dpro,dprodmgas & 
-            & ,dmgas,dso4fdmgas,dkhgas_dso4f,mgasx_save,dmgasx,dkhgas_dios
+            & ,mgasx_save,dmgasx,dkhgas_dios
         real(kind=8),dimension(nsp_gas,nz)::diosdmgas
         real(kind=8),dimension(nsp_gas,nsp_aq,nz)::dkhgas_dmaq,ddgas_dmaq,dagas_dmaq,drxngas_dmaq 
         real(kind=8),dimension(nsp_gas,nsp_sld,nz)::drxngas_dmsld 
         real(kind=8),dimension(nsp_gas,nsp_gas,nz)::dkhgas_dmgas,ddgas_dmgas,dagas_dmgas,drxngas_dmgas 
         real(kind=8),dimension(nsp_gas,nflx,nz),intent(out)::flx_gas 
         real(kind=8),dimension(nrxn_ext,nz),intent(inout)::rxnext
-        real(kind=8),dimension(nrxn_ext,nz)::drxnext_dpro,drxnext_dso4f,drxnext_dios
+        real(kind=8),dimension(nrxn_ext,nz)::drxnext_dpro,drxnext_dios
         real(kind=8),dimension(nrxn_ext,nsp_gas),intent(in)::stgas_ext,stgas_dext
         real(kind=8),dimension(nrxn_ext,nsp_aq),intent(in)::staq_ext,staq_dext
         real(kind=8),dimension(nrxn_ext,nsp_sld),intent(in)::stsld_ext,stsld_dext
@@ -143,27 +143,22 @@ module scepter_transport
         logical,dimension(nsp_sld_all),intent(in)::cec_pH_depend
         real(kind=8),dimension(nsp_sld_all,nz),intent(out)::msldf_loc,beta_loc
 
-        real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,dso4fdmaq_all,diosdmaq_all
-        real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,dso4fdmgas_all,diosdmgas_all
+        real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,diosdmaq_all
+        real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,diosdmgas_all
 
-        real(kind=8),dimension(nz)::domega_dpro_loc,domega_dso4f_loc,domega_dios_loc
+        real(kind=8),dimension(nz)::domega_dpro_loc,domega_dios_loc
         real(kind=8),dimension(nsp_gas_all,nz)::domega_dmgas_all
         real(kind=8),dimension(nsp_aq_all,nz)::domega_dmaq_all
-        real(kind=8),dimension(nsp_aq_all,nz)::maqft_loc,dmaqft_dpro_loc,maqf_loc,maqx_loc,maqx_loc_tmp,dmaqft_dios_loc
+        real(kind=8),dimension(nsp_aq_all,nz)::maqft_loc,dmaqft_dpro_loc,maqx_loc,dmaqft_dios_loc
         real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqft_dmaqf_loc
         real(kind=8),dimension(nsp_aq_all,nsp_gas_all,nz)::dmaqft_dmgas_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::dmaqf_dpro,dmaqf_dso4f,dmaqf_dmaq,dmaqf_dpco2
-        real(kind=8),dimension(nsp_aq_cnst,nz)::maqcx
 
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
-        real(kind=8),dimension(nsp_gas_all,nz)::khgas_all,khgasx_all,dkhgas_dpro_all,dkhgas_dso4f_all,dkhgas_dios_all
+        real(kind=8),dimension(nsp_gas_all,nz)::khgas_all,khgasx_all,dkhgas_dpro_all,dkhgas_dios_all
         real(kind=8),dimension(nsp_gas_all,nsp_aq_all,nz)::dkhgas_dmaq_all
         real(kind=8),dimension(nsp_gas_all,nsp_gas_all,nz)::dkhgas_dmgas_all
 
         real(kind=8),dimension(nsp_sld_all,nz)::msldx_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::maqfads_loc,dmaqfads_dpro_loc
-        real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqfads_dmaqf_loc
-        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_dmsld_loc
 
         real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::maqfads_sld_loc
         real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nsp_aq_all,nz)::dmaqfads_sld_dmaqf_loc
@@ -200,10 +195,10 @@ module scepter_transport
 
         real(kind=8), dimension(4,nflx,nz), intent(out) :: flx_co2sp
 
-        integer iz,row,ie,ie2,iflx,isps,ispa,ispg,ispa2,ispg2,col,irxn,isps2,iiz,isps_kinspc,row_w,col_w
+        integer iz,row,ie,ie2,iflx,isps,ispa,ispg,ispa2,ispg2,col,irxn,isps2,iiz,isps_kinspc
         integer izp,izn
         integer::itflx,iadv,idif,irain,ires
-        integer::ph_iter,ph_iter2
+        integer::ph_iter
         data itflx,iadv,idif,irain/1,2,3,4/
 
         integer, dimension(nsp_sld)::irxn_sld 
@@ -219,19 +214,16 @@ module scepter_transport
 
         real(kind=8), parameter :: infinity = huge(0d0)
         real(kind=8), parameter :: fact = 1d-3
-        real(kind=8), parameter :: dconc = 1d-14
-        real(kind=8), parameter :: maxfact = 1d200
         ! real(kind=8), parameter :: threshold = log(maxfact)
         real(kind=8), parameter :: threshold = 10d0
         ! real(kind=8), parameter :: threshold = 3d0
         ! real(kind=8), parameter :: corr = 1.5d0
         real(kind=8), parameter :: corr = exp(threshold)
 
-        real(kind=8), dimension(nz)::dummy,dummy2,dummy3,kin,dkin_dmsp,dumtest,sporo,prox_save,iosx_save
+        real(kind=8), dimension(nz)::dummy,dummy2,kin,dkin_dmsp,sporo,prox_save,iosx_save
 
         logical print_cb,ph_error,omega_error,rxnext_error,ads_error
         character(500) print_loc
-        character(20) chrfmt
 
         integer, parameter :: iter_max = 50
         ! integer, parameter :: iter_max = 300
@@ -708,9 +700,7 @@ module scepter_transport
                     & nz,nsp_aq,nsp_gas,nsp_aq_all,nsp_sld_all,nsp_gas_all,nsp_aq_cnst,nsp_gas_cnst & 
                     & ,chraq,chraq_cnst,chraq_all,chrsld_all,chrgas,chrgas_cnst,chrgas_all &
                     & ,maqx,maqc,mgasx,mgasc,mgasth_all,prox,iosx,tc &
-                    & ,keqsld_all,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3 &
-                    & ,staq_all,stgas_all &
-                    & ,chrsld(isps) &
+                    & ,keqsld_all,keqgas_h,staq_all,stgas_all,chrsld(isps) &
                     & ,domega_dmaq_all,domega_dmgas_all,domega_dpro_loc,domega_dios_loc &! output
                     & ,dummy,omega_error &! output
                     & )
@@ -1033,7 +1023,7 @@ module scepter_transport
             drxnsld_dmgas = 0d0
             
             call sld_rxn( &
-                & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx,dz &! input 
+                & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx &! input 
                 & ,dksld_dmaq,domega_dmaq,dksld_dmgas,domega_dmgas,precstyle,solmod &! input
                 & ,msld,msldth,dt,sat,maq,maqth,agas,mgas,mgasth,staq,stgas,chrsld &! input
                 & ,rxnsld,drxnsld_dmsld,drxnsld_dmaq,drxnsld_dmgas &! output
@@ -2463,9 +2453,7 @@ module scepter_transport
                 & nz,nsp_aq,nsp_gas,nsp_aq_all,nsp_sld_all,nsp_gas_all,nsp_aq_cnst,nsp_gas_cnst & 
                 & ,chraq,chraq_cnst,chraq_all,chrsld_all,chrgas,chrgas_cnst,chrgas_all &
                 & ,maqx,maqc,mgasx,mgasc,mgasth_all,prox,iosx,tc &
-                & ,keqsld_all,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3 &
-                & ,staq_all,stgas_all &
-                & ,chrsld(isps) &
+                & ,keqsld_all,keqgas_h,staq_all,stgas_all,chrsld(isps) &
                 & ,domega_dmaq_all,domega_dmgas_all,domega_dpro_loc,domega_dios_loc &! output
                 & ,dummy,omega_error &! output
                 & )
@@ -2491,7 +2479,7 @@ module scepter_transport
         rxnsld = 0d0
             
         call sld_rxn( &
-            & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx,dz &! input 
+            & nz,nsp_sld,nsp_aq,nsp_gas,msld_seed,hr,poro,mv,ksld,omega,nonprec,msldx &! input 
             & ,dksld_dmaq,domega_dmaq,dksld_dmgas,domega_dmgas,precstyle,solmod &! input
             & ,msld,msldth,dt,sat,maq,maqth,agas,mgas,mgasth,staq,stgas,chrsld &! input
             & ,rxnsld,drxnsld_dmsld,drxnsld_dmaq,drxnsld_dmgas &! output

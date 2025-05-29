@@ -23,7 +23,7 @@ module scepter_calc_khgas
         & nz,nsp_aq_all,nsp_gas_all,nsp_gas,nsp_aq,nsp_aq_cnst,nsp_gas_cnst &
         & ,chraq_all,chrgas_all,chraq_cnst,chrgas_cnst,chraq,chrgas &
         & ,maq,mgas,maqx,mgasx,maqc,mgasc &
-        & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3  &
+        & ,keqgas_h,keqaq_c,keqaq_nh3  &
         & ,pro,prox,ios,iosx,tc &
         & ,khgas,khgasx,dkhgas_dpro,dkhgas_dmaq,dkhgas_dmgas,dkhgas_dios &!output
         & )
@@ -44,8 +44,7 @@ module scepter_calc_khgas
         real(kind=8),dimension(nsp_gas_cnst,nz),intent(in)::mgasc
         real(kind=8),dimension(nz),intent(in)::pro,prox,ios,iosx
         real(kind=8),dimension(nsp_gas_all,3),intent(in)::keqgas_h
-        real(kind=8),dimension(nsp_aq_all,4),intent(in)::keqaq_h
-        real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3
+        real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_c,keqaq_nh3
         ! output 
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::khgas,khgasx,dkhgas_dpro,dkhgas_dios
         real(kind=8),dimension(nsp_gas_all,nsp_gas_all,nz),intent(out)::dkhgas_dmgas

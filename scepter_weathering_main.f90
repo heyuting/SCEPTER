@@ -49,7 +49,7 @@ module scepter_weathering_main
         real(kind=8) :: rho_grain_z(nz),sldvolfrac(nz) != 2.7d0 ! g/cm3 as soil grain density 
         real(kind=8) :: mblk(nz),mblki,mblkix,mblkx(nz)
         real(kind=8) sat(nz), poro(nz), torg(nz), tora(nz), tc, satup
-        real(kind=8) w(nz),w_btm,wx(nz),wexp(nz)
+        real(kind=8) w(nz),w_btm,wx(nz)
         real(kind=8) v(nz),qin
         real(kind=8),intent(in) :: tcin != 15.0d0 ! deg celsius
         real(kind=8),intent(in)::plant_rain != 1d2 ! 1 t/ha/yr; approximate values from Vanveen et al. 1991 ! 
@@ -87,7 +87,7 @@ module scepter_weathering_main
 
         real(kind=8),dimension(nz):: pro,prox,poroprev,hrb,vprev,torgprev,toraprev,wprev,ssab,int_ph
         real(kind=8),dimension(nz):: ios,iosx,gamma,gamma_tmp,dgamma_dios_tmp
-        real(kind=8),dimension(nz):: dummy,up,dwn,cnr,adf
+        real(kind=8),dimension(nz):: up,dwn,cnr,adf
         real(kind=8),dimension(nz) :: disp,dispprev  ! dispersion coefficients 
         real(kind=8),dimension(nz) :: cec  ! cation exchange capacity  
         real(kind=8),dimension(nz) :: bs  ! base saturation  
@@ -104,11 +104,11 @@ module scepter_weathering_main
         real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld,nz)::flx_sld
         real(kind=8),dimension(nsp_sld,5 + nrxn_ext + nsp_sld)::int_flx_sld
         real(kind=8),dimension(nsp_aq)::maqi,maqth,daq,mwtaq
-        real(kind=8),dimension(nsp_aq,nz)::maqx,maq,rxnaq,maqsupp,cecaq,cecaqr,cecaqwt
+        real(kind=8),dimension(nsp_aq,nz)::maqx,maq,maqsupp,cecaq,cecaqr,cecaqwt
         real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld,nz)::flx_aq
         real(kind=8),dimension(nsp_aq,5 + nrxn_ext + nsp_sld)::int_flx_aq
-        real(kind=8),dimension(nsp_gas)::mgasi,mgasth,dgasa,dgasg,dmgas,khgasi,dgasi
-        real(kind=8),dimension(nsp_gas,nz)::mgasx,mgas,khgasx,khgas,dgas,agasx,agas,rxngas,mgassupp 
+        real(kind=8),dimension(nsp_gas)::mgasi,mgasth,dgasa,dgasg,khgasi
+        real(kind=8),dimension(nsp_gas,nz)::mgasx,mgas,mgassupp 
         real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld,nz)::flx_gas  
         real(kind=8),dimension(nsp_gas,5 + nrxn_ext + nsp_sld)::int_flx_gas  
         real(kind=8),dimension(nrxn_ext,nz)::rxnext
@@ -147,14 +147,11 @@ module scepter_weathering_main
         ! Aqueous species arrays
         !-----------------------------
         real(kind=8),dimension(nsp_aq,nz)::maqft,maqft_prev,maqfads,maqfads_prev
-        real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,dso4fdmaq_all,diosdmaq_all
-        real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,dmaqft_dpro_loc,maqft_loc,maqads_loc,dmaqft_dios_loc
+        real(kind=8),dimension(nsp_aq_all,nz)::dprodmaq_all,diosdmaq_all
+        real(kind=8),dimension(nsp_aq_all,nz)::maqx_loc,dmaqft_dpro_loc,maqft_loc,dmaqft_dios_loc
         real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqft_dmaqf_loc
         real(kind=8),dimension(nsp_aq_all,nsp_gas_all,nz)::dmaqft_dmgas_loc
-        real(kind=8),dimension(nsp_aq_all,nz)::maqfads_loc,dmaqfads_dpro
-        real(kind=8),dimension(nsp_aq_all,nsp_aq_all,nz)::dmaqfads_dmaqf
-        real(kind=8),dimension(nsp_aq_all,nsp_sld_all,nz)::dmaqfads_dmsld
-        real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,dso4fdmgas_all,diosdmgas_all
+        real(kind=8),dimension(nsp_gas_all,nz)::dprodmgas_all,diosdmgas_all
         real(kind=8),dimension(nsp_gas_all,nz)::mgasx_loc
         real(kind=8),dimension(nsp_sld_all,nz)::msldx_loc,msldf_loc,beta_loc
 
@@ -187,12 +184,11 @@ module scepter_weathering_main
         ! Particle size distribution parameters
         !-----------------------------
         real(kind=8),dimension(nps)::ps,psd_th
-        real(kind=8),dimension(nps,nz)::psd,dVd,psd_old,dpsd,psdx,psd_save,ddpsd,dpsd_save
+        real(kind=8),dimension(nps,nz)::psd,psd_old,dpsd,psdx,psd_save,ddpsd
         real(kind=8),dimension(nps,nz)::psd_rain
         real(kind=8),dimension(nps,nz)::psd_norm,psdx_norm,dpsd_norm,psd_rain_norm
-        real(kind=8),dimension(nps)::psd_tmp,dvd_tmp
         real(kind=8),dimension(nps)::psd_pr,dps,rough_ps_b
-        real(kind=8),dimension(nps)::psd_pr_norm,psd_norm_fact,psd_rain_tmp,intpsd,intpsd_tmp,intpsd_sum_tmp
+        real(kind=8),dimension(nps)::psd_pr_norm,psd_norm_fact,psd_rain_tmp,intpsd,intpsd_tmp
         real(kind=8),dimension(nz)::DV
 
         !-----------------------------
@@ -227,7 +223,6 @@ module scepter_weathering_main
         integer,dimension(nsp_sld)::imix
         real(kind=8),dimension(nz,nz,nsp_sld)::trans
         real(kind=8),dimension(nsp_sld)::zml
-        real(kind=8),dimension(nz)::so4f,no3f,so4fprev
 
         character(5),dimension(5 + nrxn_ext + nsp_sld)::chrflx
         integer,dimension(nsp_sld)::irxn_sld 
@@ -1764,7 +1759,7 @@ module scepter_weathering_main
         allocate(chrsld_nopsd(nsld_nopsd))
 
         call get_nopsd( &
-            & nsp_sld,nsld_nopsd &! input
+            & nsld_nopsd &! input
             & ,chrsld_nopsd &! output
             & )
 

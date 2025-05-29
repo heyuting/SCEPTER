@@ -38,8 +38,8 @@ module scepter_eq_coefs
         integer,intent(in)::nz
         real(kind=8),intent(in)::rg,rg2,tc,sec2yr,tempk_0
         real(kind=8),dimension(nz),intent(in)::pro
-        real(kind=8),dimension(nz)::oh,po2,kin,dkin_dmsp
-        real(kind=8) kho,po2th,mv_tmp,therm,ss_x,ss_y,ss_z,ss_tmp,therm_tmp,mwt_tmp,visc
+        real(kind=8),dimension(nz)::oh,kin,dkin_dmsp
+        real(kind=8) kho,mv_tmp,therm,ss_x,ss_y,ss_z,ss_tmp,therm_tmp,mwt_tmp,visc
         real(kind=8),intent(out)::ucv,kw
 
         ! real(kind=8) k_arrhenius
@@ -113,7 +113,6 @@ module scepter_eq_coefs
         integer isps,ispss,ispa
 
         ! real(kind=8)::thon = 1d0
-        real(kind=8)::thon = -1d100
         character(5) mineral,ssaq,sssld,aqsp
         character(5),dimension(7):: chrss_gbas_aq,chrss_cbas_aq
         character(5),dimension(7):: chrss_gbas_sld,chrss_cbas_sld

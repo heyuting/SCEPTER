@@ -21,11 +21,11 @@ contains
         real(kind=8) tc_ref,ha,therm_ref,delG
         real(kind=8) tc_ref_1,ha_1,therm_ref_1,therm_1,delG_1
         real(kind=8) tc_ref_2,ha_2,therm_ref_2,therm_2,delG_2
-        real(kind=8) tc_ref_3,ha_3,therm_ref_3,therm_3,delG_3
+        real(kind=8) therm_ref_3,therm_3,delG_3
         real(kind=8) tc_ref_4,ha_4,therm_ref_4,therm_4,delG_4
         real(kind=8) tc_ref_5,ha_5,therm_ref_5,therm_5,delG_5
-        real(kind=8) tc_ref_6,ha_6,therm_ref_6,therm_6,delG_6
-        real(kind=8) tc_ref_7,ha_7,therm_ref_7,therm_7,delG_7
+        real(kind=8) therm_ref_6,therm_6,delG_6
+        real(kind=8) ha_7,therm_ref_7,therm_7,delG_7
         real(kind=8) tc_ref_8,ha_8,therm_ref_8,therm_8,delG_8
 
         ! real(kind=8) k_arrhenius
