@@ -23,7 +23,7 @@ module scepter_kinetics
 
         integer,intent(in)::nz,nsp_sld,nsp_aq,nsp_gas
         real(kind=8),intent(in)::msld_seed,dt
-        real(kind=8),dimension(nz),intent(in)::poro,sat,dz
+        real(kind=8),dimension(nz),intent(in)::poro,sat
         real(kind=8),dimension(nsp_sld,nz),intent(in)::hr
         real(kind=8),dimension(nsp_sld),intent(in)::mv,msldth
         real(kind=8),dimension(nsp_sld,nsp_aq),intent(in)::staq
