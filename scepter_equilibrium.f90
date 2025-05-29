@@ -39,7 +39,7 @@ module scepter_equilibrium
         real(kind=8),dimension(nsp_gas_all,nz),intent(in)::mgasx_loc
         real(kind=8),dimension(nsp_aq_all,nz),intent(in)::maqf_loc
         real(kind=8),dimension(nsp_aq_all),intent(in)::base_charge
-        real(kind=8),dimension(nz),intent(in)::z,prox,ph_add_order,iosx
+        real(kind=8),dimension(nz),intent(in)::prox,ph_add_order,iosx
         real(kind=8),dimension(nz),intent(out)::f1,df1,d2f1
         real(kind=8),dimension(nsp_aq_all,nz),intent(out)::df1dmaqf,d2f1dmaqf
         real(kind=8),dimension(nsp_gas_all,nz),intent(out)::df1dmgas,d2f1dmgas
