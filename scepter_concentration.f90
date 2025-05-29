@@ -1215,8 +1215,6 @@ module scepter_concentration
         real(kind=8),dimension(nsp_gas_cnst,nz),intent(in)::mgasc
         real(kind=8),dimension(nsp_gas_all),intent(in)::mgasth_all
         real(kind=8),dimension(nsp_gas_all,3),intent(in)::keqgas_h
-        real(kind=8),dimension(nsp_aq_all,4),intent(in)::keqaq_h
-        real(kind=8),dimension(nsp_aq_all,2),intent(in)::keqaq_c,keqaq_s,keqaq_no3
         real(kind=8),dimension(nsp_sld_all),intent(in)::keqsld_all
         real(kind=8),dimension(nsp_sld_all,nsp_aq_all),intent(in)::staq_all
         real(kind=8),dimension(nsp_sld_all,nsp_gas_all),intent(in)::stgas_all
