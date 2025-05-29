@@ -930,7 +930,7 @@ module scepter_transport
                     & nz,nsp_aq_all,nsp_gas_all,nsp_gas,nsp_aq,nsp_aq_cnst,nsp_gas_cnst &
                     & ,chraq_all,chrgas_all,chraq_cnst,chrgas_cnst,chraq,chrgas &
                     & ,maq,mgas,maqx,mgasx,maqc,mgasc &
-                    & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3  &
+                    & ,keqgas_h,keqaq_c,keqaq_nh3  &
                     & ,pro,prox,ios,iosx,tc &
                     & ,khgas_all,khgasx_all,dkhgas_dpro_all,dkhgas_dmaq_all,dkhgas_dmgas_all,dkhgas_dios_all &!output
                     & )
@@ -2714,7 +2714,7 @@ module scepter_transport
                 & nz,nsp_aq_all,nsp_gas_all,nsp_gas,nsp_aq,nsp_aq_cnst,nsp_gas_cnst &
                 & ,chraq_all,chrgas_all,chraq_cnst,chrgas_cnst,chraq,chrgas &
                 & ,maq,mgas,maqx,mgasx,maqc,mgasc &
-                & ,keqgas_h,keqaq_h,keqaq_c,keqaq_s,keqaq_no3,keqaq_nh3  &
+                & ,keqgas_h,keqaq_c,keqaq_nh3  &
                 & ,pro,prox,ios,iosx,tc &
                 & ,khgas_all,khgasx_all,dkhgas_dpro_all,dkhgas_dmaq_all,dkhgas_dmgas_all,dkhgas_dios_all &!output
                 & )
