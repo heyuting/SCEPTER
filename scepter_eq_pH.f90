@@ -106,7 +106,6 @@ module scepter_eq_ph
         integer,intent(out)::ph_iter
 
         logical,intent(in)::print_cb,act_ON
-        character(500),intent(in)::print_loc
         logical print_res
         logical bisec_chk,bisec_chk_ON,bisec_only,mod_ph_order,calc_simple,halley,first_chk_done
 
