@@ -40,7 +40,7 @@ module scepter_eq_ph
         real(kind=8),intent(in)::kw,tc
         real(kind=8),dimension(nz)::so4x,prox_save,error_save,prox_save_newton,prox_init
         real(kind=8),dimension(nz)::iosx_save,ios_new
-        real(kind=8),dimension(nz),intent(in)::poro,sat
+        real(kind=8),dimension(nz),intent(in)::z,poro,sat
         real(kind=8),dimension(nz),intent(inout)::prox
         logical,intent(out)::ph_error
 
