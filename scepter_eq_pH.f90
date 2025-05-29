@@ -24,7 +24,7 @@ module scepter_eq_ph
         & ,chraq,chraq_cnst,chraq_all,chrgas,chrgas_cnst,chrgas_all &!input
         & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,maqth_all, keqaq_no3,keqaq_nh3 &! input
         & ,keqaq_oxa,keqaq_cl &! input
-        & ,print_cb,print_loc,act_ON &! input 
+        & ,print_cb,print_loc,z,act_ON &! input 
         & ,dprodmaq_all,dprodmgas_all &! output
         & ,iosx,diosdmaq_all,diosdmgas_all &! output
         & ,prox,ph_error,ph_iter &! output
@@ -40,7 +40,7 @@ module scepter_eq_ph
         real(kind=8),intent(in)::kw,tc
         real(kind=8),dimension(nz)::so4x,prox_save,error_save,prox_save_newton,prox_init
         real(kind=8),dimension(nz)::iosx_save,ios_new
-        real(kind=8),dimension(nz),intent(in)::z,poro,sat
+        real(kind=8),dimension(nz),intent(in)::poro,sat
         real(kind=8),dimension(nz),intent(inout)::prox
         logical,intent(out)::ph_error
 
