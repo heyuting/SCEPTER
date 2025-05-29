@@ -24,7 +24,7 @@ module scepter_eq_ph
         & ,chraq,chraq_cnst,chraq_all,chrgas,chrgas_cnst,chrgas_all &!input
         & ,maqx,maqc,mgasx,mgasc,keqgas_h,keqaq_h,keqaq_c,keqaq_s,maqth_all, keqaq_no3,keqaq_nh3 &! input
         & ,keqaq_oxa,keqaq_cl &! input
-        & ,print_cb,z,act_ON &! input 
+        & ,print_cb,print_loc,act_ON &! input 
         & ,dprodmaq_all,dprodmgas_all &! output
         & ,iosx,diosdmaq_all,diosdmgas_all &! output
         & ,prox,ph_error,ph_iter &! output
@@ -106,6 +106,7 @@ module scepter_eq_ph
         integer,intent(out)::ph_iter
 
         logical,intent(in)::print_cb,act_ON
+        character(500),intent(in)::print_loc
         logical print_res
         logical bisec_chk,bisec_chk_ON,bisec_only,mod_ph_order,calc_simple,halley,first_chk_done
 
