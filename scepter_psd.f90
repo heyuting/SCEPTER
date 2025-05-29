@@ -135,8 +135,7 @@ contains
         implicit none 
 
         integer,intent(in)::nz,nps,iz
-        real(kind=8),intent(in)::dt,ps_min,ps_max,pi,tol 
-        real(kind=8),dimension(nz),intent(in)::z,poro
+        real(kind=8),intent(in)::ps_min,ps_max,pi,tol 
         real(kind=8),dimension(nps),intent(in)::ps,dps
         real(kind=8),dimension(nz),intent(in)::DV
         real(kind=8),dimension(nps,nz),intent(in)::psd
