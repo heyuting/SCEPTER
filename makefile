@@ -50,7 +50,7 @@ LIBS          = -lopenblas
 
 ifneq (,$(findstring -Dmod_basalt_cmp,$(CPFLAGS)))
   # Found -Dmod_basalt_cmp
-  INC          = -I/home/yhs5/project/SCEPTER/data 
+  INC          = -I./data 
 else
   # Not found
   INC          = 
