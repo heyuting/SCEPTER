@@ -1,0 +1,32 @@
+{
+  "sites": [
+    {
+      "name": "Scioto_River_Chillicothe_OH_control",
+      "station_id": "03231500",
+      "lat": 39.34,
+      "lon": -82.97,
+      "elevation": 180.92,
+      "simulation_type": "spinup",
+      "erw_rate": 0,
+      "site_type": "agricultural",
+      "forest_pct": 12.0,
+      "agriculture_pct": 80.0,
+      "description": "Control simulation for Scioto River at Chillicothe, OH (agricultural)"
+    } 
+  ],
+  "settings": {
+    "max_distance_km": 100,
+    "outdir": "../scepter_output/usgs_control/",
+    "timeout_minutes": 30,
+    "parallel_runs": false
+  },
+  "study_info": {
+    "simulation_type": "control",
+    "purpose": "Baseline weathering simulations without basalt application",
+    "total_sites": 12,
+    "agricultural_sites": 6,
+    "forested_sites": 6,
+    "study_region": "Ohio River basin",
+    "notes": "These control simulations establish baseline weathering rates for comparison with ERW treatments"
+  }
+}
