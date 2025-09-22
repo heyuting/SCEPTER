@@ -329,8 +329,14 @@ def apply_erw_modifications(params, erw_rate, csv_row):
     params["sld_varlist_dust"] = []  # Use source file instead
 
     # Enhanced organic matter due to improved plant growth
+    # Enhance organic matter input for ERW (basalt weathering increases nutrient availability)
     original_om = params["omrain"]
-    params["omrain"] = original_om * (1.0 + erw_rate / 10000.0)  # Slight OM enhancement
+    params["omrain"] = original_om * (1.0 + erw_rate / 10000.0)
+    
+    # Enhance SOC content for ERW (basalt improves soil structure and organic matter retention)
+    if "soc_initial" in params:
+        original_soc = params["soc_initial"]
+        params["soc_initial"] = original_soc * (1.0 + erw_rate / 20000.0)  # Slight OM enhancement
 
     # Adjust mixing if agricultural site with ERW
     if is_agricultural and erw_rate > 1000:  # High ERW rate
@@ -358,6 +364,25 @@ def csv_row_to_scepter_params(row):
     runoff = row["runoff [m/yr]"]
     erosion_mm_yr = row["erosion [mm/yr]"]
     cropland_pct = row["cropland [%]"]
+    
+    # Additional CSV values for more realistic simulations
+    bs_0_20cm = row["BS_0-20cm [%]"]  # Base saturation percentage
+    nitrification_rate = row["nitrification rate [kgN/ha/day]"]  # Nitrogen cycling
+    
+    # Calculate initial pH from soil pH (convert to H+ concentration)
+    h_initial = 10**(-ph_0_30cm)  # H+ concentration from pH
+    
+    # Calculate initial SOC content (convert wt% to concentration)
+    soc_initial = soc_0_30cm / 100.0  # Convert percentage to fraction
+    
+    # Calculate base cation concentrations from base saturation and CEC
+    # Base saturation = (Ca + Mg + K + Na) / CEC * 100%
+    base_cations_total = (bs_0_20cm / 100.0) * cec_0_30cm  # cmol/kg
+    # Distribute among cations (typical ratios)
+    ca_initial = base_cations_total * 0.6  # ~60% Ca
+    mg_initial = base_cations_total * 0.25  # ~25% Mg  
+    k_initial = base_cations_total * 0.1   # ~10% K
+    na_initial = base_cations_total * 0.05  # ~5% Na
 
     # Create runname from coordinates
     runname = f"site_{lat:.1f}_{lon:.1f}".replace("-", "neg").replace(".", "p")
@@ -377,6 +402,7 @@ def csv_row_to_scepter_params(row):
         "fdust2": 0,
         "taudust": 0,
         "omrain": npp * 0.3,  # Convert NPP to organic matter input (rough conversion)
+        "soc_initial": soc_initial,  # Initial SOC content from CSV
         "zom": 0.25,
         "poro": porosity,  # Use CSV porosity
         "moistsrf": soil_moisture,  # Use CSV soil moisture
@@ -416,7 +442,12 @@ def csv_row_to_scepter_params(row):
         "exrxn_list": [],
         # ---- boundary values ----
         "pr_list": [("inrt", 1.0)],
-        "rain_list": [("ca", 1e-5)],  # Keep default
+        "rain_list": [
+            ("ca", ca_initial * 1e-6),  # Convert cmol/kg to mol/L (rough conversion)
+            ("mg", mg_initial * 1e-6),
+            ("k", k_initial * 1e-6), 
+            ("na", na_initial * 1e-6),
+        ],
         "atm_list": [
             ("pco2", 3.16e-4),
             ("po2", 0.21),
@@ -444,6 +475,11 @@ def csv_row_to_scepter_params(row):
             "ph_0_30cm": ph_0_30cm,
             "soc_0_30cm": soc_0_30cm,
             "cropland_pct": cropland_pct,
+            "bs_0_20cm": bs_0_20cm,
+            "nitrification_rate": nitrification_rate,
+            "h_initial": h_initial,
+            "soc_initial": soc_initial,
+            "base_cations_total": base_cations_total,
         },
     }
 
