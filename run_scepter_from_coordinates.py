@@ -426,8 +426,8 @@ def csv_row_to_scepter_params(row):
         # ---- solid phase properties ----
         "sld_varlist_dust": [],
         "sld_varlist_cec": [
-            ("inrt", cec_0_30cm, 5.9, 3.4),
-            ("g2", cec_0_30cm, 5.9, 3.4),
+            ("inrt", cec_0_30cm, 5.9, 4.8, 10.47, 10.786, 16.47, 3.4),
+            ("g2", cec_0_30cm, 5.9, 4.8, 10.47, 10.786, 16.47, 3.4),
         ],
         "sld_varlist_omrain": [("g2", 1.0)],
         "sld_varlist_kinspc": [],
