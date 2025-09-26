@@ -441,12 +441,16 @@ def run_spinup_simulation(
         runid=params["runid"],
     )
 
-    if result["success"]:
+    if result:
         print(f"SPINUP completed successfully: {params['runname']}")
+        return {"success": True, "runname": params["runname"]}
     else:
-        print(f"SPINUP failed: {result.get('error', 'Unknown error')}")
-
-    return result
+        print(f"SPINUP failed: {params['runname']}")
+        return {
+            "success": False,
+            "error": "Spinup simulation failed",
+            "runname": params["runname"],
+        }
 
 
 def run_erw_simulation(
@@ -549,12 +553,16 @@ def run_erw_simulation(
         runid=params["runid"],
     )
 
-    if result["success"]:
+    if result:
         print(f"ERW completed successfully: {params['runname']}")
+        return {"success": True, "runname": params["runname"]}
     else:
-        print(f"ERW failed: {result.get('error', 'Unknown error')}")
-
-    return result
+        print(f"ERW failed: {params['runname']}")
+        return {
+            "success": False,
+            "error": "ERW simulation failed",
+            "runname": params["runname"],
+        }
 
 
 def run_proper_workflow(

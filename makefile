@@ -1,7 +1,7 @@
 # Start of the makefile
 # Defining variables
 
-FC            = gfortran
+FC            = ftn
 # FC            = ifort
 FFLAGS = -O2 -Wall -cpp $(CPFLAGS)
 
@@ -46,7 +46,7 @@ endif
 # LDFLAGS       = -L/usr/local/lib
 LDFLAGS       = 
 
-LIBS          = -lopenblas
+LIBS          =
 
 ifneq (,$(findstring -Dmod_basalt_cmp,$(CPFLAGS)))
   # Found -Dmod_basalt_cmp
