@@ -266,7 +266,7 @@ def run_scepter_from_coordinates(
     if success:
         print(f"✓ Simulation completed successfully: {runname}")
     else:
-        print(f"❌ Simulation failed: {runname}")
+        print(f" Simulation failed: {runname}")
 
     return result
 
@@ -293,13 +293,20 @@ def apply_erw_modifications(params, erw_rate, csv_row):
     cropland_pct = csv_row["cropland [%]"]
     is_agricultural = cropland_pct >= 50
 
-    # ERW parameters
-    params["fdust"] = erw_rate  # Basalt application rate
+    # ERW parameters - with safeguards for PBE stability
+    # Cap ERW rate to prevent PBE errors (max 3000 g/m²/yr for stability)
+    safe_erw_rate = min(erw_rate, 3000.0)
+    if erw_rate > 3000.0:
+        print(
+            f"⚠️  Warning: ERW rate {erw_rate} g/m²/yr capped to {safe_erw_rate} g/m²/yr for PBE stability"
+        )
+
+    params["fdust"] = safe_erw_rate  # Basalt application rate
 
     # Set application duration based on site type
     if is_agricultural:
         params["taudust"] = 10  # 10 years for agricultural sites (annual applications)
-        params["fdust2"] = erw_rate * 0.1  # Small amount of fertilizer dust
+        params["fdust2"] = safe_erw_rate * 0.1  # Small amount of fertilizer dust
     else:
         params["taudust"] = 20  # 20 years for natural sites (longer term)
         params["fdust2"] = 0
@@ -313,7 +320,7 @@ def apply_erw_modifications(params, erw_rate, csv_row):
 
     # Enhanced CEC due to basalt weathering
     original_cec = params["sld_varlist_cec"][0][1]
-    enhanced_cec = original_cec + (erw_rate / 1000.0) * 10  # Rough scaling
+    enhanced_cec = original_cec + (safe_erw_rate / 1000.0) * 10  # Rough scaling
 
     # Update CEC for all solid species
     params["sld_varlist_cec"] = [
@@ -331,15 +338,17 @@ def apply_erw_modifications(params, erw_rate, csv_row):
     # Enhanced organic matter due to improved plant growth
     # Enhance organic matter input for ERW (basalt weathering increases nutrient availability)
     original_om = params["omrain"]
-    params["omrain"] = original_om * (1.0 + erw_rate / 10000.0)
-    
+    params["omrain"] = original_om * (1.0 + safe_erw_rate / 10000.0)
+
     # Enhance SOC content for ERW (basalt improves soil structure and organic matter retention)
     if "soc_initial" in params:
         original_soc = params["soc_initial"]
-        params["soc_initial"] = original_soc * (1.0 + erw_rate / 20000.0)  # Slight OM enhancement
+        params["soc_initial"] = original_soc * (
+            1.0 + safe_erw_rate / 20000.0
+        )  # Slight OM enhancement
 
     # Adjust mixing if agricultural site with ERW
-    if is_agricultural and erw_rate > 1000:  # High ERW rate
+    if is_agricultural and safe_erw_rate > 1000:  # High ERW rate
         params["mix_scheme"] = 3  # Tilling mixing for incorporation
 
     return params
@@ -364,24 +373,24 @@ def csv_row_to_scepter_params(row):
     runoff = row["runoff [m/yr]"]
     erosion_mm_yr = row["erosion [mm/yr]"]
     cropland_pct = row["cropland [%]"]
-    
+
     # Additional CSV values for more realistic simulations
     bs_0_20cm = row["BS_0-20cm [%]"]  # Base saturation percentage
     nitrification_rate = row["nitrification rate [kgN/ha/day]"]  # Nitrogen cycling
-    
+
     # Calculate initial pH from soil pH (convert to H+ concentration)
-    h_initial = 10**(-ph_0_30cm)  # H+ concentration from pH
-    
+    h_initial = 10 ** (-ph_0_30cm)  # H+ concentration from pH
+
     # Calculate initial SOC content (convert wt% to concentration)
     soc_initial = soc_0_30cm / 100.0  # Convert percentage to fraction
-    
+
     # Calculate base cation concentrations from base saturation and CEC
     # Base saturation = (Ca + Mg + K + Na) / CEC * 100%
     base_cations_total = (bs_0_20cm / 100.0) * cec_0_30cm  # cmol/kg
     # Distribute among cations (typical ratios)
     ca_initial = base_cations_total * 0.6  # ~60% Ca
-    mg_initial = base_cations_total * 0.25  # ~25% Mg  
-    k_initial = base_cations_total * 0.1   # ~10% K
+    mg_initial = base_cations_total * 0.25  # ~25% Mg
+    k_initial = base_cations_total * 0.1  # ~10% K
     na_initial = base_cations_total * 0.05  # ~5% Na
 
     # Create runname from coordinates
@@ -411,7 +420,7 @@ def csv_row_to_scepter_params(row):
         "w": erosion_mm_yr / 1000.0,  # Convert mm/yr to m/yr for erosion rate
         "q": runoff,  # Use CSV runoff
         "p": 1e-5,  # Keep default particle size
-        "nstep": 10,
+        "nstep": 20,  # Increased for better PBE stability
         "rstrt": "self",
         # ---- switches.in parameters ----
         "w_scheme": 1,
@@ -445,7 +454,7 @@ def csv_row_to_scepter_params(row):
         "rain_list": [
             ("ca", ca_initial * 1e-6),  # Convert cmol/kg to mol/L (rough conversion)
             ("mg", mg_initial * 1e-6),
-            ("k", k_initial * 1e-6), 
+            ("k", k_initial * 1e-6),
             ("na", na_initial * 1e-6),
         ],
         "atm_list": [
@@ -685,10 +694,10 @@ def run_sites_from_json(json_file):
                 successful += 1
                 print(f"  ✓ Completed successfully")
             else:
-                print(f"  ❌ Failed")
+                print(f"  Failed")
 
         except Exception as e:
-            print(f"  ❌ Error: {e}")
+            print(f"  Error: {e}")
             results[name] = {"success": False, "error": str(e)}
 
     print(f"\n" + "=" * 60)
