@@ -1,7 +1,7 @@
 import os, shutil, sys, subprocess
 import make_inputs
 import numpy as np
-import spinup
+import csv_reader
 
 
 def run_a_scepter_run(runname, outdir_src, **kwargs):
@@ -224,6 +224,10 @@ def main():
 
     outdir_src = "../scepter_output/"
     runname = "test"
+
+    target_lat = 39.34
+    target_lon = -82.97
+    csv_params = csv_reader.get_csv_parameters(target_lat, target_lon)
 
     #  >>>> input variables of interests
     cec = csv_params["cec"] if csv_params else 10.0

@@ -132,7 +132,7 @@ def get_csv_parameters(
         "lon": nearest_row["lon"],
         "distance_km": distance,
         "temp": temp_csv,
-        "moistsrf": soil_moisture,
+        "moistsrf": soil_moisture/porosity, # moistsrf needs normalization by poro (moistsrf=moistsrf/poro)
         "poro": porosity,
         "q": runoff,
         "w": erosion_mm_yr / 1000.0,  # Convert mm/yr to m/yr
