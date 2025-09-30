@@ -231,7 +231,11 @@ def main():
 
     #  >>>> input variables of interests
     cec = csv_params["cec"] if csv_params else 10.0
-    logkh = 5.9
+    logkhna = 5.9
+    logkhk = 4.8
+    logkhca = 10.47
+    logkhmg = 10.786
+    logkhal = 16.47
     alpha = 3.4
 
     ca = 1e-5
@@ -288,7 +292,10 @@ def main():
     atm_list = [("pco2", 3.16e-4), ("po2", 0.21), ("pnh3", 1e-50), ("pn2o", 1e-50)]
     # ---- sopecify solid phase properties ----
     sld_varlist_dust = []
-    sld_varlist_cec = [("inrt", cec, logkh, alpha), ("g2", cec, logkh, alpha)]
+    sld_varlist_cec = [
+        ("inrt", cec, logkhna, logkhk, logkhca, logkhmg, logkhal, alpha),
+        ("g2", cec, logkhna, logkhk, logkhca, logkhmg, logkhal, alpha),
+    ]
     sld_varlist_omrain = [("g2", 1.0)]
     sld_varlist_kinspc = []
     sld_varlist_2ndslds = []
