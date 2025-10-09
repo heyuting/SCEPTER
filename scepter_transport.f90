@@ -643,9 +643,7 @@ module scepter_transport
                         select case (trim(adjustl(chrsld_kinspc(isps_kinspc))))
                             case('g1','g2','g3') ! for OMs, turn over year needs to be provided [yr]
                                 if (kin_sld_spc(isps_kinspc)/=0d0) then  
-                                    ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = ( &                   
-                                        & 1d0/kin_sld_spc(isps_kinspc) &
-                                        & ) 
+                                    ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = 1d0/kin_sld_spc(isps_kinspc)
                                 else
                                     ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = kin_sld_spc(isps_kinspc)
                                 endif 
@@ -2415,18 +2413,12 @@ module scepter_transport
                     select case (trim(adjustl(chrsld_kinspc(isps_kinspc))))
                         case('g1','g2','g3') ! for OMs, turn over year needs to be provided [yr]
                             if (kin_sld_spc(isps_kinspc)/=0d0) then  
-                                ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = ( &                   
-                                    & 1d0/kin_sld_spc(isps_kinspc) &
-                                    & ) 
+                                ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = 1d0/kin_sld_spc(isps_kinspc)
                             else
-                                ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = ( &                            
-                                    & kin_sld_spc(isps_kinspc) &
-                                    & ) 
+                                ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = (kin_sld_spc(isps_kinspc)) 
                             endif 
                         case default ! otherwise, usual rate constant [mol/m2/yr]
-                            ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = ( &                            
-                                & kin_sld_spc(isps_kinspc) &
-                                & ) 
+                            ksld(findloc(chrsld,chrsld_kinspc(isps_kinspc),dim=1),:) = (kin_sld_spc(isps_kinspc)) 
                     end select 
                 endif 
             enddo 

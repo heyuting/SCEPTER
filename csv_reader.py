@@ -10,7 +10,7 @@ import numpy as np
 from math import radians, cos, sin, asin, sqrt
 
 
-def load_csv_data(csv_file="./data/inputdata_depres.csv"):
+def load_csv_data(csv_file="./data/inputdata_with_tunedpars.csv"):
     """Load CSV data with soil and climate parameters"""
     try:
         df = pd.read_csv(csv_file)
@@ -60,7 +60,10 @@ def find_nearest_csv_site(target_lat, target_lon, df, max_distance_km=100):
 
 
 def get_csv_parameters(
-    target_lat, target_lon, csv_file="./data/inputdata_depres.csv", max_distance_km=100
+    target_lat,
+    target_lon,
+    csv_file="./data/inputdata_with_tunedpars.csv",
+    max_distance_km=100,
 ):
     """
     Main function to get CSV parameters for a target location
@@ -109,6 +112,20 @@ def get_csv_parameters(
     print(f"  NPP: {nearest_row['NPP [gC/m/yr]']:.1f} gC/m²/yr")
     print(f"  pH (0-30cm): {nearest_row['pH_H2O_0-30cm [-]']:.2f}")
 
+    # Tuned parameters (if available)
+    if "OC_input_gC_per_m2_per_yr" in nearest_row and pd.notna(
+        nearest_row["OC_input_gC_per_m2_per_yr"]
+    ):
+        print(
+            f"  [TUNED] OC input: {nearest_row['OC_input_gC_per_m2_per_yr']:.1f} gC/m²/yr"
+        )
+    if "log_tau_OC_yr" in nearest_row and pd.notna(nearest_row["log_tau_OC_yr"]):
+        print(f"  [TUNED] log(tau_OC): {nearest_row['log_tau_OC_yr']:.2f}")
+    if "log_KH_per_Na" in nearest_row and pd.notna(nearest_row["log_KH_per_Na"]):
+        print(f"  [TUNED] log(KH/Na): {nearest_row['log_KH_per_Na']:.2f}")
+    if "log_Ca_M" in nearest_row and pd.notna(nearest_row["log_Ca_M"]):
+        print(f"  [TUNED] log(Ca): {nearest_row['log_Ca_M']:.2f}")
+
     # Extract CSV parameters
     temp_csv = nearest_row["temperature [oC]"]
     soil_moisture = nearest_row["soil moisture [m3/m3]"]
@@ -125,6 +142,23 @@ def get_csv_parameters(
     npp = nearest_row["NPP [gC/m/yr]"]
     ph_0_30cm = nearest_row["pH_H2O_0-30cm [-]"]
 
+    # Extract tuned parameters (if available)
+    oc_input = None
+    log_tau_oc = None
+    log_kh_na = None
+    log_ca = None
+
+    if "OC_input_gC_per_m2_per_yr" in nearest_row and pd.notna(
+        nearest_row["OC_input_gC_per_m2_per_yr"]
+    ):
+        oc_input = nearest_row["OC_input_gC_per_m2_per_yr"]
+    if "log_tau_OC_yr" in nearest_row and pd.notna(nearest_row["log_tau_OC_yr"]):
+        log_tau_oc = nearest_row["log_tau_OC_yr"]
+    if "log_KH_per_Na" in nearest_row and pd.notna(nearest_row["log_KH_per_Na"]):
+        log_kh_na = nearest_row["log_KH_per_Na"]
+    if "log_Ca_M" in nearest_row and pd.notna(nearest_row["log_Ca_M"]):
+        log_ca = nearest_row["log_Ca_M"]
+
     # Return parameters in format expected by spinup.py
     params = {
         # Location
@@ -132,12 +166,18 @@ def get_csv_parameters(
         "lon": nearest_row["lon"],
         "distance_km": distance,
         "temp": temp_csv,
-        "moistsrf": soil_moisture/porosity, # moistsrf needs normalization by poro (moistsrf=moistsrf/poro)
+        "moistsrf": soil_moisture
+        / porosity,  # moistsrf needs normalization by poro (moistsrf=moistsrf/poro)
         "poro": porosity,
         "q": runoff,
         "w": erosion_mm_yr / 1000.0,  # Convert mm/yr to m/yr
         "cec": cec_csv,
-        # Additional CSV parameters (not used by spinup.py)
+        # Tuned parameters (if available)
+        "omrain": oc_input,  # OC input (tuned) - replaces default omrain calculation
+        "log_tau_oc": log_tau_oc,  # log(tau_OC) - OC turnover time
+        "log_kh_na": log_kh_na,  # log(KH/Na) - cation exchange coefficient
+        "log_ca": log_ca,  # log(Ca) - calcium concentration
+        # Additional CSV parameters (not directly used by spinup.py)
         # "soc_0_30cm": soc_0_30cm,
         # "bs_0_20cm": bs_0_20cm,
         # "cropland_pct": cropland_pct,

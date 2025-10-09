@@ -220,25 +220,44 @@ def run_a_scepter_run(runname, outdir_src, **kwargs):
     return run_success
 
 
-def main():
+def run_single_site(site_name, target_lat, target_lon, outdir_src="../scepter_output/"):
+    """
+    Run SCEPTER spinup for a single site with tuned parameters
 
-    outdir_src = "../scepter_output/"
-    runname = "test"
+    Args:
+        site_name: Name for the simulation output directory
+        target_lat: Latitude of the site
+        target_lon: Longitude of the site
+        outdir_src: Output directory path
 
-    target_lat = 39.34
-    target_lon = -82.97
+    Returns:
+        dict: Result dictionary with 'success' boolean and optional 'error' message
+    """
+    runname = site_name
     csv_params = csv_reader.get_csv_parameters(target_lat, target_lon)
 
     #  >>>> input variables of interests
     cec = csv_params["cec"] if csv_params else 10.0
-    logkhna = 5.9
-    logkhk = 4.8
-    logkhca = 10.47
-    logkhmg = 10.786
-    logkhal = 16.47
-    alpha = 3.4
+    # Use tuned cation exchange coefficients if available
+    # logkhna is log10(KH/Na), other coefficients are calculated from it
+    logkhna = (
+        csv_params.get("log_kh_na")
+        if csv_params and csv_params.get("log_kh_na") is not None
+        else 5.9
+    )
+    # Calculate other cation exchange coefficients from logkhna (as per Yoshi's equations)
+    logkhk = logkhna - 1.1
+    logkhca = (logkhna - 0.665) * 2.0
+    logkhmg = (logkhna - 0.507) * 2.0
+    logkhal = (logkhna - 0.41) * 3.0
+    alpha = 2.0  # As used in 2025 paper
 
-    ca = 1e-5
+    # Use tuned calcium concentration if available (convert from log to linear)
+    ca = (
+        10 ** csv_params.get("log_ca")
+        if csv_params and csv_params.get("log_ca") is not None
+        else 1e-5
+    )
 
     # >>>> define input variables written in input files
     # ---- frame.in ----
@@ -249,7 +268,12 @@ def main():
     fdust = 0
     fdust2 = 0
     taudust = 0
-    omrain = 300
+    # Use tuned OC input (Jorg) if available, otherwise use default
+    omrain = (
+        csv_params.get("omrain")
+        if csv_params and csv_params.get("omrain") is not None
+        else 300
+    )
     zom = 0.25
     poro = csv_params["poro"] if csv_params else 0.5
     moistsrf = csv_params["moistsrf"] if csv_params else 0.5
@@ -263,7 +287,7 @@ def main():
     runid = runname
     # ---- switches.in ----
     w_scheme = 1
-    mix_scheme = 1  # 1 --Fickian
+    mix_scheme = 2  # 2 --homogeneous mixing (as used in 2025 paper)
     poro_iter = "false"
     sldmin_lim = "true"
     display = "true"
@@ -297,7 +321,18 @@ def main():
         ("g2", cec, logkhna, logkhk, logkhca, logkhmg, logkhal, alpha),
     ]
     sld_varlist_omrain = [("g2", 1.0)]
-    sld_varlist_kinspc = []
+    # Use tuned OC turnover time (τorg) if available
+    # The value should be in years (convert from log scale if needed)
+    if csv_params and csv_params.get("log_tau_oc") is not None:
+        tau_oc_yr = 10 ** csv_params.get("log_tau_oc")
+        sld_varlist_kinspc = [("g2", tau_oc_yr)]
+        print(
+            f"Using tuned OC turnover time: {tau_oc_yr:.2f} years (from log = {csv_params.get('log_tau_oc'):.2f})"
+        )
+    else:
+        sld_varlist_kinspc = (
+            []
+        )  # Will use hardcoded default of 8 years in scepter_sld_kin.f90
     sld_varlist_2ndslds = []
     srcfile_dust = None
     srcfile_omrain = None
@@ -375,6 +410,72 @@ def main():
         # ---- python stuff ----
         use_local_storage=use_local_storage,
     )
+
+    return {"success": True, "site_name": site_name, "runname": runname}
+
+
+def main():
+    """Main function - processes all sites from JSON file"""
+    import json
+    import sys
+
+    # Read sites from JSON file
+    json_file = "usgs_12_sites_control.json"
+    if len(sys.argv) > 1:
+        json_file = sys.argv[1]
+
+    print(f"Reading sites from: {json_file}")
+    with open(json_file, "r") as f:
+        config = json.load(f)
+
+    sites = config.get("sites", [])
+    print(f"Found {len(sites)} sites to process\n")
+
+    # Track results
+    successful_sites = []
+    failed_sites = []
+
+    # Process each site
+    for site_idx, site in enumerate(sites):
+        site_name = site.get("name", f"site_{site_idx}")
+        target_lat = site.get("lat")
+        target_lon = site.get("lon")
+
+        print(f"\n{'='*80}")
+        print(f"Processing site {site_idx + 1}/{len(sites)}: {site_name}")
+        print(f"Coordinates: {target_lat}°N, {target_lon}°W")
+        print(f"{'='*80}\n")
+
+        try:
+            result = run_single_site(site_name, target_lat, target_lon)
+
+            if result.get("success"):
+                successful_sites.append(site_name)
+                print(f"\nCompleted spinup for {site_name}")
+            else:
+                failed_sites.append(site_name)
+                print(f"\nFailed spinup for {site_name}")
+
+        except Exception as e:
+            failed_sites.append(site_name)
+            print(f"\nException during spinup for {site_name}: {e}")
+
+    # Summary
+    print(f"\n{'='*80}")
+    print(f"BATCH PROCESSING COMPLETE")
+    print(f"{'='*80}")
+    print(f"Successful: {len(successful_sites)}/{len(sites)}")
+    print(f"Failed: {len(failed_sites)}/{len(sites)}")
+
+    if successful_sites:
+        print(f"\nSuccessful sites:")
+        for site in successful_sites:
+            print(f"  - {site}")
+
+    if failed_sites:
+        print(f"\nFailed sites:")
+        for site in failed_sites:
+            print(f"  - {site}")
 
 
 if __name__ == "__main__":

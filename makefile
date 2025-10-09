@@ -1,7 +1,8 @@
 # Start of the makefile
 # Defining variables
 
-FC            = ftn
+# FC            = ftn
+FC            = gfortran
 # FC            = ifort
 FFLAGS = -O2 -Wall -cpp $(CPFLAGS)
 
@@ -44,9 +45,9 @@ ifeq ($(FC),ifort)
 endif 
 
 # LDFLAGS       = -L/usr/local/lib
-LDFLAGS       = 
+LDFLAGS       = -L/opt/homebrew/opt/lapack/lib
 
-LIBS          =
+LIBS          = -llapack -lblas
 
 ifneq (,$(findstring -Dmod_basalt_cmp,$(CPFLAGS)))
   # Found -Dmod_basalt_cmp
@@ -80,7 +81,7 @@ SRC           = \
                 scepter_psd_implicit.f90 \
                 scepter_psd_pbe.f90 \
                 scepter_sld_kin.f90 \
-                scepter_eq_pH.f90 \
+                scepter_eq_ph.f90 \
                 scepter_makegrid.f90 \
                 scepter_physics.f90 \
                 scepter_transport.f90 \
