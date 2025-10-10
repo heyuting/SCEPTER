@@ -32,7 +32,7 @@ def create_slurm_jobs(json_file="usgs_12_sites_control.json"):
 
         slurm_script = f"""#!/bin/bash
 #SBATCH --job-name=spinup_{site_name}
-#SBATCH --account=m4259
+#SBATCH --account=smeglin
 #SBATCH --qos=regular
 #SBATCH --constraint=cpu
 #SBATCH --nodes=1

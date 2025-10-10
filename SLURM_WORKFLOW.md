@@ -63,7 +63,7 @@ ls ../scepter_output/*control*/run_complete.txt
 
 Each job is configured with:
 
-- **Account**: m4259
+- **Account**: smeglin
 - **QOS**: regular
 - **Constraint**: cpu
 - **Nodes**: 1 per site
