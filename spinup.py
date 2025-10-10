@@ -415,67 +415,18 @@ def run_single_site(site_name, target_lat, target_lon, outdir_src="../scepter_ou
 
 
 def main():
-    """Main function - processes all sites from JSON file"""
-    import json
-    import sys
+    """Main function - runs single test site (default behavior)"""
+    # Default test site
+    site_name = "test"
+    target_lat = 39.34
+    target_lon = -82.97
 
-    # Read sites from JSON file
-    json_file = "usgs_12_sites_control.json"
-    if len(sys.argv) > 1:
-        json_file = sys.argv[1]
+    result = run_single_site(site_name, target_lat, target_lon)
 
-    print(f"Reading sites from: {json_file}")
-    with open(json_file, "r") as f:
-        config = json.load(f)
-
-    sites = config.get("sites", [])
-    print(f"Found {len(sites)} sites to process\n")
-
-    # Track results
-    successful_sites = []
-    failed_sites = []
-
-    # Process each site
-    for site_idx, site in enumerate(sites):
-        site_name = site.get("name", f"site_{site_idx}")
-        target_lat = site.get("lat")
-        target_lon = site.get("lon")
-
-        print(f"\n{'='*80}")
-        print(f"Processing site {site_idx + 1}/{len(sites)}: {site_name}")
-        print(f"Coordinates: {target_lat}°N, {target_lon}°W")
-        print(f"{'='*80}\n")
-
-        try:
-            result = run_single_site(site_name, target_lat, target_lon)
-
-            if result.get("success"):
-                successful_sites.append(site_name)
-                print(f"\nCompleted spinup for {site_name}")
-            else:
-                failed_sites.append(site_name)
-                print(f"\nFailed spinup for {site_name}")
-
-        except Exception as e:
-            failed_sites.append(site_name)
-            print(f"\nException during spinup for {site_name}: {e}")
-
-    # Summary
-    print(f"\n{'='*80}")
-    print(f"BATCH PROCESSING COMPLETE")
-    print(f"{'='*80}")
-    print(f"Successful: {len(successful_sites)}/{len(sites)}")
-    print(f"Failed: {len(failed_sites)}/{len(sites)}")
-
-    if successful_sites:
-        print(f"\nSuccessful sites:")
-        for site in successful_sites:
-            print(f"  - {site}")
-
-    if failed_sites:
-        print(f"\nFailed sites:")
-        for site in failed_sites:
-            print(f"  - {site}")
+    if result.get("success"):
+        print(f"\nSpinup completed successfully for {site_name}")
+    else:
+        print(f"\nSpinup failed for {site_name}")
 
 
 if __name__ == "__main__":
