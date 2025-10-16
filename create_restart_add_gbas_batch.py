@@ -44,6 +44,9 @@ def create_restart_add_gbas_jobs(json_file="usgs_12_sites_control.json"):
         # Create the SLURM script content
         slurm_content = f"""#!/bin/bash
 #SBATCH --job-name=erw_{site_name[:20]}
+#SBATCH --account=m4922
+#SBATCH --qos=regular
+#SBATCH --constraint=cpu
 #SBATCH --output=restart_logs/restart_add_gbas_{site_name}_%j.log
 #SBATCH --error=restart_logs/restart_add_gbas_{site_name}_%j.err
 #SBATCH --time=02:00:00
@@ -51,7 +54,6 @@ def create_restart_add_gbas_jobs(json_file="usgs_12_sites_control.json"):
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=8G
-#SBATCH --partition=regular_m
 
 # Load modules if needed
 # module load python/3.9
