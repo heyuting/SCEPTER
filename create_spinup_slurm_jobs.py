@@ -38,7 +38,7 @@ def create_slurm_jobs(json_file="usgs_12_sites_control.json"):
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --time=24:00:00
+#SBATCH --time=3:00:00
 #SBATCH --output=logs/spinup_{site_name}_%j.log
 #SBATCH --error=logs/spinup_{site_name}_%j.err
 
@@ -60,6 +60,7 @@ cd $SLURM_SUBMIT_DIR
 python3 << 'PYEOF'
 import time
 import spinup
+import time
 
 site_name = "{site_name}"
 target_lat = {target_lat}
