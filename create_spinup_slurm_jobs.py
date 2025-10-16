@@ -32,7 +32,7 @@ def create_slurm_jobs(json_file="usgs_12_sites_control.json"):
 
         slurm_script = f"""#!/bin/bash
 #SBATCH --job-name=spinup_{site_name}
-#SBATCH --account=smeglin
+#SBATCH --account=m4922
 #SBATCH --qos=regular
 #SBATCH --constraint=cpu
 #SBATCH --nodes=1
@@ -58,6 +58,7 @@ cd $SLURM_SUBMIT_DIR
 
 # Run spinup for this site
 python3 << 'PYEOF'
+import time
 import spinup
 
 site_name = "{site_name}"
@@ -67,7 +68,11 @@ target_lon = {target_lon}
 print(f"Running spinup for: {{site_name}}")
 print(f"Coordinates: {{target_lat}}°N, {{target_lon}}°W\\n")
 
+start_time = time.time()
 result = spinup.run_single_site(site_name, target_lat, target_lon)
+end_time = time.time()
+elapsed = (end_time - start_time) / 60  # minutes
+print(f"Spinup completed in {{elapsed:.2f}} minutes")
 
 if result.get("success"):
     print(f"\\nSpinup completed successfully for {{site_name}}")

@@ -1,0 +1,22 @@
+#!/bin/bash
+# Submit all ERW restart jobs
+# Generated on 2025-10-16 11:33:22
+
+echo "Submitting 12 ERW restart jobs..."
+
+sbatch restart_slurm_scripts/restart_add_gbas_Scioto_River_Chillicothe_OH_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Scioto_River_Higby_OH_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Great_Miami_River_Hamilton_OH_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Vermilion_River_Danville_IL_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Embarras_River_Diona_IL_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_White_River_Centerton_IN_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Allegheny_River_Salamanca_NY_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Little_Kanawha_River_Palestine_WV_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Levisa_Fork_Paintsville_KY_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Big_Sandy_River_Louisa_KY_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Cumberland_River_Williamsburg_KY_control.sh
+sbatch restart_slurm_scripts/restart_add_gbas_Cumberland_River_Carthage_TN_control.sh
+
+echo "All jobs submitted!"
+echo "Monitor with: squeue -u $USER"
+echo "Check logs in: restart_logs/"
