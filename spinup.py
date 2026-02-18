@@ -1,7 +1,10 @@
-import os, shutil, sys, subprocess
-import make_inputs
-import numpy as np
+import os
+import shutil
+import subprocess
+import sys
+
 import csv_reader
+import make_inputs
 
 
 def run_a_scepter_run(runname, outdir_src, **kwargs):
@@ -78,6 +81,10 @@ def run_a_scepter_run(runname, outdir_src, **kwargs):
     outdir = outdir_src
     if use_local_storage:
         outdir = os.environ["TMPDIR"] + "/scepter_output/"
+
+    # Run from SCEPTER project root so make, ./data/, and scepter binary are found
+    _scepter_root = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(_scepter_root)
 
     # compile
     exename = "scepter"
@@ -195,7 +202,7 @@ def run_a_scepter_run(runname, outdir_src, **kwargs):
         os.system(outdir + runname + where + exename)
         run_success = True
     else:
-        proc = subprocess.Popen([outdir + runname_lab + where + exename])
+        proc = subprocess.Popen([outdir + runname + where + exename])
 
         my_timeout = 60 * max_calc_time
 
@@ -220,20 +227,32 @@ def run_a_scepter_run(runname, outdir_src, **kwargs):
     return run_success
 
 
-def run_single_site(site_name, target_lat, target_lon, outdir_src="../scepter_output/"):
+def run_single_site(
+    site_name, target_lat, target_lon, outdir_src, use_local_storage=True
+):
     """
     Run SCEPTER spinup for a single site with tuned parameters
 
     Args:
-        site_name: Name for the simulation output directory
+        site_name: Name for the simulation output directory (use "output" for job_folder/output)
         target_lat: Latitude of the site
         target_lon: Longitude of the site
         outdir_src: Output directory path
+        use_local_storage: If True, run in TMPDIR and copy back. If False, write directly to outdir_src.
 
     Returns:
         dict: Result dictionary with 'success' boolean and optional 'error' message
     """
-    runname = site_name
+    # Sanitize runname: avoid spaces/special chars that break shell commands
+    runname = (
+        str(site_name)
+        .replace(" ", "_")
+        .replace("/", "_")
+        .replace("(", "")
+        .replace(")", "")
+    )
+    if not runname:
+        runname = "output"
     csv_params = csv_reader.get_csv_parameters(target_lat, target_lon)
 
     #  >>>> input variables of interests
@@ -339,12 +358,9 @@ def run_single_site(site_name, target_lat, target_lon, outdir_src="../scepter_ou
     srcfile_cec = None
     srcfile_kinspc = None
     srcfile_2ndslds = "./data/2ndslds_def.in"
-    # ---- python stuff ----
-    use_local_storage = True
-
     #  >>>> run the code
 
-    run_a_scepter_run(
+    run_success = run_a_scepter_run(
         runname,
         outdir_src,
         # ---- frame.in ----
@@ -407,11 +423,10 @@ def run_single_site(site_name, target_lat, target_lon, outdir_src="../scepter_ou
         srcfile_cec=srcfile_cec,
         srcfile_kinspc=srcfile_kinspc,
         srcfile_2ndslds=srcfile_2ndslds,
-        # ---- python stuff ----
         use_local_storage=use_local_storage,
     )
 
-    return {"success": True, "site_name": site_name, "runname": runname}
+    return {"success": run_success, "site_name": site_name, "runname": runname}
 
 
 def main():
@@ -420,8 +435,9 @@ def main():
     site_name = "test"
     target_lat = 39.34
     target_lon = -82.97
+    outdir_src = "../scepter_output/"
 
-    result = run_single_site(site_name, target_lat, target_lon)
+    result = run_single_site(site_name, target_lat, target_lon, outdir_src)
 
     if result.get("success"):
         print(f"\nSpinup completed successfully for {site_name}")
