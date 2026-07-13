@@ -36,3 +36,4 @@ ENV/
 
 # Output directories
 scepter_output/
+jobs/

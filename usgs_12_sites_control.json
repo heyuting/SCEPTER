@@ -161,7 +161,10 @@
     "max_distance_km": 100,
     "outdir": "../scepter_output/usgs_control/",
     "timeout_minutes": 30,
-    "parallel_runs": false
+    "parallel_runs": false,
+    "particle_size": "320um",
+    "application_rate": 1000,
+    "target_pH": null
   },
   "study_info": {
     "simulation_type": "control",

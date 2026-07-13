@@ -26,6 +26,76 @@ import make_inputs
 import get_inputs
 
 
+def _fortran_rstrt_path(spinup_dir, restart_dir):
+    """
+    Build the restart source path written to frame.in.
+
+    SCEPTER prepends '../' to runname_save from inside the run directory
+    (see scepter_weathering_main.f90), so the value must be relative to the
+    *parent* of restart_dir.  Paths may contain '/', which is fine once
+    make_inputs quotes the field for Fortran list-directed input.
+    """
+    spinup_abs = os.path.abspath(spinup_dir)
+    restart_parent = os.path.dirname(os.path.abspath(restart_dir))
+    return os.path.relpath(spinup_abs, restart_parent)
+
+
+def _erw_outputs_look_valid(run_dir, dust_sld="gbas"):
+    """
+    Return True only if outputs look like a finished ERW restart, not a
+    copied spinup tree.  Copied spinups already have prof/ and flx/, so those
+    directories alone must not count as success.
+    """
+    if os.path.exists(os.path.join(run_dir, "run_complete.txt")):
+        # Only trust this marker if ERW species or flux data are also present
+        pass
+
+    sld_paths = [
+        os.path.join(run_dir, "prof", "prof_sld-020.txt"),
+        os.path.join(run_dir, "prof", "prof_sld-001.txt"),
+    ]
+    for sld_path in sld_paths:
+        if not os.path.exists(sld_path):
+            continue
+        try:
+            header = open(sld_path).readline().split()
+        except OSError:
+            continue
+        if dust_sld in header:
+            return True
+
+    # Non-empty integrated flux file is another strong success signal
+    for flx_name in (
+        "int_flx_co2sp-hco3.txt",
+        "int_flx_sld-gbas.txt",
+        f"int_flx_sld-{dust_sld}.txt",
+    ):
+        flx_path = os.path.join(run_dir, "flx", flx_name)
+        if not os.path.exists(flx_path):
+            continue
+        try:
+            with open(flx_path) as f:
+                nlines = sum(1 for _ in f)
+        except OSError:
+            continue
+        if nlines > 1:
+            return True
+
+    return False
+
+
+def _run_scepter(exe_path, run_dir, logfile=None):
+    """Run the SCEPTER binary; return True iff process exit code is 0."""
+    if logfile:
+        with open(logfile, "w") as logf:
+            proc = subprocess.run(
+                [exe_path], cwd=run_dir, stdout=logf, stderr=subprocess.STDOUT
+            )
+    else:
+        proc = subprocess.run([exe_path], cwd=run_dir)
+    return proc.returncode == 0
+
+
 def add_gbas(outdir, runname_spinup, dustname, runname_restart, **kwargs):
     """
     Restart a SCEPTER simulation from a completed spinup and apply basalt dust.

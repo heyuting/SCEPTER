@@ -24,7 +24,18 @@ def get_input_frame(**kwargs):
     p           = kwargs.get('p',       10e-6)
     nstep       = kwargs.get('nstep',   10)
     rstrt       = kwargs.get('rstrt',   'self')
-    runid       = kwargs.get('runid',   runname) 
+    runid       = kwargs.get('runid',   runname)
+
+    # Fortran list-directed READ (read(*,*) ) treats bare '/' as end-of-input.
+    # Quote character fields so paths like batch/site are read intact.
+    def _fortran_char(val):
+        s = str(val)
+        if len(s) >= 2 and s[0] == "'" and s[-1] == "'":
+            return s
+        return "'" + s.replace("'", "''") + "'"
+
+    rstrt = _fortran_char(rstrt)
+    runid = _fortran_char(runid)
     
     
     notes = [

@@ -228,31 +228,35 @@ def run_a_scepter_run(runname, outdir_src, **kwargs):
 
 
 def run_single_site(
-    site_name, target_lat, target_lon, outdir_src, use_local_storage=True
+    site_name, target_lat, target_lon, outdir_src, use_local_storage=True, output_in_place=False
 ):
     """
     Run SCEPTER spinup for a single site with tuned parameters
 
     Args:
-        site_name: Name for the simulation output directory (use "output" for job_folder/output)
+        site_name: Name for the simulation output directory (ignored if output_in_place=True)
         target_lat: Latitude of the site
         target_lon: Longitude of the site
         outdir_src: Output directory path
         use_local_storage: If True, run in TMPDIR and copy back. If False, write directly to outdir_src.
+        output_in_place: If True, write files directly in outdir_src (no runname subfolder).
 
     Returns:
         dict: Result dictionary with 'success' boolean and optional 'error' message
     """
-    # Sanitize runname: avoid spaces/special chars that break shell commands
-    runname = (
-        str(site_name)
-        .replace(" ", "_")
-        .replace("/", "_")
-        .replace("(", "")
-        .replace(")", "")
-    )
-    if not runname:
-        runname = "output"
+    if output_in_place:
+        runname = ""
+    else:
+        # Sanitize runname: avoid spaces/special chars that break shell commands
+        runname = (
+            str(site_name)
+            .replace(" ", "_")
+            .replace("/", "_")
+            .replace("(", "")
+            .replace(")", "")
+        )
+        if not runname:
+            runname = "output"
     csv_params = csv_reader.get_csv_parameters(target_lat, target_lon)
 
     #  >>>> input variables of interests
@@ -360,6 +364,9 @@ def run_single_site(
     srcfile_2ndslds = "./data/2ndslds_def.in"
     #  >>>> run the code
 
+    # With output_in_place, write directly to job folder to avoid TMPDIR copy overwriting it
+    use_local = use_local_storage and not output_in_place
+
     run_success = run_a_scepter_run(
         runname,
         outdir_src,
@@ -423,7 +430,7 @@ def run_single_site(
         srcfile_cec=srcfile_cec,
         srcfile_kinspc=srcfile_kinspc,
         srcfile_2ndslds=srcfile_2ndslds,
-        use_local_storage=use_local_storage,
+        use_local_storage=use_local,
     )
 
     return {"success": run_success, "site_name": site_name, "runname": runname}

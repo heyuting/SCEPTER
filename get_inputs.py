@@ -9,6 +9,12 @@ def get_input_frame(outdir,runname):
     with open(infile) as f:
         lines = [line for line in f]
     
+    if len(lines) < 21:
+        raise ValueError(
+            f"frame.in has only {len(lines)} lines (expected >= 21). "
+            f"File: {infile}"
+        )
+    
     ztot = float(lines[1].split()[0])
     nz = int(lines[2].split()[0])
     ttot = float(lines[3].split()[0])
@@ -27,7 +33,14 @@ def get_input_frame(outdir,runname):
     p = float(lines[16].split()[0])
     nstep = int(lines[17].split()[0])
     rstrt = (lines[18].split()[0])
-    runid = (lines[20].split()[0])
+    # runid: try line 20 or 21 (format can vary). When output_in_place, runid may be empty.
+    runid = "self"
+    for idx in (20, 21):
+        if idx < len(lines):
+            parts = lines[idx].split()
+            if parts and not parts[0].startswith('^'):
+                runid = parts[0]
+                break
     
     return ztot,nz,ttot,temp,fdust,fdust2,taudust,omrain,zom,poro,moistsrf,zwater,zdust,w,q,p,nstep,rstrt,runid
 
