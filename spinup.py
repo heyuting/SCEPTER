@@ -257,6 +257,11 @@ def run_single_site(
         )
         if not runname:
             runname = "output"
+
+    # Ensure CSV lookup uses SCEPTER/data regardless of the SLURM job cwd
+    _scepter_root = os.path.dirname(os.path.abspath(__file__))
+    os.chdir(_scepter_root)
+
     csv_params = csv_reader.get_csv_parameters(target_lat, target_lon)
 
     #  >>>> input variables of interests

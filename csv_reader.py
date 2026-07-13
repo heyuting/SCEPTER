@@ -5,13 +5,29 @@ This script provides functions to load CSV data and find the nearest data point
 to target coordinates, returning the relevant parameters for SCEPTER.
 """
 
+import os
 import pandas as pd
 import numpy as np
 from math import radians, cos, sin, asin, sqrt
 
+# Directory containing this module (= SCEPTER project root when installed flat)
+_SCEPTER_ROOT = os.path.dirname(os.path.abspath(__file__))
+_DEFAULT_CSV = os.path.join(_SCEPTER_ROOT, "data", "inputdata_with_tunedpars.csv")
 
-def load_csv_data(csv_file="./data/inputdata_with_tunedpars.csv"):
+
+def load_csv_data(csv_file=None):
     """Load CSV data with soil and climate parameters"""
+    if csv_file is None:
+        csv_file = _DEFAULT_CSV
+    # Allow relative paths, but resolve against SCEPTER root (not process cwd)
+    if not os.path.isabs(csv_file):
+        candidate = os.path.join(_SCEPTER_ROOT, csv_file)
+        if os.path.exists(candidate):
+            csv_file = candidate
+        elif csv_file.startswith("./"):
+            candidate = os.path.join(_SCEPTER_ROOT, csv_file[2:])
+            if os.path.exists(candidate):
+                csv_file = candidate
     try:
         df = pd.read_csv(csv_file)
         print(f"Loaded {len(df)} data points from {csv_file}")
@@ -62,7 +78,7 @@ def find_nearest_csv_site(target_lat, target_lon, df, max_distance_km=100):
 def get_csv_parameters(
     target_lat,
     target_lon,
-    csv_file="./data/inputdata_with_tunedpars.csv",
+    csv_file=None,
     max_distance_km=100,
 ):
     """
@@ -71,14 +87,14 @@ def get_csv_parameters(
     Args:
         target_lat: Target latitude
         target_lon: Target longitude
-        csv_file: Path to CSV file
+        csv_file: Path to CSV file (default: <SCEPTER>/data/inputdata_with_tunedpars.csv)
         max_distance_km: Maximum distance to search for nearest data point
 
     Returns:
         dict: Dictionary containing all relevant parameters for SCEPTER
     """
 
-    # Load CSV data
+    # Load CSV data (resolved against SCEPTER root, independent of cwd)
     df = load_csv_data(csv_file)
     if df is None:
         return None

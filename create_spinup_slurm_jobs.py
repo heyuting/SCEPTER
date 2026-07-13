@@ -24,6 +24,33 @@ def _sanitize_job_id(name):
     return re.sub(r"[^\w\-.]", "_", s) or "site"
 
 
+def _find_scepter_root(start_path):
+    """
+    Walk upward from start_path until the SCEPTER project root is found.
+
+    Nested batch layouts like jobs/baseline_batch_*/baseline_* break a fixed
+    number of os.path.dirname() calls (they land in jobs/ instead of SCEPTER/).
+    Identify the root by the presence of spinup.py and data/.
+    """
+    path = os.path.abspath(start_path)
+    if os.path.isfile(path):
+        path = os.path.dirname(path)
+
+    for _ in range(12):
+        if os.path.isfile(os.path.join(path, "spinup.py")) and os.path.isdir(
+            os.path.join(path, "data")
+        ):
+            return path
+        parent = os.path.dirname(path)
+        if parent == path:
+            break
+        path = parent
+
+    raise FileNotFoundError(
+        f"Could not locate SCEPTER root (spinup.py + data/) starting from {start_path}"
+    )
+
+
 def _resolve_job_path(job_input, jobs_base):
     """
     Resolve job_input to (job_id, params_path).
@@ -127,7 +154,12 @@ def create_slurm_jobs_from_sites(sites, jobs_base="jobs", submit=True):
     """
     os.makedirs("logs", exist_ok=True)
     os.makedirs(jobs_base, exist_ok=True)
-    project_root = os.path.dirname(os.path.abspath(os.path.join(jobs_base, ".")))
+    # Resolve SCEPTER root robustly (not just parent of jobs_base), so nested
+    # batch folders still cd into the directory that contains data/*.csv.
+    try:
+        project_root = _find_scepter_root(os.path.abspath(jobs_base))
+    except FileNotFoundError:
+        project_root = os.path.dirname(os.path.abspath(os.path.join(jobs_base, ".")))
 
     created = 0
     for idx, site in enumerate(sites):
@@ -209,10 +241,18 @@ def create_slurm_jobs(job_inputs, jobs_base="jobs", submit=True):
             print(f"Warning: Skipping {job_id} - missing coordinate in parameters.json")
             continue
 
-        project_root = os.path.dirname(
-            os.path.dirname(os.path.dirname(os.path.abspath(params_path)))
-        )
         job_folder = os.path.dirname(params_path)
+        try:
+            project_root = _find_scepter_root(params_path)
+        except FileNotFoundError:
+            # Fallback: previous 3-dirname heuristic (works only for jobs/<id>/)
+            project_root = os.path.dirname(
+                os.path.dirname(os.path.dirname(os.path.abspath(params_path)))
+            )
+            print(
+                f"Warning: {job_id}: could not find SCEPTER root from path; "
+                f"using {project_root}"
+            )
 
         script_file = _build_and_submit_slurm_script(
             job_id, site_name, target_lat, target_lon, job_folder, project_root, submit=submit
